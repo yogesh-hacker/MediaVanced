@@ -4,6 +4,6 @@
   </a>
 </p>
 <p align="center">
-<img src='https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=flat-square' />
+<img src='https://img.shields.io/badge/License-Apache%202.0-brightgreen?style=for-the-badge&logo=apache&logoColor=red' />
   <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue"/>
 </p>
