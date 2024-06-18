@@ -3,4 +3,4 @@
     <img width="550" src="README/banner.png" alt="MediaVanced Banner" />
   </a>
 </p> 
-<img scr='https://img.shields.io/badge/License-Apache_2.0-blue.svg' />
+<img src='https://img.shields.io/badge/License-Apache_2.0-blue.svg' />
