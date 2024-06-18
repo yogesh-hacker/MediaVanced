@@ -12,3 +12,9 @@
 ```console
 ~ $ python path_to_target_website_script.py
 ```
+* 🕒 Fast than your network 😉
+* 💪 Modifiable
+* 🔥 Connectible with library
+* 👨‍💻 Customer support
+* 📦 Minimum Resources
+* 👫 All languages supported
