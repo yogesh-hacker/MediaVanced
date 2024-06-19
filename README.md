@@ -31,8 +31,15 @@ git clone https://github.com/yogesh-hacker/MediaVanced.git
 
 * Open the Media Vanced's target Python script file. e.g. ```minoplres.py```
 * Replace the ```base_url``` with your URL
-#### Example
+#### Example Usage
 ```python
 base_url = "https://minoplres.xyz/embed-q6kab8jns.html"
-#Replace base_url with your actual url
+# Replace base_url with your actual url
 ```
+* Now run the script
+#### Example Usage
+```console
+python your_script.py
+```
+
+> If you face any error or issues please report that issue in the respective repository.
