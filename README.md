@@ -18,3 +18,9 @@
 * 👨‍💻 Customer support
 * 📦 Minimum Resources
 * 👫 All languages supported
+---
+## Getting Started
+### Installation
+```console
+~ $ git clone https://github.com/yogesh-hacker/MediaVanced.git
+```
