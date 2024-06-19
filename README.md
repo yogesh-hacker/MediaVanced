@@ -43,3 +43,7 @@ python your_script.py
 ```
 
 > If you face any error or issues please report that issue in the respective repository.
+
+
+## License
+Media Vanced is licensed under a [Apache License]()
