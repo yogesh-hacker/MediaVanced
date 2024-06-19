@@ -25,3 +25,6 @@ python path_to_target_website_script.py
 git clone https://github.com/yogesh-hacker/MediaVanced.git
 ```
 ⬇️ You can clone or download this repository as ZIP for usage.
+
+### Usage
+> You need to parse or get streaming website links supported by MediaVanced. You can use [Eruda](https://github.com/liriliri/eruda) or Developer Tools for it.
