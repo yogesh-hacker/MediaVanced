@@ -28,3 +28,8 @@ git clone https://github.com/yogesh-hacker/MediaVanced.git
 
 ### Usage
 > You need to parse or get streaming website links supported by MediaVanced. You can use [Eruda](https://github.com/liriliri/eruda) or Developer Tools for it.
+
+* Open the Media Vanced's target Python script file.
+* Replace the ```python
+base_url
+```
