@@ -46,4 +46,4 @@ python your_script.py
 
 
 ## License
-Media Vanced is licensed under a [Apache License]()
+Media Vanced is licensed under a [Apache 2.0 License](https://github.com/yogesh-hacker/MediaVanced/blob/main/LICENSE)
