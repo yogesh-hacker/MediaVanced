@@ -24,4 +24,4 @@ python path_to_target_website_script.py
 ```console
 git clone https://github.com/yogesh-hacker/MediaVanced.git
 ```
-You can clone or download this repository for usage.
+⬇️ You can clone or download this repository as ZIP for usage.
