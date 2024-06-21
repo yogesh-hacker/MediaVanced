@@ -69,10 +69,11 @@ python your_script.py
 7. [Photojin](https://photojin.one)
 8. [Saicord](https://saicord.com)
 9. [Shavetape/Streamtape](https://shavetape.cash)
-10. [Streamwish](https://streamwish.to)
-11. [VcdnLare](https://ww4.vcdnlare.com)
-12. [Vidstream](https://vidstreamnew.xyz)
-13. [Wolfstream](https://wolfstream.tv)
+10. [Streambucket](https://streambucket.net)
+11. [Streamwish](https://streamwish.to)
+12. [VcdnLare](https://ww4.vcdnlare.com)
+13. [Vidstream](https://vidstreamnew.xyz)
+14. [Wolfstream](https://wolfstream.tv)
 
 ## License
 
