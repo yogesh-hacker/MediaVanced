@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 
 session = requests.Session()
-initial_url = "https://photojin.one/download/jBNOL-RbNxM"
+initial_url = "https://photojin.one/download/-FgaYAQm77P"
 
 class Colors:
     HEADER = '\033[95m'

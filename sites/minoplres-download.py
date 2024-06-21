@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
-base_url = "https://minoplres.xyz/d/0hc5f76a6tk1_{}"
+base_url = "https://minoplres.xyz/d/l1s6pevitg6y_{}"
 
 suffixes = ['h', 'l','o']
 

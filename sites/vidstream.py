@@ -59,6 +59,7 @@ matcher = re.search(pattern, initial_page_html)
 
 if matcher:
     json_data = json.loads(matcher.group(1))
+    print(json_data)
 
     ct = base64.b64decode(json_data['ct'])
     iv = bytes.fromhex(json_data['iv'])

@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
 guest_account_url = "https://api.gofile.io/accounts"
-base_url = "https://gofile.io/d/0aiagU"
+base_url = "https://gofile.io/d/mIjnib"
 
 class Colors:
     HEADER = '\033[95m'
