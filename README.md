@@ -60,7 +60,8 @@ python your_script.py
 
 ## Supported Sites
 
-1. [Minoplres](https://minoplres.xyz)
+1. [Minoplres/Speedostream](https://minoplres.xyz)
+2. [1Fichier](https://1fichier.com)
 
 ## License
 
