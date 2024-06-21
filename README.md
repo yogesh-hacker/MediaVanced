@@ -62,6 +62,17 @@ python your_script.py
 
 1. [Minoplres/Speedostream](https://minoplres.xyz)
 2. [1Fichier](https://1fichier.com)
+3. [Clickndownload](https://clickndownload.link)
+4. [Filelions](https://filelions.site)
+5. [GoFile](https://gofile.io)
+6. [MoviesAPI](https://w1.moviesapi.club)
+7. [Photojin](https://photojin.one)
+8. [Saicord](https://saicord.com)
+9. [Shavetape/Streamtape](https://shavetape.cash)
+10. [Streamwish](https://streamwish.to)
+11. [VcdnLare](https://ww4.vcdnlare.com)
+12. [Vidstream](https://vidstreamnew.xyz)
+13. [Wolfstream](https://wolfstream.tv)
 
 ## License
 
