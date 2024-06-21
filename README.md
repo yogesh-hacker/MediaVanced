@@ -72,9 +72,10 @@ python your_script.py
 10. [Streambucket](https://streambucket.net)
 11. [Streamwish](https://streamwish.to)
 12. [Uploadhub](https://uploadhub.wf)
-13. [VcdnLare](https://ww4.vcdnlare.com)
-14. [Vidstream](https://vidstreamnew.xyz)
-15. [Wolfstream](https://wolfstream.tv)
+13. [Uploadraja](https://uploadraja.com/)
+14. [VcdnLare](https://ww4.vcdnlare.com)
+15. [Vidstream](https://vidstreamnew.xyz)
+16. [Wolfstream](https://wolfstream.tv)
 
 ## License
 
