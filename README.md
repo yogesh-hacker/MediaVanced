@@ -58,6 +58,10 @@ python your_script.py
 
 > If you encounter any errors or issues, please report them in the respective repository.
 
+## Supported Sites
+
+1. [Minoplres](https://minoplres.xyz)
+
 ## License
 
 Media Vanced is licensed under the [Apache 2.0 License](https://github.com/yogesh-hacker/MediaVanced/blob/main/LICENSE).
