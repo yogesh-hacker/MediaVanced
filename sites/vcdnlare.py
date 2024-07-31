@@ -2,7 +2,7 @@ from requests import get, post
 from bs4 import BeautifulSoup
 import re
 
-mTargetUrl = 'https://ww4.vcdnlare.com/v/O2BQzVmy3gZ8BRS'
+base_url = 'https://ww4.vcdnlare.com/v/O2BQzVmy3gZ8BRS'
 
 class Colors:
     HEADER = '\033[95m'
@@ -20,7 +20,7 @@ mHeaders = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
-mPageResponse = get(mTargetUrl, headers=mHeaders)
+mPageResponse = get(base_url, headers=mHeaders)
 mSoup = BeautifulSoup(mPageResponse.text, "html.parser")
 
 mVideoElement = mSoup.find("video", id="player")
