@@ -42,8 +42,8 @@ cookies = {
 }
 
 proxy = {
-    "http": "http://qvgxntjn:1cyxq9jfd6rh@45.127.248.127:5128",
-    "https": "http://qvgxntjn:1cyxq9jfd6rh@45.127.248.127:5128"
+    "http": "your_proxy_address",
+    "https": "your_proxy_address"
 }
 
 session = requests.Session()
