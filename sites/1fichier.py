@@ -9,6 +9,7 @@ from js2py import EvalJs
 import binascii
 import codecs
 import time
+import random
 
 class Colors:
     HEADER = '\033[95m'
@@ -21,25 +22,30 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-base_url = "https://1fichier.com/?vqi59hurbe20vlu5f7jx"
+base_url = "https://1fichier.com/?y3nos3xwqneytaz2kcm7"
 default_domain = "https://1fichier.com/"
 print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")
 session = requests.Session()
 
+def generate_random_ip():
+    return '.'.join(str(random.randint(0, 255)) for _ in range(4))
 
 initial_headers = {
     "Referer": base_url,
+    "X-Forwarded-For": generate_random_ip(),
+    "X-Real-IP": generate_random_ip(),
+    "Forwarded": generate_random_ip(),
     "User-Agent":"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 }
 
-initial_response = session.get(base_url,headers=initial_headers)
+initial_response = session.get(base_url, headers=initial_headers)
 initial_page_html = initial_response.text
 soup = BeautifulSoup(initial_page_html, "html.parser")
 adz = soup.find("input", attrs = {"name":"adz"})['value']
 payload = {
     "adz" : adz
 }
-initial_response = session.post(base_url, data=payload,headers=initial_headers)
+initial_response = session.post(base_url, data=payload, headers=initial_headers)
 initial_page_html = initial_response.text
 soup = BeautifulSoup(initial_page_html, "html.parser")
 error = soup.find("div", attrs={"class": "ct_warn"})

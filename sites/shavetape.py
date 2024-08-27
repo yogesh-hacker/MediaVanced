@@ -12,20 +12,20 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-print(f"\n{Colors.OKCYAN}TARGET: shavetape.cash{Colors.ENDC}")
+print(f"\n{Colors.OKCYAN}TARGET: streamtape.com{Colors.ENDC}")
 
-default_domain = "https://shavetape.cash/"
+default_domain = "https://streamtape.com/"
 initial_headers = {
     'Referer': default_domain,
     'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
-base_url = "https://streamtape.to/v/lWv6wjA3dMi7Rqb"
+base_url = "https://streamtape.com/v/x9vek9lxJ4hDpZ/"
 initial_response = requests.get(base_url, headers=initial_headers)
 initial_page_html = initial_response.text
 
-regex_pattern = r"document\.getElementById\(['\"]botlink['\"]\)\.innerHTML\s*=\s*['\"]([^'\"]+)['\"].*?\+\s*\(['\"]([^'\"]+)['\"]\)\.substring\(\d+\);"
-
+regex_pattern = r"document\.getElementById\(['\"]captchalink['\"]\)\.innerHTML\s*=\s*['\"]([^'\"]+)['\"].*?\+\s*\(['\"]([^'\"]+)['\"]\)\.substring\(\d+\);"
+print(regex_pattern)
 botlink_match = re.search(regex_pattern, initial_page_html)
 
 if botlink_match:

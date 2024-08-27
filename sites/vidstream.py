@@ -50,7 +50,7 @@ initial_headers = {
     "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 }
 
-base_url = "https://vidstreamnew.xyz/v/PjrmR68FunxF/"
+base_url = "https://vidstreamnew.xyz/v/84oPWpVecrIB/"
 initial_response = requests.get(base_url, headers=initial_headers)
 initial_page_html = initial_response.text
 
@@ -59,7 +59,6 @@ matcher = re.search(pattern, initial_page_html)
 
 if matcher:
     json_data = json.loads(matcher.group(1))
-    print(json_data)
 
     ct = base64.b64decode(json_data['ct'])
     iv = bytes.fromhex(json_data['iv'])
@@ -92,7 +91,8 @@ if matcher:
         javascript = json.loads(decrypted_plaintext)
         pattern = r'\"file\":\"(https?:\/\/[^\"]+)\"'
         matcher = re.search(pattern, javascript)
-
+        initial_response = requests.get(matcher.group(1), headers=initial_headers)
+        print(initial_response.text)
         if matcher:
             print("######################")
             print("######################")

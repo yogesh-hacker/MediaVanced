@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 
 session = requests.Session()
-initial_url = "https://photojin.one/download/-FgaYAQm77P"
+initial_url = "https://photojin.lol/download/jBNOL-RbNxM"
 
 class Colors:
     HEADER = '\033[95m'
@@ -32,10 +32,9 @@ if initial_response.status_code == 200:
         }
     }
     json_data = json.dumps(data)
-    print(json_data)
 
     headers = {"X-Requested-With": "xmlhttprequest"}
-    post_response = session.post("https://photojin.one/action", data=json_data, headers=headers)
+    post_response = session.post("https://photojin.online/action", data=json_data, headers=headers)
 
     captured_url = post_response.json()['download_url']
     print("\n######################")

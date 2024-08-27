@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
 guest_account_url = "https://api.gofile.io/accounts"
-base_url = "https://gofile.io/d/mIjnib"
+base_url = "https://gofile.io/d/3YLDxX"
 
 class Colors:
     HEADER = '\033[95m'
@@ -51,6 +51,7 @@ try:
     content_data_response = requests.get(f"https://api.gofile.io/contents/{file_id}?{query_string}", headers=headers)
     content_data_response.raise_for_status()
     content_data = content_data_response.json()
+    print(content_data_response.text)
     children = content_data.get('data', {}).get('children', {})
     if not children:
         raise ValueError("No children found in the response data")

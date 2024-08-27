@@ -31,8 +31,9 @@ cookies = {
 }
 
 base_url = "https://saicord.com/hi/movies/1433-attack-on-finland.html"
-initial_response = requests.get(base_url,headers=initial_headers,cookies=cookies)
+initial_response = requests.get(base_url, headers=initial_headers, cookies=cookies)
 initial_page_html = initial_response.text
+print(initial_page_html)
 soup = BeautifulSoup(initial_page_html,"html.parser")
 iframe = soup.find("div", attrs={"class": "player-iframe"})
 script = iframe.find_all("script")

@@ -19,7 +19,7 @@ def ignore_user_warnings(message, category, filename, lineno, file=None, line=No
     return category == UserWarning
 warnings.showwarning = ignore_user_warnings
 
-base_url = "https://streambucket.net/vipstream2.php?token=STJXUVNTS0dsNE5ZaDhISkRSOTFIVzd0VS92Q3JBdkZQNnFoNFVNcms4S0psenBNeTJCam1FenNrWG41VGlOc0pmSUo="
+base_url = "https://multiembed.mov/directstream.php?video_id=tt12735488"
 default_domain = "https://streambucket.net/"
 print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")
 print(f"\n{Colors.WARNING}Caution: Please note that URLs from {default_domain} using tokens for streaming links may expire after some time.{Colors.ENDC}")
@@ -28,7 +28,7 @@ try:
     session = requests.Session()
 
     initial_headers = {
-        "Referer": "https://vidsrc.net/",
+        "Referer": "https://multiembed.mov/",
         "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
     }
     initial_response = session.get(base_url, headers=initial_headers)
@@ -48,7 +48,6 @@ try:
 
     pattern = r'file:"(https?://[^"]+)"'
     match = re.search(pattern, decoded_string)
-    
     if match:
         stream_url = match.group(1)
         print("######################")
@@ -56,6 +55,8 @@ try:
         print(f"Captured URL: {Colors.OKGREEN}{stream_url}{Colors.ENDC}")
         print("######################")
         print("######################\n")
+        initial_response = session.get(stream_url, headers=initial_headers)
+        print(initial_response.text)
     else:
         print(f"{Colors.FAIL}URL not found.{Colors.ENDC}")
 

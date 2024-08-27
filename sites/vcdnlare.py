@@ -2,7 +2,7 @@ from requests import get, post
 from bs4 import BeautifulSoup
 import re
 
-base_url = 'https://ww4.vcdnlare.com/v/O2BQzVmy3gZ8BRS'
+mTargetUrl = 'https://ww3.vcdnlare.com/v/a9E96y2rdyeWh56'
 
 class Colors:
     HEADER = '\033[95m'
@@ -16,11 +16,11 @@ class Colors:
     UNDERLINE = '\033[4m'
 
 mHeaders = {
-    'Referer': 'https://www.5movierulz.tube/',
+    'Referer': '5movierulz',
     'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
-mPageResponse = get(base_url, headers=mHeaders)
+mPageResponse = get(mTargetUrl, headers=mHeaders)
 mSoup = BeautifulSoup(mPageResponse.text, "html.parser")
 
 mVideoElement = mSoup.find("video", id="player")

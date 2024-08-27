@@ -14,7 +14,7 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-base_url = "http://uploadhub.wf/2o4zyfqa07qh"
+base_url = "http://uploadhub.wf/cadb7g83bar4"
 
 default_domain = "https://www.uploadhub.wf/"
 print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")

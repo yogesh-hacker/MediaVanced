@@ -20,6 +20,18 @@ class Colors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    
+def save_file_in_internal_directory(filename, content, directory='/storage/emulated/0'):
+    file_path = os.path.join(directory, filename)
+    try:
+        with open(file_path, 'w') as file:
+            file.write(content)
+        print(f"File saved to {file_path}")
+    except Exception as e:
+        print(f"Error saving file: {e}")
+
+def hex_to_char(match):
+    return chr(int(match.group(1), 16))
 
 base_url = "https://uploadraja.com/f/aa230b-4qynkmytwota3"
 

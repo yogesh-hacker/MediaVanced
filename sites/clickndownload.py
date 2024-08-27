@@ -21,8 +21,8 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-base_url = "https://clickndownload.link/q8m7c7lyk6gx"
-default_domain = "https://clickndownload.link/"
+base_url = "https://clickndownload.xyz/r8z7wwebhzq3"
+default_domain = "https://clickndownload.xyz/"
 print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")
 session = requests.Session()
 
