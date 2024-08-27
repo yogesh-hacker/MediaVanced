@@ -59,23 +59,24 @@ python your_script.py
 > If you encounter any errors or issues, please report them in the respective repository.
 
 ## Supported Sites
-
-1. [Minoplres/Speedostream](https://minoplres.xyz)
-2. [1Fichier](https://1fichier.com)
-3. [Clickndownload](https://clickndownload.link)
-4. [Filelions](https://filelions.site)
-5. [GoFile](https://gofile.io)
-6. [MoviesAPI](https://w1.moviesapi.club)
-7. [Photojin](https://photojin.one)
-8. [Saicord](https://saicord.com)
-9. [Shavetape/Streamtape](https://shavetape.cash)
-10. [Streambucket](https://streambucket.net)
-11. [Streamwish](https://streamwish.to)
-12. [Uploadhub](https://uploadhub.wf)
-13. [Uploadraja](https://uploadraja.com/)
-14. [VcdnLare](https://ww4.vcdnlare.com)
-15. [Vidstream](https://vidstreamnew.xyz)
-16. [Wolfstream](https://wolfstream.tv)
+1. [Antol](https://antol307vvk.com)
+2. [Minoplres/Speedostream](https://minoplres.xyz)
+3. [1Fichier](https://1fichier.com)
+4. [Clickndownload](https://clickndownload.link)
+5. [Filelions](https://filelions.site)
+6. [GoFile](https://gofile.io)
+7. [MoviesAPI](https://w1.moviesapi.club)
+8. [Multiquality](https://swift.multiquality.click)
+9. [Photojin](https://photojin.one)
+10. [Saicord](https://saicord.com)
+11. [Shavetape/Streamtape](https://shavetape.cash)
+12. [Streambucket](https://streambucket.net)
+13. [Streamwish](https://streamwish.to)
+14. [Uploadhub](https://uploadhub.wf)
+15. [Uploadraja](https://uploadraja.com/)
+16. [VcdnLare](https://ww4.vcdnlare.com)
+17. [Vidstream](https://vidstreamnew.xyz)
+18. [Wolfstream](https://wolfstream.tv)
 
 ## License
 
