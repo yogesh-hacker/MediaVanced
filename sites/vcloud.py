@@ -42,11 +42,6 @@ cookies = {
     'sku': '01J28X81T07BA9D023VY5JQRJAD_gamechanger_cue_piece'
 }
 
-proxy = {
-    "http": "http://qvgxntjn:1cyxq9jfd6rh@45.127.248.127:5128",
-    "https": "http://qvgxntjn:1cyxq9jfd6rh@45.127.248.127:5128"
-}
-
 data = {
 
 }
