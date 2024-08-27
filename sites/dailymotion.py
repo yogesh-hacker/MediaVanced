@@ -41,11 +41,6 @@ cookies = {
     'ui': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjAzNTgxMjQsIm5iZiI6MTcyMDM1ODEyNCwiZXhwIjoxNzUxNDYyMTQ0LCJkYXRhIjp7InVpZCI6NDU0MDA0LCJ0b2tlbiI6IjdjNmMwMzEzYThhOGUzOTczNGZjMDI2MDQ2Y2JlNzkzIn19.LXWUfS004XLU6irNvIiNbxmG0weQ-mjZr7rzUhQdBjk'
 }
 
-proxy = {
-    "http": "http://qvgxntjn:1cyxq9jfd6rh@45.127.248.127:5128",
-    "https": "http://qvgxntjn:1cyxq9jfd6rh@45.127.248.127:5128"
-}
-
 base_url = "https://www.dailymotion.com/player/metadata/video/x8qqe3e"
 session = requests.Session()
 
