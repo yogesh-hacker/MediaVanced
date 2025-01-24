@@ -20,7 +20,12 @@ class Colors:
     underline = '\033[4m'
 
 '''
-Message to Vidstream/Animedekho: Hello, developers! What are you guys up to? Your new method is no challenge—I’ve cracked it again. I’ve identified the pattern, and it’s ridiculously easy now. Next time, step up your game with better obfuscation and a more advanced approach. This is MediaVanced (Media Advanced), not a standard library like others. If I want, I can crack all your methods. It only took me 3 hours to break it! Haha!
+Message to Vidstream/Animedekho: Hello, developers! 
+What are you guys up to? Your new method is no challenge—I’ve cracked it again.
+I’ve identified the pattern, and it’s ridiculously easy now. 
+Next time, step up your game with better obfuscation and a more advanced approach. 
+This is MediaVanced (Media Advanced), not a standard library like others. 
+If I want, I can crack all your methods. It only took me 3 hours to break it! Haha!
 '''
 
 
