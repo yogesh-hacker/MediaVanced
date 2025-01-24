@@ -1,11 +1,12 @@
 import requests
-from bs4 import BeautifulSoup
-import os
-from urllib.parse import urlparse, unquote
 import re
 import json
 import base64
-import zlib
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+import hashlib
+import struct
+import os
 
 class Colors:
     header = '\033[95m'
@@ -18,58 +19,84 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
+'''
+Message to Vidstream/Animedekho: Hello, developers! What are you guys up to? Your new method is no challenge—I’ve cracked it again. I’ve identified the pattern, and it’s ridiculously easy now. Next time, step up your game with better obfuscation and a more advanced approach. This is MediaVanced (Media Advanced), not a standard library like others. If I want, I can crack all your methods. It only took me 3 hours to break it! Haha!
+'''
+
+
+# Configuration
 base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
-default_domain = "https://vidstreamnew.xyz/"
-request_headers = {
-    'Referer': default_domain,
-    'User-Agent': 'Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
+headers = {
+    'Referer': "https://vidstreamnew.xyz/",
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
-print(f"\n{Colors.okcyan}TARGET: {default_domain}{Colors.endc}")
 
-http_session = requests.Session()
+# Convert string to 32-bit word array
+def string_to_32bit_words(text):
+    words = [0] * ((len(text) + 3) // 4)
+    for i, char in enumerate(text):
+        words[i >> 2] |= (ord(char) & 255) << (24 - (i % 4) * 8)
+    return words
 
-initial_page_content = http_session.get(base_url, headers=request_headers).text
+# Convert byte array to 32-bit word array
+def bytes_to_32bit_words(byte_data):
+    words = []
+    for i in range(0, len(byte_data), 4):
+        word = 0
+        for j in range(4):
+            if i + j < len(byte_data):
+                word |= byte_data[i + j] << (24 - j * 8)
+        words.append(struct.unpack('>i', struct.pack('>I', word))[0])
+    return words
 
-encrypted_data_pattern = r"const\s+Encrypted\s*=\s*'(.*?)'"
-encrypted_data_match = re.search(encrypted_data_pattern, initial_page_content)
+# Derive key using PBKDF2
+def derive_key(password, salt, key_size, iterations, hash_algo):
+    password_bytes = b''.join(word.to_bytes(4, 'big') for word in password)
+    salt_bytes = b''.join(word.to_bytes(4, 'big') for word in salt)
+    return hashlib.pbkdf2_hmac(hash_algo, password_bytes, salt_bytes, iterations, dklen=key_size)
 
-encrypted_data = ""
-if encrypted_data_match:
-    encrypted_data = encrypted_data_match.group(1)
-else:
+# Base64 and Hex parsers
+hex_parser = lambda x: bytes.fromhex(x)
+base64_parser = lambda x: base64.b64decode(x)
+
+
+# Fetch and extract encrypted data
+response = requests.get(base_url, headers=headers).text
+encrypted_data_match = re.search(r"const\s+Encrypted\s*=\s*'(.*?)'", response)
+
+if not encrypted_data_match:
     print("No encrypted data found.")
+    exit()
 
-decoded_bytes = base64.b64decode(encrypted_data)
-decoded_characters = []
+encrypted_data = encrypted_data_match.group(1)
 
-for byte in decoded_bytes:
-    binary_representation = f'{byte:08b}'
-    reversed_binary = binary_representation[::-1]
-    reversed_integer = int(reversed_binary, 2)
-    decoded_characters.append(reversed_integer)
+# Decode and parse JSON
+decoded_data = base64.b64decode(encrypted_data).decode('utf-8')
+parsed_json = json.loads(decoded_data)
 
-byte_array = bytearray(decoded_characters)
-decompressed_data = ""
+# Derive key
+salt = string_to_32bit_words(parsed_json['salt'])
+password = string_to_32bit_words("=e{27)K~vfTftY9s4hRsRx$j=P~w2mpN")
+derived_key = derive_key(password, salt, key_size=32, iterations=1000, hash_algo='sha512')
+
+# Prepare IV and data
+iv = hex_parser(base64_parser(parsed_json['iv']).hex())
+encrypted_content = base64_parser(parsed_json['data'])
+
+# Decrypt data
+cipher = AES.new(derived_key, AES.MODE_CBC, iv=iv)
+decrypted_data = cipher.decrypt(encrypted_content)
+
+# Unpad and print plaintext
+final_result = ''
 try:
-    decompressed_data = zlib.decompress(byte_array).decode('utf-8')
-except zlib.error:
-    print("The data is not a valid ZLIB compressed file.")
-except Exception as e:
-    print(f"An error occurred during decompression: {e}")
-
-special_to_alphabet_map = {
-    "!": "a", "@": "b", "#": "c", "$": "d", "%": "e",
-    "^": "f", "&": "g", "*": "h", "(": "i", ")": "j"
-}
-
-processed_data = ''.join(special_to_alphabet_map.get(char, char) for char in decompressed_data)
-decoded_base64_data = base64.b64decode(processed_data)
-
-decoded_url = unquote(decoded_base64_data.decode('utf-8'))
+    final_result = unpad(decrypted_data, AES.block_size).decode()
+except ValueError as e:
+    print("Padding Error:", e)
 
 video_url_pattern = r'file:\s*"([^"]+)"'
-video_url_match = re.search(video_url_pattern, decoded_url)
+video_url_match = re.search(video_url_pattern, final_result)
 
 video_url = ""
 if video_url_match:
