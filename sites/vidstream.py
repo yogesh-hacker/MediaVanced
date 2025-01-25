@@ -8,6 +8,8 @@ import hashlib
 import struct
 import os
 
+## Library v6.3 ##
+
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -20,12 +22,7 @@ class Colors:
     underline = '\033[4m'
 
 '''
-Message to Vidstream/Animedekho: Hello, developers! 
-What are you guys up to? Your new method is no challenge—I’ve cracked it again.
-I’ve identified the pattern, and it’s ridiculously easy now. 
-Next time, step up your game with better obfuscation and a more advanced approach. 
-This is MediaVanced (Media Advanced), not a standard library like others. 
-If I want, I can crack all your methods. It only took me 3 hours to break it! Haha!
+Message to Vidstream/Animedekho: Hello, developers! What are you guys up to? Your new method is no challenge—I’ve cracked it again. I’ve identified the pattern, and it’s ridiculously easy now. Next time, step up your game with better obfuscation and a more advanced approach. This is MediaVanced (Media Advanced), not a standard library like others. If I want, I can crack all your methods. It only took me 3 hours to break it! Haha!
 '''
 
 
@@ -82,8 +79,9 @@ parsed_json = json.loads(decoded_data)
 
 # Derive key
 salt = string_to_32bit_words(parsed_json['salt'])
-password = string_to_32bit_words("=e{27)K~vfTftY9s4hRsRx$j=P~w2mpN")
-derived_key = derive_key(password, salt, key_size=32, iterations=1000, hash_algo='sha512')
+password = string_to_32bit_words("3%.tjS0K@K9{9rTc")
+derived_key = derive_key(password, salt, key_size=32, iterations=999, hash_algo='sha512')
+
 
 # Prepare IV and data
 iv = hex_parser(base64_parser(parsed_json['iv']).hex())
