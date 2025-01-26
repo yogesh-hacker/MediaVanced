@@ -1,70 +1,87 @@
 import requests
 import re
-from bs4 import BeautifulSoup
-from js2py import EvalJs
-import warnings
+from urllib.parse import urlparse, unquote
 
 class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+    header = '\033[95m'
+    okblue = '\033[94m'
+    okcyan = '\033[96m'
+    okgreen = '\033[92m'
+    warning = '\033[93m'
+    fail = '\033[91m'
+    endc = '\033[0m'
+    bold = '\033[1m'
+    underline = '\033[4m'
 
-def ignore_user_warnings(message, category, filename, lineno, file=None, line=None):
-    return category == UserWarning
-warnings.showwarning = ignore_user_warnings
+def base_convert(number_str, from_base, to_base):
+    charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
+    
+    from_base_chars = charset[:from_base]
+    to_base_chars = charset[:to_base]
+
+    decimal_value = sum(
+        from_base_chars.index(char) * (from_base ** index)
+        for index, char in enumerate(reversed(number_str))
+        if char in from_base_chars
+    )
+
+    if decimal_value == 0:
+        return "0"
+
+    converted_value = ""
+    while decimal_value > 0:
+        converted_value = to_base_chars[decimal_value % to_base] + converted_value
+        decimal_value //= to_base
+    return converted_value
+
+def decode_hunter(h, u, n, t, e, r):
+    e = int(e)
+    t = int(t)
+    r = ""
+    i = 0
+    while i < len(h):
+        s = ""
+        while h[i] != n[e]:
+            s += h[i]
+            i += 1
+        for j in range(len(n)):
+            s = re.sub(n[j], str(j), s)
+        decoded_value = int(base_convert(s, e, 10)) - t
+        r += chr(decoded_value)
+        i += 1
+
+    return unquote(r)
+
 
 base_url = "https://multiembed.mov/directstream.php?video_id=tt12735488"
-default_domain = "https://streambucket.net/"
-print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")
-print(f"\n{Colors.WARNING}Caution: Please note that URLs from {default_domain} using tokens for streaming links may expire after some time.{Colors.ENDC}")
+headers = {
+    'Referer': "https://multiembed.mov/",
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
+}
 
-try:
-    session = requests.Session()
+raw_initial_response = requests.get(base_url, headers=headers)
+default_domain = f"https://{urlparse(raw_initial_response.url).hostname}/"
+initial_response = raw_initial_response.text
 
-    initial_headers = {
-        "Referer": "https://multiembed.mov/",
-        "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
-    }
-    initial_response = session.get(base_url, headers=initial_headers)
-    initial_response.raise_for_status()  # Raise an error for bad response status
+pattern = r'eval\(function\((.*?)\)\{.*\}\((.*?)\)\)'
+hunter_pack_match = re.search(pattern, initial_response)
 
-    initial_page_html = initial_response.text
-    soup = BeautifulSoup(initial_page_html, "html.parser")
-    script = soup.find_all("script")
-    
-    # Assuming script[1] exists and has string attribute
-    decrypt_script = script[1].string.replace("eval(function", "function decode").replace("(escape(r))}(", "(escape(r))}var decodedString = decode(")
-    final_script = decrypt_script[:-1]
+decoded_js =""
+if hunter_pack_match:
+    hunter_pack = hunter_pack_match.group(2).replace("\"", "").split(',')
+    decoded_js = decode_hunter(*hunter_pack)
+else:
+    print("Failed to extract hunter pack.")
 
-    context = EvalJs()
-    context.execute(final_script)
-    decoded_string = context.decodedString
-
-    pattern = r'file:"(https?://[^"]+)"'
-    match = re.search(pattern, decoded_string)
-    if match:
-        stream_url = match.group(1)
-        print("######################")
-        print("######################")
-        print(f"Captured URL: {Colors.OKGREEN}{stream_url}{Colors.ENDC}")
-        print("######################")
-        print("######################\n")
-        initial_response = session.get(stream_url, headers=initial_headers)
-        print(initial_response.text)
-    else:
-        print(f"{Colors.FAIL}URL not found.{Colors.ENDC}")
-
-except requests.RequestException as e:
-    print(f"{Colors.FAIL}Error during request: {e}{Colors.ENDC}")
-
-except (IndexError, AttributeError) as e:
-    print(f"{Colors.FAIL}Error parsing script: {e}{Colors.ENDC}")
-
-except Exception as e:
-    print(f"{Colors.FAIL}An unexpected error occurred: {e}{Colors.ENDC}")
+pattern = r'file:"(https?://[^"]+)"'
+match = re.search(pattern, decoded_js)
+if match:
+    stream_url = match.group(1)
+    print("\n######################")
+    print("######################")
+    print(f"Captured URL: {Colors.okgreen}{stream_url}{Colors.endc}")
+    print("######################")
+    print("######################")
+    print(f"{Colors.warning}### Please use the header Referer: {default_domain} or the CDN host to access the URL, along with a User-Agent.\n")
+else:
+    print(f"{Colors.fail}URL not found.{Colors.endc}")
