@@ -1,14 +1,12 @@
 import requests
 import re
-import json
 import base64
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
-import hashlib
+from Crypto.Hash import SHA256
+from Crypto.Util.Padding import unpad, pad
 import struct
-import os
 
-## Library v6.3 ##
+## Library v4.3 ##
 
 class Colors:
     header = '\033[95m'
@@ -21,28 +19,12 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-'''
-Message to Vidstream/Animedekho: Hello, developers! What are you guys up to? Your new method is no challenge—I’ve cracked it again. I’ve identified the pattern, and it’s ridiculously easy now. Next time, step up your game with better obfuscation and a more advanced approach. This is MediaVanced (Media Advanced), not a standard library like others. If I want, I can crack all your methods. It only took me 30 minutes to break it! Haha!
-'''
-
-
-# Configuration
-base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
-headers = {
-    'Referer': "https://vidstreamnew.xyz/",
-    'User-Agent': 'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
-}
-
-
-# Convert string to 32-bit word array
-def string_to_32bit_words(text):
-    words = [0] * ((len(text) + 3) // 4)
-    for i, char in enumerate(text):
-        words[i >> 2] |= (ord(char) & 255) << (24 - (i % 4) * 8)
-    return words
 
 # Convert byte array to 32-bit word array
 def bytes_to_32bit_words(byte_data):
+    """
+    Converts a byte array into a 32-bit word array.
+    """
     words = []
     for i in range(0, len(byte_data), 4):
         word = 0
@@ -52,54 +34,57 @@ def bytes_to_32bit_words(byte_data):
         words.append(struct.unpack('>i', struct.pack('>I', word))[0])
     return words
 
-# Derive key using PBKDF2
-def derive_key(password, salt, key_size, iterations, hash_algo):
-    password_bytes = b''.join(word.to_bytes(4, 'big') for word in password)
-    salt_bytes = b''.join(word.to_bytes(4, 'big') for word in salt)
-    return hashlib.pbkdf2_hmac(hash_algo, password_bytes, salt_bytes, iterations, dklen=key_size)
 
-# Base64 and Hex parsers
-hex_parser = lambda x: bytes.fromhex(x)
-base64_parser = lambda x: base64.b64decode(x)
+base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
+headers = {
+    'Referer': "https://vidstreamnew.xyz/",
+    'User-Agent': (
+        'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 '
+        '(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
+    )
+}
 
+# Fetch the initial response
+initial_response = requests.get(base_url, headers=headers).text
 
-# Fetch and extract encrypted data
-response = requests.get(base_url, headers=headers).text
-encrypted_data_match = re.search(r"const\s+Encrypted\s*=\s*'(.*?)'", response)
-
+# Extract encrypted data using regex
+encrypted_data_match = re.search(r"const\s+Encrypted\s*=\s*'(.*?)'", initial_response)
 if not encrypted_data_match:
     print("No encrypted data found.")
     exit()
 
 encrypted_data = encrypted_data_match.group(1)
 
-# Decode and parse JSON
-decoded_data = base64.b64decode(encrypted_data).decode('utf-8')
-parsed_json = json.loads(decoded_data)
+# Decryption process
+password = "vQ)$A}u%nHwp[CLa2"
 
-# Derive key
-salt = string_to_32bit_words(parsed_json['salt'])
-password = string_to_32bit_words("3%.tjS0K@K9{9rTc")
-derived_key = derive_key(password, salt, key_size=32, iterations=999, hash_algo='sha512')
+# Decode the encrypted data
+decoded_bytes = base64.b64decode(encrypted_data)
 
+# Convert bytes to 32-bit word array
+result_words = bytes_to_32bit_words(decoded_bytes)
 
-# Prepare IV and data
-iv = hex_parser(base64_parser(parsed_json['iv']).hex())
-encrypted_content = base64_parser(parsed_json['data'])
+# Extract the IV (initialization vector)
+iv = result_words[:4]
+iv_bytes = b''.join(word.to_bytes(4, byteorder='big', signed=True) for word in iv)
 
-# Decrypt data
-cipher = AES.new(derived_key, AES.MODE_CBC, iv=iv)
-decrypted_data = cipher.decrypt(encrypted_content)
+# Generate the key using SHA256 hash of the password
+key = SHA256.new(password.encode()).digest()
 
-# Unpad and print plaintext
-final_result = ''
-try:
-    final_result = unpad(decrypted_data, AES.block_size).decode()
-except ValueError as e:
-    print("Padding Error:", e)
+# Initialize the AES cipher in CBC mode
+cipher = AES.new(key, AES.MODE_CBC, iv_bytes)
 
+# Extract the ciphertext
+cipher_text = b''.join(
+    word.to_bytes(4, byteorder='big', signed=True) for word in result_words[4:]
+)
+
+# Decrypt and unpad the plaintext
+decrypted_data = unpad(cipher.decrypt(cipher_text), AES.block_size).decode('utf-8')
+
+#Get the video file URL
 video_url_pattern = r'file:\s*"([^"]+)"'
-video_url_match = re.search(video_url_pattern, final_result)
+video_url_match = re.search(video_url_pattern, decrypted_data)
 
 video_url = ""
 if video_url_match:
@@ -107,7 +92,8 @@ if video_url_match:
 else:
     print("No video URL found.")
 
-print("######################")
+# Print Results
+print("\n######################")
 print("######################")
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("######################")
