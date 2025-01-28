@@ -6,7 +6,7 @@ from Crypto.Hash import SHA256
 from Crypto.Util.Padding import unpad, pad
 import struct
 
-## Library v4.3 ##
+## Library v4.4 ##
 
 class Colors:
     header = '\033[95m'
@@ -48,7 +48,7 @@ headers = {
 initial_response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data using regex
-encrypted_data_match = re.search(r"const\s+Encrypted\s*=\s*'(.*?)'", initial_response)
+encrypted_data_match = re.search(r"const\s+Encrypted_Content\s*=\s*'(.*?)'", initial_response)
 if not encrypted_data_match:
     print("No encrypted data found.")
     exit()
@@ -56,7 +56,7 @@ if not encrypted_data_match:
 encrypted_data = encrypted_data_match.group(1)
 
 # Decryption process
-password = "vQ)$A}u%nHwp[CLa2"
+password = "lh+V!G9I=g^AwN!^["
 
 # Decode the encrypted data
 decoded_bytes = base64.b64decode(encrypted_data)
