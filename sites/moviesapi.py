@@ -1,101 +1,107 @@
 import requests
 import re
-import os
-from bs4 import BeautifulSoup
-from pathlib import Path
 import base64
-import hashlib
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
-from Crypto.Util.Padding import unpad
-import json
-from js2py import EvalJs
+from Crypto.Util.Padding import unpad, pad
+import struct
 
+## Library v4.5 ##
+
+'''
+Supports:
+https://vidstreamnew.xyz/
+https://moviesapi.club/
+ChillX
+'''
 
 class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+    header = '\033[95m'
+    okblue = '\033[94m'
+    okcyan = '\033[96m'
+    okgreen = '\033[92m'
+    warning = '\033[93m'
+    fail = '\033[91m'
+    endc = '\033[0m'
+    bold = '\033[1m'
+    underline = '\033[4m'
 
 
-def save_file_in_internal_directory(filename, content, directory='/storage/emulated/0'):
-    file_path = os.path.join(directory, filename)
-    try:
-        with open(file_path, 'w') as file:
-            file.write(content)
-            print(f"File saved to {file_path}")
-    except Exception as e:
-        print(f"Error saving file: {e}")
+# Convert byte array to 32-bit word array
+def bytes_to_32bit_words(byte_data):
+    """
+    Converts a byte array into a 32-bit word array.
+    """
+    words = []
+    for i in range(0, len(byte_data), 4):
+        word = 0
+        for j in range(4):
+            if i + j < len(byte_data):
+                word |= byte_data[i + j] << (24 - j * 8)
+        words.append(struct.unpack('>i', struct.pack('>I', word))[0])
+    return words
 
-
-default_domain = "https://w1.moviesapi.club/"
-print(f"\n{Colors.OKCYAN}TARGET: {default_domain} {Colors.ENDC}")
-session = requests.Session()
-
-initial_headers = {
-    "Referer": default_domain,
-    "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
-}
 
 base_url = "https://w1.moviesapi.club/v/fl8BAMPkUPRJ/"
-initial_response = requests.get(base_url, headers=initial_headers)
-initial_page_html = initial_response.text
+user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+headers = {
+    'Referer': "https://w1.moviesapi.club/",
+    'User-Agent': user_agent
+}
 
+# Fetch the initial response
+initial_response = requests.get(base_url, headers=headers).text
 
-pattern = r'JScripts = \'(.*)\''
-matcher = re.search(pattern, initial_page_html)
+# Extract encrypted data using regex
+encrypted_data_match = re.search(r"const\s+Matrix\s*=\s*'(.*?)'", initial_response)
+if not encrypted_data_match:
+    print("No encrypted data found.")
+    exit()
 
-if matcher:
-    json_data = json.loads(matcher.group(1))
+encrypted_data = encrypted_data_match.group(1)
 
-    ct = base64.b64decode(json_data['ct'])
-    iv = bytes.fromhex(json_data['iv'])
-    salt = bytes.fromhex(json_data['s'])
+# Decryption process
+password = "0-4_xSb3ikmo]&v%D,&7"
 
-    assert len(iv) == 16, "IV must be 16 bytes long"
+# Decode the encrypted data
+decoded_bytes = base64.b64decode(encrypted_data)
 
-    pass_phrase = b"KB3c1lgTx6cHL3W"
-    print(f'\n\n{Colors.OKCYAN}Using Password: {pass_phrase}{Colors.ENDC}')
+# Convert bytes to 32-bit word array
+result_words = bytes_to_32bit_words(decoded_bytes)
 
-    md = hashlib.md5()
-    md.update(pass_phrase)
-    md.update(salt)
-    cache0 = md.digest()
+# Extract the IV (initialization vector)
+iv = result_words[:4]
+iv_bytes = b''.join(word.to_bytes(4, byteorder='big', signed=True) for word in iv)
 
-    md = hashlib.md5()
-    md.update(cache0)
-    md.update(pass_phrase)
-    md.update(salt)
-    cache1 = md.digest()
-    key = cache0 + cache1
+# Generate a dynamic password with password and User-Agent
+dynamic_password = f"{password}{user_agent}"
 
-    assert len(ct) % 16 == 0, "Ciphertext length must be a multiple of 16 bytes"
+# Generate the key using SHA256 hash of the password
+key = SHA256.new(dynamic_password.encode()).digest()
 
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    result = cipher.decrypt(ct)
+# Initialize the AES cipher in CBC mode
+cipher = AES.new(key, AES.MODE_CBC, iv_bytes)
 
-    try:
-        decrypted_plaintext = unpad(result, AES.block_size)
-        javascript = json.loads(decrypted_plaintext)
-        pattern = r'\"file\":\"(https?:\/\/[^\"]+)\"'
-        matcher = re.search(pattern, javascript)
+# Extract the ciphertext
+cipher_text = b''.join(
+    word.to_bytes(4, byteorder='big', signed=True) for word in result_words[4:]
+)
 
-        if matcher:
-            print("######################")
-            print("######################")
-            print(f"Captured URL: {Colors.OKGREEN}{matcher.group(1)}{Colors.ENDC}")
-            print("######################")
-            print("######################\n")
-            print(f"\n{Colors.WARNING}###Please use header Referer: {default_domain} and a valid User-Agent to access the url")
-        else:
-            print("No matching file URL found in decrypted JavaScript.")
-    except ValueError as e:
-        print("Error unpadding the decrypted plaintext:", e)
+# Decrypt and unpad the plaintext
+decrypted_data = unpad(cipher.decrypt(cipher_text), AES.block_size).decode('utf-8')
+
+#Get the video file URL
+video_url_pattern = r'file:\s*"([^"]+)"'
+video_url_match = re.search(video_url_pattern, decrypted_data)
+
+video_url = ""
+if video_url_match:
+    video_url = video_url_match.group(1)
 else:
-    print("Pattern not found in initial HTML.")
+    print("No video URL found.")
+
+# Print Results
+print("\n" + "#"*25 + "\n" + "#"*25)
+print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
+print("#"*25 + "\n" + "#"*25)
+print(f"{Colors.warning}### Please use the header \"Referer: https://w1.moviesapi.club\" or the CDN host to access the URL, along with the User-Agent: {Colors.okcyan}[{user_agent}]{Colors.endc}\n")
