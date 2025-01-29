@@ -8,8 +8,6 @@ import struct
 
 ## Library v4.5 ##
 
-# Chillx/Vidstream you can't beat me 😈
-
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -38,7 +36,7 @@ def bytes_to_32bit_words(byte_data):
 
 
 base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
-user_agent = "Mozilla/5.0 (Linux; Android 14; CPH2617 Build/TP1A.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/131.0.6778.260 Mobile Safari/537.36"
+user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 headers = {
     'Referer': "https://vidstreamnew.xyz/",
     'User-Agent': user_agent
@@ -100,4 +98,4 @@ else:
 print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#"*25 + "\n" + "#"*25)
-print(f"{Colors.warning}### Please use the header \"Referer: https://vidstreamnew.xyz\" or the CDN host to access the URL, along with a User-Agent.\n")
+print(f"{Colors.warning}### Please use the header \"Referer: https://vidstreamnew.xyz\" or the CDN host to access the URL, along with the User-Agent: {Colors.okcyan}[{user_agent}]{Colors.endc}\n")
