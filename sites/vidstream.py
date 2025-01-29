@@ -8,6 +8,13 @@ import struct
 
 ## Library v4.5 ##
 
+'''
+Supports:
+https://vidstreamnew.xyz/
+https://moviesapi.club/
+ChillX
+'''
+
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -67,6 +74,7 @@ iv = result_words[:4]
 iv_bytes = b''.join(word.to_bytes(4, byteorder='big', signed=True) for word in iv)
 
 # Generate a dynamic password with password and User-Agent
+
 dynamic_password = f"{password}{user_agent}"
 
 # Generate the key using SHA256 hash of the password
