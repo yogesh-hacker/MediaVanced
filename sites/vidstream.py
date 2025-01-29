@@ -6,7 +6,9 @@ from Crypto.Hash import SHA256
 from Crypto.Util.Padding import unpad, pad
 import struct
 
-## Library v4.4 ##
+## Library v4.5 ##
+
+# Chillx/Vidstream you can't beat me 😈
 
 class Colors:
     header = '\033[95m'
@@ -36,19 +38,17 @@ def bytes_to_32bit_words(byte_data):
 
 
 base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
+user_agent = "Mozilla/5.0 (Linux; Android 14; CPH2617 Build/TP1A.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/131.0.6778.260 Mobile Safari/537.36"
 headers = {
     'Referer': "https://vidstreamnew.xyz/",
-    'User-Agent': (
-        'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 '
-        '(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
-    )
+    'User-Agent': user_agent
 }
 
 # Fetch the initial response
 initial_response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data using regex
-encrypted_data_match = re.search(r"const\s+Encrypted_Content\s*=\s*'(.*?)'", initial_response)
+encrypted_data_match = re.search(r"const\s+Matrix\s*=\s*'(.*?)'", initial_response)
 if not encrypted_data_match:
     print("No encrypted data found.")
     exit()
@@ -56,7 +56,7 @@ if not encrypted_data_match:
 encrypted_data = encrypted_data_match.group(1)
 
 # Decryption process
-password = "lh+V!G9I=g^AwN!^["
+password = "0-4_xSb3ikmo]&v%D,&7"
 
 # Decode the encrypted data
 decoded_bytes = base64.b64decode(encrypted_data)
@@ -68,8 +68,12 @@ result_words = bytes_to_32bit_words(decoded_bytes)
 iv = result_words[:4]
 iv_bytes = b''.join(word.to_bytes(4, byteorder='big', signed=True) for word in iv)
 
+# Generate a dynamic password with password and User-Agent
+
+dynamic_password = f"{password}{user_agent}"
+
 # Generate the key using SHA256 hash of the password
-key = SHA256.new(password.encode()).digest()
+key = SHA256.new(dynamic_password.encode()).digest()
 
 # Initialize the AES cipher in CBC mode
 cipher = AES.new(key, AES.MODE_CBC, iv_bytes)
@@ -93,9 +97,7 @@ else:
     print("No video URL found.")
 
 # Print Results
-print("\n######################")
-print("######################")
+print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
-print("######################")
-print("######################")
+print("#"*25 + "\n" + "#"*25)
 print(f"{Colors.warning}### Please use the header \"Referer: https://vidstreamnew.xyz\" or the CDN host to access the URL, along with a User-Agent.\n")
