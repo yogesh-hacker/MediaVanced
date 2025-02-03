@@ -53,7 +53,7 @@ headers = {
 initial_response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data using regex
-encrypted_data_match = re.search(r"const\s+Matrixs\s*=\s*'(.*?)'", initial_response)
+encrypted_data_match = re.search(r"const\s+\w+\s*=\s*'(.*?)'", initial_response)
 if not encrypted_data_match:
     print("No encrypted data found.")
     exit()
