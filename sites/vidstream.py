@@ -8,6 +8,13 @@ import struct
 
 ## Library v4.6 ##
 
+'''
+Supports:
+https://vidstreamnew.xyz/
+https://moviesapi.club/
+https://chillx.top
+'''
+
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
