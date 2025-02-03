@@ -1,6 +1,5 @@
 import requests
 import re
-import base64
 
 ## Library v7.1 ##
 
