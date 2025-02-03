@@ -1,10 +1,6 @@
 import requests
 import re
 import base64
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
-from Crypto.Util.Padding import unpad, pad
-import struct
 
 ## Library v7.1 ##
 
