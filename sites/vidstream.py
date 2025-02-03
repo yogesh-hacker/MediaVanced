@@ -6,14 +6,7 @@ from Crypto.Hash import SHA256
 from Crypto.Util.Padding import unpad, pad
 import struct
 
-## Library v4.6 ##
-
-'''
-Supports:
-https://vidstreamnew.xyz/
-https://moviesapi.club/
-https://chillx.top/
-'''
+## Library v7.1 ##
 
 class Colors:
     header = '\033[95m'
@@ -27,21 +20,15 @@ class Colors:
     underline = '\033[4m'
 
 
-# Convert byte array to 32-bit word array
-def bytes_to_32bit_words(byte_data):
-    """
-    Converts a byte array into a 32-bit word array.
-    """
-    words = []
-    for i in range(0, len(byte_data), 4):
-        word = 0
-        for j in range(4):
-            if i + j < len(byte_data):
-                word |= byte_data[i + j] << (24 - j * 8)
-        words.append(struct.unpack('>i', struct.pack('>I', word))[0])
-    return words
+# Function to perform XOR operation
+# The index increments in steps of 3
+def decrypt_xor(encrypted_data, password):
+    return bytearray(
+        [int(encrypted_data[i:i+3]) ^ ord(password[i//3 % len(password)]) 
+         for i in range(0, len(encrypted_data), 3)]
+    ).decode('utf-8', errors='ignore')
 
-
+# Initializing static variables
 base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
 user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 headers = {
@@ -58,34 +45,17 @@ if not encrypted_data_match:
     print("No encrypted data found.")
     exit()
 
+#Get Encrypted Data and Initialize password
 encrypted_data = encrypted_data_match.group(1)
+password = "TGRKeQCC8yrxC;5)"
 
-# Decryption process
-password = "Fvv0O(0ep+X,q-Z+"
-
-# Decode the encrypted data
-decoded_bytes = base64.b64decode(encrypted_data)
-
-# Convert bytes to 32-bit word array
-result_words = bytes_to_32bit_words(decoded_bytes)
-
-# Extract the IV (initialization vector)
-iv = result_words[:4]
-iv_bytes = b''.join(word.to_bytes(4, byteorder='big', signed=True) for word in iv)
-
-# Generate the key using SHA256 hash of the password
-key = SHA256.new(password.encode()).digest()
-
-# Initialize the AES cipher in CBC mode
-cipher = AES.new(key, AES.MODE_CBC, iv_bytes)
-
-# Extract the ciphertext
-cipher_text = b''.join(
-    word.to_bytes(4, byteorder='big', signed=True) for word in result_words[4:]
-)
-
-# Decrypt and unpad the plaintext
-decrypted_data = unpad(cipher.decrypt(cipher_text), AES.block_size).decode('utf-8')
+# Obtain the result by applying the XOR operation
+decrypted_data = None
+if encrypted_data_match:
+    encrypted_data = encrypted_data_match.group(1)
+    decrypted_data = decrypt_xor(encrypted_data, password)
+else:
+    print("No encrypted data found.")
 
 #Get the video file URL
 video_url_pattern = r'file:\s*"([^"]+)"'
