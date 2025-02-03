@@ -12,7 +12,7 @@ import struct
 Supports:
 https://vidstreamnew.xyz/
 https://moviesapi.club/
-https://chillx.top
+https://chillx.top/
 '''
 
 class Colors:
