@@ -8,6 +8,7 @@ Supports:
 https://vidstreamnew.xyz/
 https://moviesapi.club/
 https://chillx.top/
+https://boosterx.stream/
 '''
 
 class Colors:
@@ -22,7 +23,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
+base_url = "https://boosterx.stream/v/NGGJGqZKpllV/"
 user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 headers = {'Referer': base_url, 'User-Agent': user_agent}
 password = "CQ0KveLh[lZN6jP5"
@@ -48,7 +49,7 @@ decrypted_data = bytearray(
 ).decode('utf-8', errors='ignore')
 
 #Get the video file URL
-video_url_pattern = r'file:\s*"([^"]+)"'
+video_url_pattern = r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"'
 video_url_match = re.search(video_url_pattern, decrypted_data)
 
 video_url = ""
