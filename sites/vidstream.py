@@ -1,14 +1,7 @@
 import requests
 import re
 
-## Library v7.1 ##
-
-'''
-Supports:
-https://vidstreamnew.xyz/
-https://moviesapi.club/
-https://chillx.top/
-'''
+## Library v7.3 ##
 
 class Colors:
     header = '\033[95m'
@@ -21,43 +14,31 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-
-# Function to perform XOR operation
-# The index increments in steps of 3
-def decrypt_xor(encrypted_data, password):
-    return bytearray(
-        [int(encrypted_data[i:i+3]) ^ ord(password[i//3 % len(password)]) 
-         for i in range(0, len(encrypted_data), 3)]
-    ).decode('utf-8', errors='ignore')
-
-# Initializing static variables
+# Constants
 base_url = "https://vidstreamnew.xyz/v/EDMfWZnXmaYU/"
-user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
-headers = {
-    'Referer': "https://vidstreamnew.xyz/",
-    'User-Agent': user_agent
-}
+user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+headers = {'Referer': base_url, 'User-Agent': user_agent}
+password = "CQ0KveLh[lZN6jP5"
 
-# Fetch the initial response
-initial_response = requests.get(base_url, headers=headers).text
+# Fetch encrypted data
+response = requests.get(base_url, headers=headers).text
 
-# Extract encrypted data using regex
-encrypted_data_match = re.search(r"const\s+\w+\s*=\s*'(.*?)'", initial_response)
-if not encrypted_data_match:
+# Extract encrypted data with regex
+match = re.search(r"const\s+\w+\s*=\s*'(.*?)'", response)
+if not match:
     print("No encrypted data found.")
     exit()
 
-#Get Encrypted Data and Initialize password
-encrypted_data = encrypted_data_match.group(1)
-password = "TGRKeQCC8yrxC;5)"
+encrypted_data = match.group(1)
 
-# Obtain the result by applying the XOR operation
-decrypted_data = None
-if encrypted_data_match:
-    encrypted_data = encrypted_data_match.group(1)
-    decrypted_data = decrypt_xor(encrypted_data, password)
-else:
-    print("No encrypted data found.")
+# Convert password to bytes
+password_bytes = bytes(password, 'utf-8')
+
+# Decrypt the data with XOR operation
+decrypted_data = bytearray(
+    [int(encrypted_data[i:i+2], 16) ^ password_bytes[i // 2 % len(password_bytes)]
+     for i in range(0, len(encrypted_data), 2)]
+).decode('utf-8', errors='ignore')
 
 #Get the video file URL
 video_url_pattern = r'file:\s*"([^"]+)"'
