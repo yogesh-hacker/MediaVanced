@@ -3,6 +3,13 @@ import re
 
 ## Library v7.3 ##
 
+'''
+Supports:
+https://vidstreamnew.xyz/
+https://moviesapi.club/
+https://chillx.top/
+'''
+
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
