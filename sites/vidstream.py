@@ -1,7 +1,7 @@
 import requests
 import re
 
-## Library v7.3 ##
+## Func ID: yaIm2u ##
 
 '''
 Supports:
@@ -9,6 +9,7 @@ https://vidstreamnew.xyz/
 https://moviesapi.club/
 https://chillx.top/
 https://boosterx.stream/
+https://playerx.stream/
 '''
 
 class Colors:
@@ -24,9 +25,9 @@ class Colors:
 
 # Constants
 base_url = "https://boosterx.stream/v/NGGJGqZKpllV/"
-user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {'Referer': base_url, 'User-Agent': user_agent}
-password = "CQ0KveLh[lZN6jP5"
+password = "HG1I}V!u$IR6Rxdf"
 
 # Fetch encrypted data
 response = requests.get(base_url, headers=headers).text
