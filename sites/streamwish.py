@@ -8,6 +8,10 @@ import ast
 Supports:
 https://streamwish.to/
 https://rapidplayers.com/
+https://moflix-stream.click/
+https://dhtpre.com/
+https://vidhide.com
+https://mixdrop.ps
 '''
 
 class Colors:
