@@ -1,7 +1,9 @@
 import requests
 import re
+import base64
+import array
 
-## Func ID: yaIm2u ##
+## Func ID: mOreFf ##
 
 '''
 Supports:
@@ -27,40 +29,43 @@ class Colors:
 base_url = "https://boosterx.stream/v/NGGJGqZKpllV/"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {'Referer': base_url, 'User-Agent': user_agent}
-password = "HG1I}V!u$IR6Rxdf"
+password = "~%aRg@&H3&QEK1QV"
 
-# Fetch encrypted data
+# Fetch response
 response = requests.get(base_url, headers=headers).text
 
-# Extract encrypted data with regex
+# Extract encrypted data
 match = re.search(r"const\s+\w+\s*=\s*'(.*?)'", response)
 if not match:
-    print("No encrypted data found.")
-    exit()
+    exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
 
-# Convert password to bytes
-password_bytes = bytes(password, 'utf-8')
+# Decode Base64 to ASCII values
+decoded_bytes = base64.b64decode(encrypted_data)
+ascii_values = list(decoded_bytes)
 
-# Decrypt the data with XOR operation
-decrypted_data = bytearray(
-    [int(encrypted_data[i:i+2], 16) ^ password_bytes[i // 2 % len(password_bytes)]
-     for i in range(0, len(encrypted_data), 2)]
-).decode('utf-8', errors='ignore')
+key_bytes = ascii_values[:16]  # First 16 bytes as key
+data_bytes = ascii_values[16:]  # Remaining as encrypted content
 
-#Get the video file URL
-video_url_pattern = r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"'
-video_url_match = re.search(video_url_pattern, decrypted_data)
+# Convert password to ASCII list
+password_bytes = array.array("B", password.encode()).tolist()
 
-video_url = ""
-if video_url_match:
-    video_url = video_url_match.group(1)
-else:
-    print("No video URL found.")
+# Decrypt data using XOR
+decrypted_bytes = [
+    data_bytes[i] ^ password_bytes[i % len(password_bytes)] ^ key_bytes[i % len(key_bytes)]
+    for i in range(len(data_bytes))
+]
 
-# Print Results
-print("\n" + "#"*25 + "\n" + "#"*25)
+# Convert decrypted bytes to string
+decrypted_text = ''.join(chr(i) for i in decrypted_bytes)
+
+# Extract video URL
+video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_text)
+video_url = video_match.group(1) if video_match else exit(print("No video URL found."))
+
+# Print results
+print("\n" + "#" * 25 + "\n" + "#" * 25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
-print("#"*25 + "\n" + "#"*25)
-print(f"{Colors.warning}### Please use the header \"Referer: https://vidstreamnew.xyz\" or the CDN host to access the URL, along with a User-Agent: {Colors.okcyan}[{user_agent}]{Colors.endc}\n")
+print("#" * 25 + "\n" + "#" * 25)
+print(f"{Colors.warning}### Use header \"Referer: https://vidstreamnew.xyz\" and User-Agent: {Colors.okcyan}[{user_agent}]{Colors.endc}\n")
