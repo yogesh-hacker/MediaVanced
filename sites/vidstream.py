@@ -12,6 +12,7 @@ https://moviesapi.club/
 https://chillx.top/
 https://boosterx.stream/
 https://playerx.stream/
+https://vidstreaming.xyz/
 '''
 
 class Colors:
