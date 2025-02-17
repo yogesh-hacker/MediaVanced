@@ -3,7 +3,14 @@ import re
 import base64
 import array
 
-## Func ID: TetNDo ##
+## Func ID: gQSgL8 ##
+
+
+
+## Due to my exams, it's taken longer than expected 😤
+## Chillx, f##k you 😒
+## Let me finish my exams from 19th to 22nd February
+## Then I'll get back to you, you stupids!!
 
 '''
 Supports:
@@ -37,39 +44,52 @@ headers = {
     "Connection": "keep-alive",
     "User-Agent": user_agent
 }
-password = "l%sn3@bJvcg0IuJV"
+password = "CbrP~To{lEc1i$,+"
 
 # Fetch response
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"const\s+\w+\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var)\s+\w+\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
 
-# Decode Base64 to ASCII values
-decoded_bytes = base64.b64decode(encrypted_data)
-ascii_values = list(decoded_bytes)
+# Convert hex values to bytes
+byte_data = bytes(int(encrypted_data[i:i + 2], 16) for i in range(0, len(encrypted_data), 2))
 
-key_bytes = ascii_values[:16]  # First 16 bytes as key
-data_bytes = ascii_values[16:]  # Remaining as encrypted content
+# RC4 Decryption Proccess
+def rc4_decrypt(key, encrypted_data):
+    # Initialize the S array (State array)
+    key_length = len(key)
+    S = list(range(256))  # State array
+    j = 0
+    
+    # Key Scheduling Algorithm (KSA)
+    for i in range(256):
+        j = (j + S[i] + ord(key[i % key_length])) % 256
+        S[i], S[j] = S[j], S[i]
+    
+    # Pseudo-Random Generation Algorithm (PRGA)
+    i = 0
+    j = 0
+    decrypted_data = []
+    
+    for byte in encrypted_data:
+        i = (i + 1) % 256
+        j = (j + S[i]) % 256
+        S[i], S[j] = S[j], S[i]
+        K = S[(S[i] + S[j]) % 256]
+        decrypted_data.append(byte ^ K)
+    
+    return bytes(decrypted_data)
 
-# Convert password to ASCII list
-password_bytes = array.array("B", password.encode()).tolist()
-
-# Decrypt data using XOR
-decrypted_bytes = [
-    data_bytes[i] ^ password_bytes[i % len(password_bytes)] ^ key_bytes[i % len(key_bytes)]
-    for i in range(len(data_bytes))
-]
-
-# Convert decrypted bytes to string
-decrypted_text = ''.join(chr(i) for i in decrypted_bytes)
+# Decrypt and proceed
+decrypted_data = rc4_decrypt(password, byte_data).decode('utf-8')
 
 # Extract video URL
-video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_text)
+video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
 video_url = video_match.group(1) if video_match else exit(print("No video URL found."))
 
 # Print results
