@@ -3,7 +3,7 @@ import re
 import base64
 import array
 
-## Func ID: coRy85 ##
+## Func ID: gQSgL8 ##
 
 
 
@@ -44,7 +44,7 @@ headers = {
     "Connection": "keep-alive",
     "User-Agent": user_agent
 }
-password = "CbrP~To{lEc1i$,+"
+password = "YawPUx3_xJuL)fLF"
 
 # Fetch response
 response = requests.get(base_url, headers=headers).text
