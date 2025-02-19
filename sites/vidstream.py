@@ -44,7 +44,7 @@ headers = {
     "Connection": "keep-alive",
     "User-Agent": user_agent
 }
-password = "YawPUx3_xJuL)fLF"
+password = "3%{EEGhrgoWo}^Rz"
 
 # Fetch response
 response = requests.get(base_url, headers=headers).text
