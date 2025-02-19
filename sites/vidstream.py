@@ -44,7 +44,8 @@ headers = {
     "Connection": "keep-alive",
     "User-Agent": user_agent
 }
-password = "3%{EEGhrgoWo}^Rz"
+base64encoded="MyV7RUVHaHJnb1dvfV5Seg=="
+password = base64.b64decode(base64encoded)
 
 # Fetch response
 response = requests.get(base_url, headers=headers).text
