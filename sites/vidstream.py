@@ -1,16 +1,17 @@
 import requests
 import re
 import base64
-import array
+from Crypto.Cipher import AES
+import binascii
+from Crypto.Util.Padding import unpad
 
-## Func ID: DKixG_Y ##
+
+## Func ID: AkeGtWh ##
 
 
-
-## Due to my exams, it's taken longer than expected 😤
-## Chillx, f##k you 😒
-## Let me finish my exams from 19th to 22nd February
-## Then I'll get back to you, you stupids!!
+## @Chillx, did you really think I spared (left) you?
+## No, I had exams, that's why! 😁 But now, I'm back for you!
+## Using modules? That's good, but nothing can stop me.
 
 '''
 Supports:
@@ -38,55 +39,37 @@ base_url = "https://vidstreaming.xyz/v/Gel3fC9MllfL/"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {
     "Referer": "https://vidstreamnew.xyz",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Connection": "keep-alive",
     "User-Agent": user_agent
 }
-password = "YawPUx3_xJuL)fLF"
 
 # Fetch response
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"(?:const|let|var)\s+\w+\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha))\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
 
-# Convert hex values to bytes
-byte_data = bytes(int(encrypted_data[i:i + 2], 16) for i in range(0, len(encrypted_data), 2))
+#Decode base64-encoded encrypted data
+bytes_data = base64.b64decode(encrypted_data)
 
-# RC4 Decryption Proccess
-def rc4_decrypt(key, encrypted_data):
-    # Initialize the S array (State array)
-    key_length = len(key)
-    S = list(range(256))  # State array
-    j = 0
-    
-    # Key Scheduling Algorithm (KSA)
-    for i in range(256):
-        j = (j + S[i] + ord(key[i % key_length])) % 256
-        S[i], S[j] = S[j], S[i]
-    
-    # Pseudo-Random Generation Algorithm (PRGA)
-    i = 0
-    j = 0
-    decrypted_data = []
-    
-    for byte in encrypted_data:
-        i = (i + 1) % 256
-        j = (j + S[i]) % 256
-        S[i], S[j] = S[j], S[i]
-        K = S[(S[i] + S[j]) % 256]
-        decrypted_data.append(byte ^ K)
-    
-    return bytes(decrypted_data)
+# Convert to uint8 array equivalent (byte slice)
+iv = bytes_data[:16]
+ciphertext = bytes_data[16:]
+
+# Convert hex key to bytes
+key_base64 = "ZmJlYTcyMGU5MDY0NDE3Mzg1MDc0MjMzOThiYTcwMjg5ZTQwNjJmZTU2NGFhNTU5OTY5OWZhNjA2NDVmNzdjZA=="
+key_hex = base64.b64decode(key_base64).decode('utf-8')
+key = binascii.unhexlify(key_hex)
+
+# Decrypt using AES in CBC mode
+cipher = AES.new(key, AES.MODE_CBC, iv)
+decrypted_bytes = unpad(cipher.decrypt(ciphertext), AES.block_size)
 
 # Decrypt and proceed
-decrypted_data = rc4_decrypt(password, byte_data).decode('utf-8')
+decrypted_data = decrypted_bytes.decode('utf-8')
 
 # Extract video URL
 video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
