@@ -1,17 +1,11 @@
 import requests
 import re
 import base64
+import hashlib
 from Crypto.Cipher import AES
-import binascii
-from Crypto.Util.Padding import unpad
 
 
-## Func ID: AkeGtWh ##
-
-
-## @Chillx, did you really think I spared (left) you?
-## No, I had exams, that's why! 😁 But now, I'm back for you!
-## Using modules? That's good, but nothing can stop me.
+## Library v6.4 ##
 
 '''
 Supports:
@@ -21,7 +15,16 @@ https://chillx.top/
 https://boosterx.stream/
 https://playerx.stream/
 https://vidstreaming.xyz/
+https://raretoonsindia.co/
+https://plyrxcdn.site/
 '''
+
+
+## Well done! 👏 This time, you really implemented some top-tier security.  
+## But unfortunately for you, I’ve already broken through.  
+## AES-GCM? 😂 Nice attempt!  
+## Am I late? Yeah, but only because I was busy with other projects.
+
 
 class Colors:
     header = '\033[95m'
@@ -35,7 +38,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://vidstreaming.xyz/v/Gel3fC9MllfL/"
+base_url = "https://raretoonsindia.co/v/zecLyCAzldEL/"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {
     "Referer": "https://vidstreamnew.xyz",
@@ -46,27 +49,28 @@ headers = {
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha))\s+\w*\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt))\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
 
 #Decode base64-encoded encrypted data
-bytes_data = base64.b64decode(encrypted_data)
+decoded_bytes = base64.b64decode(encrypted_data)
 
-# Convert to uint8 array equivalent (byte slice)
-iv = bytes_data[:16]
-ciphertext = bytes_data[16:]
+# Extract Initialization Vector (IV), Authentication Tag, and Ciphertext
+iv = decoded_bytes[:12]  
+auth_tag = decoded_bytes[12:28]  
+ciphertext = decoded_bytes[28:]
 
-# Convert hex key to bytes
-key_base64 = "ZmJlYTcyMGU5MDY0NDE3Mzg1MDc0MjMzOThiYTcwMjg5ZTQwNjJmZTU2NGFhNTU5OTY5OWZhNjA2NDVmNzdjZA=="
-key_hex = base64.b64decode(key_base64).decode('utf-8')
-key = binascii.unhexlify(key_hex)
+# Convert base64-encoded password to a SHA-256 encryption key
+password_base64 = "fnBmd19PVzRyfSFmdWV0ZQ=="
+password = base64.b64decode(password_base64).decode('utf-8')
+key = hashlib.sha256(password.encode()).digest()
 
-# Decrypt using AES in CBC mode
-cipher = AES.new(key, AES.MODE_CBC, iv)
-decrypted_bytes = unpad(cipher.decrypt(ciphertext), AES.block_size)
+# Decrypt the data using AES-GCM
+aes_cipher = AES.new(key, AES.MODE_GCM, iv)
+decrypted_bytes = aes_cipher.decrypt_and_verify(ciphertext, auth_tag)
 
 # Decrypt and proceed
 decrypted_data = decrypted_bytes.decode('utf-8')
