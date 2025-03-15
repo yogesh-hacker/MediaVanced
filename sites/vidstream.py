@@ -3,9 +3,11 @@ import re
 import base64
 import hashlib
 from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import PBKDF2
+from Crypto.Hash import SHA256
 
 
-## Library v6.4 ##
+## Func ID: uO96yB ##
 
 '''
 Supports:
@@ -19,12 +21,7 @@ https://raretoonsindia.co/
 https://plyrxcdn.site/
 '''
 
-
-## Well done! 👏 This time, you really implemented some top-tier security.  
-## But unfortunately for you, I’ve already broken through.  
-## AES-GCM? 😂 Nice attempt!  
-## Am I late? Yeah, but only because I was busy with other projects.
-
+## One Word: Dumb Ass
 
 class Colors:
     header = '\033[95m'
@@ -41,7 +38,7 @@ class Colors:
 base_url = "https://raretoonsindia.co/v/zecLyCAzldEL/"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {
-    "Referer": "https://vidstreamnew.xyz",
+    "Referer": "https://raretoonsindia.co",
     "User-Agent": user_agent
 }
 
@@ -49,7 +46,7 @@ headers = {
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt))\s+\w*\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt|Flagon))\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
@@ -58,15 +55,16 @@ encrypted_data = match.group(1)
 #Decode base64-encoded encrypted data
 decoded_bytes = base64.b64decode(encrypted_data)
 
-# Extract Initialization Vector (IV), Authentication Tag, and Ciphertext
-iv = decoded_bytes[:12]  
-auth_tag = decoded_bytes[12:28]  
-ciphertext = decoded_bytes[28:]
+# Extract Salt, Initialization Vector (IV), Authentication Tag, and Ciphertext
+salt = decoded_bytes[:16]
+iv = decoded_bytes[16:28]
+auth_tag = decoded_bytes[28:44]
+ciphertext = decoded_bytes[44:]
 
-# Convert base64-encoded password to a SHA-256 encryption key
-password_base64 = "fnBmd19PVzRyfSFmdWV0ZQ=="
-password = base64.b64decode(password_base64).decode('utf-8')
-key = hashlib.sha256(password.encode()).digest()
+# Generate a 256-bit key from a Base64 password using PBKDF2  
+password_base64 = "SCkjX0Y9Vy5tY1FNIyZtdg=="
+password = base64.b64decode(password_base64)
+key = PBKDF2(password, salt, dkLen=32, count=999, hmac_hash_module=SHA256)
 
 # Decrypt the data using AES-GCM
 aes_cipher = AES.new(key, AES.MODE_GCM, iv)
