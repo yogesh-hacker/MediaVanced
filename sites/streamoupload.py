@@ -3,6 +3,10 @@ import re
 from bs4 import BeautifulSoup
 import ast
 
+'''
+Supports:
+https://streamoupload.xyz/
+'''
 
 class Colors:
     header = '\033[95m'
