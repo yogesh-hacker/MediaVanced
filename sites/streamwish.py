@@ -10,8 +10,10 @@ https://streamwish.to/
 https://rapidplayers.com/
 https://moflix-stream.click/
 https://dhtpre.com/
-https://vidhide.com
-https://mixdrop.ps
+https://vidhide.com/
+https://mixdrop.ps/
+https://multimovies.cloud/
+https://hlsflex.com/
 '''
 
 class Colors:
@@ -25,7 +27,7 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-base_url = "https://rapidplayers.com/balway8gy6b0"
+base_url = "https://hlsflex.com/e/d2hs3drp40pw"
 headers = {
     'User-Agent':'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
