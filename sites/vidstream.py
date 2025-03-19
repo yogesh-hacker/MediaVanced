@@ -54,6 +54,9 @@ payload = {
 }
 
 wasm_decode_api = "https://light-snake-34.deno.dev/"
+# The quota might exceed; it's recommended to create your own.  
+# To access the API source code, visit:  
+# https://yogesh-hacker.github.io/yogesh-hacker/wasm_api_playerx.js
 
 # Send POST request with JSON headers
 response = requests.post(wasm_decode_api, json=payload, headers={"Content-Type": "application/json"}).text
