@@ -5,9 +5,11 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA256
+from urllib.parse import quote
+import ast
 
 
-## Func ID: uO96yB ##
+## Func ID: _jKcjQ ##
 
 '''
 Supports:
@@ -21,7 +23,9 @@ https://raretoonsindia.co/
 https://plyrxcdn.site/
 '''
 
-## One Word: Dumb Ass
+## WASM? Well tried!
+## Sorry this is more easy than custom encryption methods
+## Hahahah!!!
 
 class Colors:
     header = '\033[95m'
@@ -46,32 +50,24 @@ headers = {
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt|Flagon))\s+\w*\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt|Grock))\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
 
-#Decode base64-encoded encrypted data
-decoded_bytes = base64.b64decode(encrypted_data)
+payload = {
+    "input": encrypted_data,
+    "key": "Y+EjFyt%YHNt(T5l"
+}
 
-# Extract Salt, Initialization Vector (IV), Authentication Tag, and Ciphertext
-salt = decoded_bytes[:16]
-iv = decoded_bytes[16:28]
-auth_tag = decoded_bytes[28:44]
-ciphertext = decoded_bytes[44:]
+wasm_decode_api = "https://light-snake-34.deno.dev/"
 
-# Generate a 256-bit key from a Base64 password using PBKDF2  
-password_base64 = "SCkjX0Y9Vy5tY1FNIyZtdg=="
-password = base64.b64decode(password_base64)
-key = PBKDF2(password, salt, dkLen=32, count=999, hmac_hash_module=SHA256)
+# Send POST request with JSON headers
+response = requests.post(wasm_decode_api, json=payload, headers={"Content-Type": "application/json"}).text
 
-# Decrypt the data using AES-GCM
-aes_cipher = AES.new(key, AES.MODE_GCM, iv)
-decrypted_bytes = aes_cipher.decrypt_and_verify(ciphertext, auth_tag)
-
-# Decrypt and proceed
-decrypted_data = decrypted_bytes.decode('utf-8')
+# Get decoded output
+decrypted_data = response.encode().decode('unicode_escape')
 
 # Extract video URL
 video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
