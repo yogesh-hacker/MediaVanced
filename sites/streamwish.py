@@ -14,7 +14,7 @@ https://vidhide.com/
 https://mixdrop.ps/
 https://multimovies.cloud/
 https://hlsflex.com/
-https://ghbrisk.com
+https://ghbrisk.com/
 '''
 
 class Colors:
