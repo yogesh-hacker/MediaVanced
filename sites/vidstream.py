@@ -1,7 +1,7 @@
 import requests
 import re
 
-## Func ID: _jKcjQ ##
+## Library v1.2 ##
 
 '''
 Supports:
@@ -42,7 +42,7 @@ headers = {
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt|Grock))\s+\w*\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt|Helious))\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
@@ -50,7 +50,7 @@ encrypted_data = match.group(1)
 
 payload = {
     "input": encrypted_data,
-    "key": "Y+EjFyt%YHNt(T5l"
+    "key": "ojl,&[y^-{cH!ux1"
 }
 
 wasm_decode_api = "https://light-snake-34.deno.dev/"
