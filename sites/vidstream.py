@@ -42,7 +42,7 @@ headers = {
 response = requests.get(base_url, headers=headers).text
 
 # Extract encrypted data
-match = re.search(r"(?:const|let|var|window\.(?:Delta|Alpha|Ebolt|Helious))\s+\w*\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
 
