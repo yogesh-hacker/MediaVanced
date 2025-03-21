@@ -13,6 +13,7 @@ https://playerx.stream/
 https://vidstreaming.xyz/
 https://raretoonsindia.co/
 https://plyrxcdn.site/
+https://newer.stream/
 '''
 
 ## WASM? Well tried!
