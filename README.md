@@ -38,13 +38,13 @@ git clone https://github.com/yogesh-hacker/MediaVanced.git
 
 > To parse or retrieve streaming website links supported by MediaVanced, you can use tools like [Eruda](https://github.com/liriliri/eruda) or Developer Tools.
 
-1. Open the Media Vanced's target Python script file (e.g., `minoplres.py`).
+1. Open the Media Vanced's target Python script file (e.g., `speedostream.py`).
 2. Replace the `base_url` with your URL.
 
 #### Example Usage
 
 ```python
-base_url = "https://minoplres.xyz/embed-q6kab8jns.html"
+base_url = "https://spedostream.com/embed-3l5zif7vfs57.html"
 # Replace base_url with your actual URL
 ```
 
