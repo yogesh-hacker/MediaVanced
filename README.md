@@ -48,9 +48,9 @@ base_url = "https://spedostream.com/embed-3l5zif7vfs57.html"
 # Replace base_url with your actual URL
 ```
 
-#### Example Usage
-
 3. Run the script.
+
+#### Example Usage
 
 ```bash
 python your_script.py
@@ -79,7 +79,7 @@ python your_script.py
 18. [Vidstream](https://vidstreamnew.xyz)
 19. [Wolfstream](https://wolfstream.tv)
 
-> These are no longer updated. To view the list of supported sites, search the repository for the site domain or check the ```Supported Sites``` list inside the scraper's script.
+> These are no longer updated. To view the list of supported sites, search the repository for the site domain or check the ```Supports``` list inside the scraper's script.
 
 ## License
 
