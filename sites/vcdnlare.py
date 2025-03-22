@@ -1,40 +1,44 @@
-from requests import get, post
+import requests
 from bs4 import BeautifulSoup
-import re
 
-mTargetUrl = 'https://ww3.vcdnlare.com/v/a9E96y2rdyeWh56'
+'''
+Supports:
+https://ww7.vcdnlare.com/
+'''
 
 class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+    header = '\033[95m'
+    okblue = '\033[94m'
+    okcyan = '\033[96m'
+    okgreen = '\033[92m'
+    warning = '\033[93m'
+    fail = '\033[91m'
+    endc = '\033[0m'
+    bold = '\033[1m'
+    underline = '\033[4m'
 
-mHeaders = {
-    'Referer': '5movierulz',
-    'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
+# Constants
+base_url = "https://ww7.vcdnlare.com/v/SD0UDfpYfqk1PnC"
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+headers = {
+    "Referer": "https://www.5movierulz.food", #Provider domain
+    "User-Agent": user_agent
 }
 
-mPageResponse = get(mTargetUrl, headers=mHeaders)
-mSoup = BeautifulSoup(mPageResponse.text, "html.parser")
+# Fetch Response
+response = requests.get(base_url, headers=headers).text
 
-mVideoElement = mSoup.find("video", id="player")
-if mVideoElement:
-    mSourceElement = mVideoElement.find("source")
-    if mSourceElement:
-        mUrl = mSourceElement.get("src")
-        print("\n######################")
-        print("######################")
-        print(f"Captured URL: {Colors.OKGREEN}{mUrl}{Colors.ENDC}")
-        print("######################")
-        print("######################\n")
-        print(f"\n\n{Colors.WARNING}###This url may not playable with external headers try with https")
-    else:
-        print("No source element found in the video tag. Try changing referer current referer https://www.5movierulz.bike/")
-else:
-    print(f"{Colors.FAIL}No video element with id 'player' found.")
+# Get Video URL
+soup = BeautifulSoup(response, 'html.parser')
+video_url = soup.select_one('source')['src']
+
+# Print Results
+print("\n" + "#"*25 + "\n" + "#"*25)
+print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
+print("#"*25 + "\n" + "#"*25)
+print(f"{Colors.warning}### Use these headers to access the URL")
+
+# Print headers by key: value
+for key, value in headers.items():
+    print(f"{Colors.okcyan}{key}:{Colors.endc} {value}")
+print("\n")
