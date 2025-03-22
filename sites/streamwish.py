@@ -15,6 +15,7 @@ https://mixdrop.ps/
 https://multimovies.cloud/
 https://hlsflex.com/
 https://ghbrisk.com/
+https://niikaplayerr.com/
 '''
 
 class Colors:
