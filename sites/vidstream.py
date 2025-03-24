@@ -10,13 +10,14 @@ import hashlib
 '''
 Supports:
 https://vidstreamnew.xyz/
-https://w1.moviesapi.club/
+https://moviesapi.club/
 https://chillx.top/
 https://boosterx.stream/
 https://playerx.stream/
 https://vidstreaming.xyz/
 https://raretoonsindia.co/
 https://plyrxcdn.site/
+https://newer.stream/
 '''
 
 # @PlayerX, Need any help?  
