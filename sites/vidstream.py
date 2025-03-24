@@ -5,7 +5,7 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 import hashlib
 
-## Library v1.5 ##
+## Library v1.7 ##
 
 '''
 Supports:
@@ -21,7 +21,7 @@ https://newer.stream/
 '''
 
 # @PlayerX, Need any help?  
-# 20th combo of cracking you, haha!  
+# 21th combo of cracking you, haha!  
 # Contact: businesshackerindia@gmail.com
 
 class Colors:
@@ -52,16 +52,16 @@ if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
-password = "Gk^Gtn-cqrdpr05l@0snp+<7{KV>RDu"
+password = "ZlpEaWRvcURMZkNBVihHJkM4"
 
 # Get password bytes and generate key
-decoded_bytes = bytes(ord(c) ^ 5 for c in password)
-key = hashlib.sha256(decoded_bytes).digest()
+password_bytes = base64.b64decode(password)
+key = hashlib.sha256(password_bytes).digest()
 
 # Decode base64 data
 decoded_bytes = base64.b64decode(encrypted_data)
-iv = decoded_bytes[36:52]
-ciphertext = decoded_bytes[52:]
+iv = decoded_bytes[32:48]
+ciphertext = decoded_bytes[48:]
 
 # Decrypt using AES
 cipher = AES.new(key, AES.MODE_CBC, iv)
