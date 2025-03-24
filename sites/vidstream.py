@@ -1,24 +1,27 @@
 import requests
 import re
+import base64
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+import hashlib
 
-## Library v1.2 ##
+## Library v1.5 ##
 
 '''
 Supports:
 https://vidstreamnew.xyz/
-https://moviesapi.club/
+https://w1.moviesapi.club/
 https://chillx.top/
 https://boosterx.stream/
 https://playerx.stream/
 https://vidstreaming.xyz/
 https://raretoonsindia.co/
 https://plyrxcdn.site/
-https://newer.stream/
 '''
 
-## WASM? Well tried!
-## Sorry this is more easy than custom encryption methods
-## Hahahah!!!
+# @PlayerX, Need any help?  
+# 20th combo of cracking you, haha!  
+# Contact: businesshackerindia@gmail.com
 
 class Colors:
     header = '\033[95m'
@@ -48,22 +51,23 @@ if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
+password = "Gk^Gtn-cqrdpr05l@0snp+<7{KV>RDu"
 
-payload = {
-    "input": encrypted_data,
-    "key": "ojl,&[y^-{cH!ux1"
-}
+# Get password bytes and generate key
+decoded_bytes = bytes(ord(c) ^ 5 for c in password)
+key = hashlib.sha256(decoded_bytes).digest()
 
-wasm_decode_api = "https://light-snake-34.deno.dev/"
-# The quota might exceed; it's recommended to create your own.  
-# To access the API source code, visit:  
-# https://yogesh-hacker.github.io/yogesh-hacker/wasm_api_playerx.js
+# Decode base64 data
+decoded_bytes = base64.b64decode(encrypted_data)
+iv = decoded_bytes[36:52]
+ciphertext = decoded_bytes[52:]
 
-# Send POST request with JSON headers
-response = requests.post(wasm_decode_api, json=payload, headers={"Content-Type": "application/json"}).text
+# Decrypt using AES
+cipher = AES.new(key, AES.MODE_CBC, iv)
+plaintext_padded = cipher.decrypt(ciphertext)
 
-# Get decoded output
-decrypted_data = response.encode().decode('unicode_escape')
+# Remove padding and decode  
+decrypted_data = unpad(plaintext_padded, AES.block_size).decode()
 
 # Extract video URL
 video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
