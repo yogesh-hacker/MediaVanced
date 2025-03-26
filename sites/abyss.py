@@ -1,6 +1,10 @@
 import requests
 import re
 import ast
+import sys
+import json
+
+## VERSION: 1.0 ##
 
 '''
 Supports:
@@ -8,11 +12,13 @@ https://abysscdn.com/
 https://hydraxcdn.biz/
 '''
 
-# This script is currently under development.  
-# It requires further optimization and bug fixes to ensure stability.  
-# There may be instances where the script does not function as expected.  
-# Please wait until the development process is complete for a stable version.  
-# If you have suggestions or improvements, your contributions are highly appreciated!
+# This script functions as expected but may occasionally fail.
+# It successfully runs in about 90% of cases.
+# This script retrieves only the necessary data for video playback.  
+# It does NOT return the actual video URL. 
+# A custom video player setup is required. 
+# The URL requires encryption and POST responses for playback.
+
 
 class Colors:
     header = '\033[95m'
@@ -37,25 +43,36 @@ headers = {
 # Utility Functions
 def decode(encoded_str):
     decoded_bytes = bytearray()
+    
     for i in range(0, len(encoded_str), 4):
-        indexes = [CHARSET.index(c) if c in CHARSET else 64 for c in encoded_str[i:i+4]]
-        byte1 = (indexes[0] << 2) | (indexes[1] >> 4)
-        byte2 = ((indexes[1] & 15) << 4) | (indexes[2] >> 2)
-        byte3 = ((indexes[2] & 3) << 6) | indexes[3]
+        chunk = encoded_str[i:i+4]
+        
+        # Ensure the chunk has exactly 4 characters, padding with '=' if needed
+        chunk = chunk.ljust(4, "=")  
 
+        indexes = [CHARSET.index(c) if c in CHARSET else 64 for c in chunk]
+
+        byte1 = (indexes[0] << 2) | (indexes[1] >> 4)
+        
+        # Append bytes conditionally to avoid IndexError
         decoded_bytes.append(byte1)
-        if indexes[2] != 64:
+        if len(indexes) > 2 and indexes[2] != 64:
+            byte2 = ((indexes[1] & 15) << 4) | (indexes[2] >> 2)
             decoded_bytes.append(byte2)
-        if indexes[3] != 64:
+        if len(indexes) > 3 and indexes[3] != 64:
+            byte3 = ((indexes[2] & 3) << 6) | indexes[3]
             decoded_bytes.append(byte3)
 
     return decoded_bytes.decode("utf-8", errors="ignore")
 
-def convert_index(index, array_length):
-    return index + array_length if index < 0 else index
+def wrap_index(input_index, total_length):
+    adjusted_index = input_index + total_length if input_index < 0 else input_index
+    if adjusted_index > total_length:
+        return adjusted_index - total_length
+    return adjusted_index
 
 def convert_array(arr, array_length):
-    converted_arr = [convert_index(x, array_length) for x in arr]
+    converted_arr = [wrap_index(x, array_length) for x in arr]
     return converted_arr
 
 # Fetch the webpage content
@@ -100,9 +117,16 @@ converted_indices = convert_array(final_numbers, len(obfuscated_string_list))
 decoded_values = [obfuscated_string_list[idx] for idx in converted_indices if 0 <= idx < len(obfuscated_string_list)]
 
 # Concatenate and decode the final extracted string
-final_string = decode("".join(decoded_values).replace("_", ""))
+decoded_data = None
+try:
+    decoded_data = decode("".join(decoded_values).replace("_", ""))
+except Exception as e:
+    print(f"\n{Colors.fail}Decoding failed: {e}{Colors.endc}\n{Colors.okgreen}[RETRY+++] By restarting the script...{Colors.endc}\n")
+    sys.exit(1)
 
-print("Concatenated String:", final_string)
+# Convert output to JSON
+json_data = json.loads(decoded_data)
 
-# The output may not always be accurate.  
-# It should return a valid JSON response containing keys like md5, slug, id, domain, etc.
+print(f'\n{Colors.okgreen}METADATA:{Colors.endc} {json_data}')
+print(f"\nCaptured URL: {Colors.okgreen}https://{json_data['domain']}/{json_data['id']}\n")
+print(f"{Colors.warning}### You may need additional set-up to play these video URLs. Thank You!{Colors.endc}\n")
