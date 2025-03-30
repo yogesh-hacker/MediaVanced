@@ -1,5 +1,12 @@
 import requests
 import re
+from bs4 import BeautifulSoup
+import sys
+
+'''
+Supports:
+https://mixdrop.sb/
+'''
 
 class Colors:
     header = '\033[95m'
@@ -12,51 +19,54 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-base_url = "https://mixdrop.ps/e/q1m9d9eeuz13dx"
+base_url = "https://mixdrop.sb/e/k0lo0mlqapx47o"
 user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 headers = {
-    'Referer': "https://mixdrop.ps/",
+    'Referer': "https://mixdrop.sb/",
     'User-Agent': user_agent
 }
 
+# Utility Functions
+# Base-36 conversion helper function
+def to_base_36(n):
+    return '' if n == 0 else to_base_36(n // 36) + "0123456789abcdefghijklmnopqrstuvwxyz"[n % 36]
+
+# Replace placeholders with corresponding values
+def unpack(p,a,c,k,e,d):
+    for i in range(c):
+        if k[c - i - 1]:
+            p = re.sub(r'\b' + to_base_36(c - i - 1) + r'\b', k[c - i - 1], p)
+    return p
 
 # Fetch the initial response
-initial_response = requests.get(base_url, headers=headers).text
+response = requests.get(base_url, headers=headers).text
 
+# Fetch and parse the initial response
+soup = BeautifulSoup(response, 'html.parser')
+script_content = next((script.text for script in soup.find_all('script') if "mxcontent" in script.text), "")
+if not script_content:
+    sys.exit(f"{Colors.fail}Error: Cannot find a valid script. It might be deleted. Exiting...{Colors.endc}")
+
+# Packed data pattern
 pattern = r'eval\(function\((.*?)\)\{.*\}\((.*?)\)\)'
-packed_data_match = re.search(pattern, initial_response)
-
+data_match = re.search(pattern, script_content)
 
 # Extract packed data if found
-packed_data = ""
-if packed_data_match:
-    packed_data = packed_data_match.group(2).replace("\"", "").replace(".split('|')", "").replace("\'","").split(',')
+data = ""
+if data_match:
+    data = data_match.group(2).replace("\"", "").replace(".split('|')", "").replace("\'","").split(',')
 else:
     print("Failed to extract packed data.")
 
-# Function to convert numbers to base-32
-def convert_base(n):
-    return str(n) if n < 10 else chr(n - 10 + ord('a'))
-
 # Extract variables from packed data
-p = packed_data[0]
-a = int(packed_data[1])
-c = int(packed_data[2])
-k = packed_data[3].split('|')
-e = int(packed_data[4])
-
-# Decrypt the data
-d = {}
-while c > 0:
-    c -= 1
-    d[convert_base(c)] = k[c] if k[c] else convert_base(c)
+p,a,c,k,e,d = data[0], int(data[1]), int(data[2]), data[3].split('|'), int(data[4]), {}
 
 # Replace function to decode the packed data
-final_result = re.sub(r'\b\w+\b', lambda match: d.get(match.group(0), match.group(0)), p)
+decoded_data = unpack(p,a,c,k,e,d)
 
 # Regex to find the video URL
-regex_match = re.search(r"MDCore\.wurl=([^;]+)", final_result)
+regex_match = re.search(r"MDCore\.wurl=([^;]+)", decoded_data)
 
 # Get video URL
 video_url = ""
@@ -69,4 +79,4 @@ else:
 print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#"*25 + "\n" + "#"*25)
-print(f"{Colors.warning}### Please use the header \"Referer: https://mixdrop.ps/\" or the CDN host to access the URL, along with a User-Agent.\n")
+print(f"{Colors.warning}### Please use the header \"Referer: https://mixdrop.sb/\" or the CDN host to access the URL, along with a User-Agent.\n")
