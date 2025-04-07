@@ -53,7 +53,6 @@ headers = {
 # Utility Functions
 # Generate a 12-byte random hex nonce
 def generate_nonce():
-
     return binascii.hexlify(os.urandom(12)).decode()
 
 # Set Up Session for all requests(Optional)
@@ -65,7 +64,6 @@ response = session.get(base_url).text
 match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
-
 encrypted_data = match.group(1)
 
 # Generate client's key pair
@@ -84,7 +82,6 @@ data = {
     "nonce": generate_nonce(),
     "client_public_key": client_pubkey_b64
 }
-
 response = session.post("https://raretoonsindia.co/api/1.2/prepair-token.php", json=data).json()
 
 # Get necessary data
@@ -102,9 +99,7 @@ data = {
     "pre_token": pre_token,
     "csrf_token": csrf_token
 }
-
 response = session.post("https://raretoonsindia.co/api/1.2/create-token.php", json=data).json()
-
 access_token = response['token']
 
 # ----------- #
@@ -119,7 +114,6 @@ data = {
     "pre_token": pre_token,
     "encrypted_data": encrypted_data
 }
-
 response = session.post("https://raretoonsindia.co/api/1.2/process-token.php", json=data).json()
 
 # Step 4: Derive shared key using server public key and client's private key
