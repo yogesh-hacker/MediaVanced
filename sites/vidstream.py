@@ -19,7 +19,7 @@ https://newer.stream/
 # 23rd attempt at cracking you—haha! 💥😂
 # Contact: businesshackerindia@gmail.com 📧
 
-!!!! Attention !!!!
+# !!!! Attention !!!!
 
 # Currently, I'm unable to build the scraper for the latest version using Python.
 # As an alternative, I developed it in Node.js.
