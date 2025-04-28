@@ -21,6 +21,7 @@ https://vidstreaming.xyz/
 https://raretoonsindia.co/
 https://plyrxcdn.site/
 https://newer.stream/
+https://mov18plus.cloud/
 '''
 
 # @PlayerX, Nice choice with Diffie-Hellman! 🔐
