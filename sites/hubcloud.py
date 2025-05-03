@@ -1,5 +1,6 @@
 import requests
 import re
+import sys
 
 '''
 Supports:
@@ -20,25 +21,28 @@ class Colors:
     underline = '\033[4m'
 
 
-base_url = "https://reviewsbuddy.in//drive/q6jvbtsqwfcxacd"
-default_domain = "https://hubcloud.dad/"
+base_url = "https://hubcloud.bz/drive/oocjo4xi4doj636"
+default_domain = "https://hubcloud.bz/"
 headers = {
     'Referer': default_domain,
     'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
 # Get first page
-initial_response = requests.post(base_url, headers=headers).text
+response = requests.post(base_url, headers=headers).text
 
 # Get next page url
-base_match = re.search(r"var\s+url\s*=\s*'(https?:\/\/[^\s]+)'", initial_response)
+base_match = re.search(r"var\s+url\s*=\s*'(https?:\/\/[^\s]+)'", response)
+if not base_match:
+    sys.exit(print(f'{Colors.fail}ERROR: Unable to get base URL, make sure file exists{Colors.endc}'))
 base_url = base_match.group(1)
 
+
 # Get next page
-initial_response = requests.get(base_url, headers=headers).text
+response = requests.get(base_url, headers=headers).text
 
 # Extract video URL
-video_match = re.search(r"https:\/\/pub[^\s]+", initial_response)
+video_match = re.search(r"https:\/\/pub[^\s]+", response)
 video_url = video_match.group(0).replace("\"", "")
 
 # Print results

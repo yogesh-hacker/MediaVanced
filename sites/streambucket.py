@@ -72,6 +72,8 @@ data = ast.literal_eval(hunter_pack)
 h,u,n,t,e,r = data[0], data[1], data[2],data[3], data[4], data[5]
 decoded_data = decode_hunter(h,u,n,t,e,r)
 
+print(h)
+print(decoded_data)
 # Extract video URL
 video_match = re.search(r'file:"(https?://[^"]+)"', decoded_data)
 raw_video_url = video_match.group(1) if video_match else exit(print("No video URL found."))

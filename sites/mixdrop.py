@@ -3,11 +3,6 @@ import re
 from bs4 import BeautifulSoup
 import sys
 
-'''
-Supports:
-https://mixdrop.sb/
-'''
-
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'

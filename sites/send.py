@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+import sys
 
 '''
 Supports:
@@ -34,7 +35,7 @@ response = requests.get(base_url, headers=headers).text
 soup = BeautifulSoup(response, 'html.parser')
 
 # Extract form data and create payload
-form = soup.find('form', {'name': 'F1'})  
+form = soup.find('form', {'name': 'F1'})
 payload = {inp['name']: inp['value'] for inp in form.find_all('input', {'name': True})}
 
 # Extract video URL

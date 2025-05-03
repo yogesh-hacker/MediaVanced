@@ -32,11 +32,11 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-base_url = "https://niikaplayerr.com/f/gxzkamnuf9x3"
+base_url = "https://hdstream4u.com/file/746puo9bt0f0"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
-    'Referer': 'https://player4u.xyz/',
+    'Referer': 'https://hdstream4u.com/',
     'User-Agent':'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
@@ -69,7 +69,7 @@ p,a,c,k,e,d = data[0], int(data[1]), int(data[2]), data[3].split('|'), None, Non
 decoded_data = unpack(p,a,c,k,e,d)
 
 # Get Video URL
-video_url = re.search(r'file:"([^"]+)', decoded_data).group(1)
+video_url = re.search(r'\"hls2\":"([^"]+)', decoded_data).group(1)
 
 # Print Results
 print("\n" + "#"*25 + "\n" + "#"*25)

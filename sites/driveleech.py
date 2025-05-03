@@ -1,10 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
+import sys
 
 '''
 Supports:
 https://driveleech.org/
+https://driveseed.org/
 '''
 
 class Colors:
@@ -19,7 +21,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://driveleech.org/file/j1SYy8S6mq"
+base_url = "https://driveseed.org/file/d2JAWrNAHb"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {
     "Referer": "https://driveleech.org",

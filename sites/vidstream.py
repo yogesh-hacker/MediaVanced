@@ -42,10 +42,10 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://raretoonsindia.co/v/zecLyCAzldEL/"
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+base_url = "https://mov18plus.cloud/v/Ozovj52rRSj2/"
+user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 headers = {
-    "Referer": "https://raretoonsindia.co",
+    "Referer": "https://mov18plus.cloud",
     "User-Agent": user_agent
 }
 

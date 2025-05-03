@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import os
 from pathlib import Path
 import base64
-from js2py import EvalJs
 import binascii
 import codecs
 import time
@@ -21,8 +20,8 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
-base_url = "https://clickndownload.xyz/r8z7wwebhzq3"
-default_domain = "https://clickndownload.xyz/"
+base_url = "https://clickndownload.online/bi2svjendk9z"
+default_domain = "https://clickndownload.online/"
 print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")
 session = requests.Session()
 

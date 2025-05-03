@@ -26,7 +26,7 @@ class Colors:
 
 
 # Constants
-base_url = "https://1fichier.com/?wltmlzn25dth442r3gbe&af=62851"
+base_url = "https://1fichier.com/?8j23awpf2mp93xq04bui&af=62851"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 af_value = re.search(r"af=(\d+)", base_url).group(1) if "af=" in base_url else "0"
 

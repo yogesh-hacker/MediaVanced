@@ -18,10 +18,10 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://ww7.vcdnlare.com/v/SD0UDfpYfqk1PnC"
+base_url = "https://ww7.vcdnlare.com/v/585mXepQCJWd5Qp"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {
-    "Referer": "https://www.5movierulz.food", #Provider domain
+    "Referer": "https://www.5movierulz.prof", #Provider domain
     "User-Agent": user_agent
 }
 
