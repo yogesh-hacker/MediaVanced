@@ -13,7 +13,6 @@ from Crypto.Util.Padding import unpad
 '''
 Supports:
 https://vidstreamnew.xyz/
-https://moviesapi.club/
 https://chillx.top/
 https://boosterx.stream/
 https://playerx.stream/
