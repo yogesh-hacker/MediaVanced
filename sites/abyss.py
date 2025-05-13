@@ -4,7 +4,7 @@ import ast
 import sys
 import json
 
-## VERSION: 1.0 ##
+## VERSION: 1.2 ##
 
 '''
 Supports:
@@ -41,6 +41,9 @@ headers = {
 }
 
 # Utility Functions
+def hex_to_int(match):
+    return str(int(match.group(0), 16))
+
 def decode(encoded_str):
     decoded_bytes = bytearray()
     
@@ -77,6 +80,9 @@ def convert_array(arr, array_length):
 
 # Fetch the webpage content
 response = requests.get(base_url, headers=headers).text
+
+# Replace all hex values to Integers
+response = re.sub(r'0[xX][0-9a-fA-F]+', hex_to_int, response)
 pattern = r'[a-zA-Z]\(\d+\)(?:\+[a-zA-Z]\(\d+\)|\+\([^)]+\))*'
 
 # Find all function-like patterns and select the longest match
@@ -86,9 +92,10 @@ longest_match = max(matched_patterns, key=len, default="")
 # Extract numerical values from the longest match
 extracted_numbers = list(map(int, re.findall(r"\d+", longest_match)))
 
+
 # Extract the subtraction offset from the response
-offset_match = re.search(r"-=(\d+)", response)
-offset_value = int(offset_match.group(1))
+offset_exp_match = re.search(r"return\s*[a-zA-Z]=function\([a-zA-Z],[a-zA-Z]\)\{[a-zA-Z]=[a-zA-Z](.*?);", response)
+offset_value = eval(offset_exp_match.group(1))
 
 # Adjust numbers using the extracted offset
 adjusted_numbers = [num - offset_value for num in extracted_numbers]
