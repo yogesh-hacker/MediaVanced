@@ -92,7 +92,6 @@ longest_match = max(matched_patterns, key=len, default="")
 # Extract numerical values from the longest match
 extracted_numbers = list(map(int, re.findall(r"\d+", longest_match)))
 
-
 # Extract the subtraction offset from the response
 offset_exp_match = re.search(r"return\s*[a-zA-Z]=function\([a-zA-Z],[a-zA-Z]\)\{[a-zA-Z]=[a-zA-Z](.*?);", response)
 offset_value = eval(offset_exp_match.group(1))
