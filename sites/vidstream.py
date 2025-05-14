@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import urlparse
 from base64 import b64decode
 import re
 from Crypto.Cipher import AES
@@ -8,7 +9,6 @@ from Crypto.Util.Padding import unpad
 
 '''
 Supports:
-https://vidstreamnew.xyz/
 https://chillx.top/
 https://boosterx.stream/
 https://playerx.stream/
@@ -35,10 +35,11 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://mov18plus.cloud/v/Ozovj52rRSj2/"
+base_url = "https://plyrxcdn.site/v/17klI4BlD87T/"
 user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
-    "Referer": "https://mov18plus.cloud",
+    "Referer": default_domain,
     "User-Agent": user_agent
 }
 
@@ -51,7 +52,6 @@ response = session.get(base_url).text
 match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'(.*?)'", response)
 if not match:
     exit(print("No encrypted data found."))
-
 encrypted_data = match.group(1)
 password = "#w8pukc]MoiBhH1{QlwOFF^I7pU]N9q^"
 
