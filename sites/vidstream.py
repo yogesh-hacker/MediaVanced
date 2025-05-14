@@ -4,7 +4,7 @@ import re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-## Func ID: o5MYvab ##
+## Func ID: QOn7xhY ##
 
 '''
 Supports:
@@ -20,7 +20,7 @@ https://mov18plus.cloud/
 '''
 
 # @PlayerX, After a long time!! with OG methods
-# 24th attempt, I love you! :)
+# 25th attempt, I love you! :)
 # Contact: businesshackerindia@gmail.com 📧
 
 class Colors:
@@ -53,7 +53,7 @@ if not match:
     exit(print("No encrypted data found."))
 
 encrypted_data = match.group(1)
-password = "bKJxbNP4iAnqLBUabDyoYRAalEwhYqwX"
+password = "#w8pukc]MoiBhH1{QlwOFF^I7pU]N9q^"
 
 # Extract IV(Initialization Vector) and Encrypted Data
 decoded_bytes = b64decode(encrypted_data)
