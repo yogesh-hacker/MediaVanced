@@ -5,7 +5,7 @@ import re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-## Func ID: QOn7xhY ##
+## Func ID: a9JmEq ##
 
 '''
 Supports:
@@ -20,7 +20,7 @@ https://mov18plus.cloud/
 '''
 
 # @PlayerX, After a long time!! with OG methods
-# 25th attempt, I love you! :)
+# 26th attempt, I love you! :)
 # Contact: businesshackerindia@gmail.com 📧
 
 class Colors:
@@ -49,11 +49,14 @@ session.headers.update(headers)
 
 # Fetch page and extract encrypted data
 response = session.get(base_url).text
-match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'(.*?)'", response)
+match = re.search(r"(?:const|let|var|window\.\w+)\s+\w*\s*=\s*'([^']{30,})'", response)
 if not match:
     exit(print("No encrypted data found."))
 encrypted_data = match.group(1)
-password = "#w8pukc]MoiBhH1{QlwOFF^I7pU]N9q^"
+
+# Convert hex to passphrase
+password_hex = "37527a3b323b7a366d7a45282572544f5a4a68625f3b645a7e765a5e5234514e"
+password = bytes.fromhex(password_hex).decode("utf-8")
 
 # Extract IV(Initialization Vector) and Encrypted Data
 decoded_bytes = b64decode(encrypted_data)
