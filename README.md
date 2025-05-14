@@ -58,28 +58,17 @@ python your_script.py
 
 > If you encounter any errors or issues, please report them in the respective repository.
 
-## Supported Sites
-1. [Antol](https://antol307vvk.com)
-2. [Dailymotion](https://www.dailymotion.com)
-3. [Minoplres/Speedostream](https://minoplres.xyz)
-4. [1Fichier](https://1fichier.com)
-5. [Clickndownload](https://clickndownload.link)
-6. [Filelions](https://filelions.site)
-7. [GoFile](https://gofile.io)
-8. [MoviesAPI](https://w1.moviesapi.club)
-9. [Multiquality](https://swift.multiquality.click)
-10. [Photojin](https://photojin.one)
-11. [Saicord](https://saicord.com)
-12. [Shavetape/Streamtape](https://shavetape.cash)
-13. [Streambucket](https://streambucket.net)
-14. [Streamwish](https://streamwish.to)
-15. [Uploadhub](https://uploadhub.wf)
-16. [Uploadraja](https://uploadraja.com/)
-17. [VcdnLare](https://ww4.vcdnlare.com)
-18. [Vidstream](https://vidstreamnew.xyz)
-19. [Wolfstream](https://wolfstream.tv)
+## Disclaimer
 
-> These are no longer updated. To view the list of supported sites, search the repository for the site domain or check the ```Supports``` list inside the scraper's script.
+This project is for educational purposes only. It demonstrates how to build web scraper tools and cryptography implementations for learning and research.
+
+While this repository may contain example URLs or domain references for demonstration, **no actual scraping is performed or encouraged**. The code does not store, serve, or distribute any scraped data or copyrighted content.
+
+Users are solely responsible for how they use this code and must ensure their usage complies with all applicable laws, regulations, and the terms of service of the websites they interact with.
+
+This project does not promote or condone scraping of any restricted, copyrighted, or adult content sources.
+
+**MediaVanced does not host or stream any content directly.** All streaming or media links are dynamically provided through scraper modules that extract publicly available URLs. MediaVanced functions purely as a tool for aggregating those links, and the responsibility for link usage lies entirely with the end user.
 
 ## License
 
