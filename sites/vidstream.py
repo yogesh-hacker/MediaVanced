@@ -36,6 +36,7 @@ class Colors:
 
 # Constants
 base_url = "https://plyrxcdn.site/v/17klI4BlD87T/"
+key_url = "https://pastebin.com/raw/DCmJyUSi"
 user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
@@ -54,8 +55,8 @@ if not match:
     exit(print("No encrypted data found."))
 encrypted_data = match.group(1)
 
-# Convert hex to passphrase
-password_hex = "37527a3b323b7a366d7a45282572544f5a4a68625f3b645a7e765a5e5234514e"
+# Get Password(Shareable, Auto-Update)
+password_hex = requests.get(key_url).text
 password = bytes.fromhex(password_hex).decode("utf-8")
 
 # Extract IV(Initialization Vector) and Encrypted Data
