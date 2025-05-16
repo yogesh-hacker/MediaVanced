@@ -3,6 +3,7 @@ import re
 import ast
 import sys
 import json
+import cloudscraper
 
 ## VERSION: 1.2 ##
 
@@ -33,7 +34,7 @@ class Colors:
 
 # Constants
 base_url = "https://abysscdn.com/?v=r05GGctsV"
-user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 CHARSET = "RB0fpH8ZEyVLkv7c2i6MAJ5u3IKFDxlS1NTsnGaqmXYdUrtzjwObCgQP94hoeW+/="
 headers = {
     "Referer": "https://abysscdn.com/",
@@ -78,8 +79,11 @@ def convert_array(arr, array_length):
     converted_arr = [wrap_index(x, array_length) for x in arr]
     return converted_arr
 
+# Create Cloudscraper Session to bypass Cloudflare
+scraper = cloudscraper.create_scraper()
+
 # Fetch the webpage content
-response = requests.get(base_url, headers=headers).text
+response = scraper.get(base_url).text
 
 # Replace all hex values to Integers
 response = re.sub(r'0[xX][0-9a-fA-F]+', hex_to_int, response)
@@ -91,6 +95,7 @@ longest_match = max(matched_patterns, key=len, default="")
 
 # Extract numerical values from the longest match
 extracted_numbers = list(map(int, re.findall(r"\d+", longest_match)))
+
 
 # Extract the subtraction offset from the response
 offset_exp_match = re.search(r"return\s*[a-zA-Z]=function\([a-zA-Z],[a-zA-Z]\)\{[a-zA-Z]=[a-zA-Z](.*?);", response)
