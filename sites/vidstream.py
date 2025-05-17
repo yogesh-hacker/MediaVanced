@@ -17,6 +17,7 @@ https://raretoonsindia.co/
 https://plyrxcdn.site/
 https://newer.stream/
 https://mov18plus.cloud/
+https://bestmovies4u.top/
 '''
 
 # @PlayerX, After a long time!! with OG methods
