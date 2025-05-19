@@ -19,6 +19,7 @@ https://ghbrisk.com/
 https://niikaplayerr.com/
 https://uqloads.xyz/
 https://filelions.to/
+https://dhcplay.com/
 '''
 
 class Colors:
