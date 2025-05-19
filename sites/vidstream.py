@@ -5,7 +5,7 @@ import re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-## Func ID: a9JmEq ##
+## Version ID: v1.26 ##
 
 '''
 Supports:
@@ -37,7 +37,7 @@ class Colors:
 
 # Constants
 base_url = "https://plyrxcdn.site/v/17klI4BlD87T/"
-key_url = "https://pastebin.com/raw/DCmJyUSi"
+key_url = "https://pastebin.com/dl/DCmJyUSi"
 user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
@@ -57,7 +57,7 @@ if not match:
 encrypted_data = match.group(1)
 
 # Get Password(Shareable, Auto-Update)
-password_hex = requests.get(key_url).text
+password_hex = requests.get(key_url, headers={'Referer': 'https://pastebin.com/'}).text
 password = bytes.fromhex(password_hex).decode("utf-8")
 
 # Extract IV(Initialization Vector) and Encrypted Data
