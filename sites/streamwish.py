@@ -32,11 +32,11 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-base_url = "https://hdstream4u.com/file/746puo9bt0f0"
+base_url = "https://dhcplay.com/exk2ot4ibxgx"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
-    'Referer': 'https://hdstream4u.com/',
+    'Referer': default_domain,
     'User-Agent':'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
 }
 
@@ -75,6 +75,7 @@ video_url = re.search(r'\"hls2\":"([^"]+)', decoded_data).group(1)
 print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#"*25 + "\n" + "#"*25)
+print(f"{Colors.warning}### Use these headers to access the URL")
 
 # Print headers by key: value
 for key, value in headers.items():
