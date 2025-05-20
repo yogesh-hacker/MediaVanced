@@ -77,16 +77,20 @@ decrypted_data = None
 try:
     decrypted_data = unpad(decrypted_bytes, AES.block_size).decode("utf-8")
 except (ValueError, KeyError) as e:
-    # Fallback to AES-GCM if CBC Fails
-    print(f"{Colors.fail}AES-CBC failed trying AES-GCM...{Colors.enc}")
+    # Move to AES-GCM fallback
+    print(f"{Colors.fail}AES-CBC failed trying AES-GCM...{Colors.endc}")
     
-    # Adjust Data
+    # Adjust data
+    iv_bytes = decoded_bytes[:12]
     auth_tag = encrypted_bytes[-16:]
     encrypted_bytes = encrypted_bytes[:-16]
     
     # Try to decrypt
     cipher = AES.new(key_bytes, AES.MODE_GCM, nonce=iv_bytes)
-    decrypted_data = cipher.decrypt_and_verify(encrypted_bytes, auth_tag).decode("utf-8")
+    try:
+        decrypted_data = cipher.decrypt_and_verify(encrypted_bytes, auth_tag).decode("utf-8")
+    except(ValueError, KeyError) as e:
+        print(f"{Colors.fail}AES-GCM failed also!{Colors.endc}")
 
 # Extract video URL
 video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
