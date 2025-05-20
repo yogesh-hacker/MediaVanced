@@ -5,15 +5,7 @@ import re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-## Version ID: v1.26 ##
-
-"""
-This script was deprecated and was designed for Vidstream Library Custom v1.26, retained for future use.
-"""
-
-## This is a backup Version
-## @PlayerX what do you think? I am stupid? Rewrite Always?
-# I have backup all of your encryptions. Hahahah!!!
+## Version ID: v2.5 ##
 
 '''
 Supports:
@@ -81,7 +73,20 @@ cipher = AES.new(key_bytes, AES.MODE_CBC, iv_bytes)
 decrypted_bytes = cipher.decrypt(encrypted_bytes)
 
 # Remove PKCS7 padding and decode the decrypted data to plaintext
-decrypted_data = unpad(decrypted_bytes, AES.block_size).decode("utf-8")
+decrypted_data = None
+try:
+    decrypted_data = unpad(decrypted_bytes, AES.block_size).decode("utf-8")
+except (ValueError, KeyError) as e:
+    # Fallback to AES-GCM if CBC Fails
+    print(f"{Colors.fail}AES-CBC failed trying AES-GCM...{Colors.enc}")
+    
+    # Adjust Data
+    auth_tag = encrypted_bytes[-16:]
+    encrypted_bytes = encrypted_bytes[:-16]
+    
+    # Try to decrypt
+    cipher = AES.new(key_bytes, AES.MODE_GCM, nonce=iv_bytes)
+    decrypted_data = cipher.decrypt_and_verify(encrypted_bytes, auth_tag).decode("utf-8")
 
 # Extract video URL
 video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
