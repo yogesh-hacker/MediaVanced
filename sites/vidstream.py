@@ -1,11 +1,10 @@
+import re
 import requests
 from urllib.parse import urlparse
 from base64 import b64decode
-import re
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
 
-## Version ID: v1.26 ##
+## Version ID: v2.0 ##
 
 '''
 Supports:
@@ -20,8 +19,9 @@ https://mov18plus.cloud/
 https://bestmovies4u.top/
 '''
 
-# @PlayerX, After a long time!! with OG methods
-# 26th attempt, I love you! :)
+# @PlayerX, Yes, I will never give up!
+# Next time, try harder. This was cute.
+# 27th attempt, I love you for trying though :) 
 # Contact: businesshackerindia@gmail.com 📧
 
 class Colors:
@@ -58,20 +58,21 @@ encrypted_data = match.group(1)
 
 # Get Password(Shareable, Auto-Update)
 password_hex = requests.get(key_url, headers={'Referer': 'https://pastebin.com/'}).text
-password = bytes.fromhex(password_hex).decode("utf-8")
+key_bytes = password_hex.encode().fromhex(password_hex)
 
-# Extract IV(Initialization Vector) and Encrypted Data
+# Extract IV(Initialization Vector), Auth Tag/GCM Tag and Encrypted Data
 decoded_bytes = b64decode(encrypted_data)
-iv_bytes = decoded_bytes[:16]
-encrypted_bytes = decoded_bytes[16:]
-key_bytes = password.encode('utf-8')
+iv_bytes = decoded_bytes[:12]
+auth_tag = decoded_bytes[-16:]
+encrypted_bytes = decoded_bytes[12:-16] 
 
-# Decrypt using AES-CBC
-cipher = AES.new(key_bytes, AES.MODE_CBC, iv_bytes)
-decrypted_bytes = cipher.decrypt(encrypted_bytes)
+# Decrypt using AES-GCM
+cipher = AES.new(key_bytes, AES.MODE_GCM, nonce=iv_bytes)
+cipher.update(b'NeverGiveUp')
+decrypted_bytes = cipher.decrypt_and_verify(encrypted_bytes, auth_tag)
 
-# Remove PKCS7 padding and decode the decrypted data to plaintext
-decrypted_data = unpad(decrypted_bytes, AES.block_size).decode("utf-8")
+# Decode the decrypted data to plaintext
+decrypted_data = decrypted_bytes.decode("utf-8")
 
 # Extract video URL
 video_match = re.search(r'(?:file\s*:\s*|"file"\s*:\s*)"(https?://[^"]+)"', decrypted_data)
