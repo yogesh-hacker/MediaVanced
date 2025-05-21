@@ -20,7 +20,7 @@ https://mov18plus.cloud/
 https://bestmovies4u.top/
 '''
 
-## Speacial Thanks to @Toasty360 for Github Workflow Setup ##
+## Special Thanks to @Toasty360 for Github Workflow Setup ##
 
 # @PlayerX, Yes, I will never give up!
 # Next time, try harder. This was cute.
