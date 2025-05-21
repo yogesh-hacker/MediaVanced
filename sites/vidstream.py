@@ -5,7 +5,7 @@ import re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
-## Version ID: v2.5 ##
+## Version ID: v3.0 ##
 
 '''
 Supports:
@@ -20,9 +20,11 @@ https://mov18plus.cloud/
 https://bestmovies4u.top/
 '''
 
+## Speacial Thanks to @Toasty360 for Github Workflow Setup ##
+
 # @PlayerX, Yes, I will never give up!
 # Next time, try harder. This was cute.
-# 27th attempt, I love you for trying though :) 
+# 28th attempt, I love you for trying though :) 
 # Contact: businesshackerindia@gmail.com 📧
 
 
@@ -39,7 +41,7 @@ class Colors:
 
 # Constants
 base_url = "https://plyrxcdn.site/v/17klI4BlD87T/"
-key_url = "https://pastebin.com/dl/DCmJyUSi"
+key_url = "https://raw.githubusercontent.com/yogesh-hacker/playerx/refs/heads/main/key.key"
 user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
@@ -59,7 +61,7 @@ if not match:
 encrypted_data = match.group(1)
 
 # Get Password(Shareable, Auto-Update)
-password_hex = requests.get(key_url, headers={'Referer': 'https://pastebin.com/'}).text
+password_hex = requests.get(key_url, headers={'Referer': 'https://github.com/'}).text
 password = bytes.fromhex(password_hex).decode("utf-8")
 
 # Extract IV(Initialization Vector) and Encrypted Data
@@ -75,7 +77,7 @@ decrypted_bytes = cipher.decrypt(encrypted_bytes)
 # Remove PKCS7 padding and decode the decrypted data to plaintext
 decrypted_data = None
 try:
-    decrypted_data = unpad(decrypted_bytes, AES.block_size).decode("utf-8")
+    decrypted_data = decrypted_bytes.decode("utf-8")
 except (ValueError, KeyError) as e:
     # Move to AES-GCM fallback
     print(f"{Colors.fail}AES-CBC failed trying AES-GCM...{Colors.endc}")
