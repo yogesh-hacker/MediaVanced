@@ -7,7 +7,7 @@
 <p align="center">
   <img src='https://img.shields.io/badge/License-Apache%202.0-brightgreen?style=for-the-badge&logo=apache&logoColor=red' />
   <a href="https://discord.com/users/975942167908474900" target="_blank">
-  <img src="https://img.shields.io/badge/Discord-peerless__x-7289DA?style=for-the-badge&logo=discord&logoColor=white" />
+  <img src="https://img.shields.io/badge/Discord-peerless-7289DA?style=for-the-badge&logo=discord&logoColor=white" />
 </a>
   <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue"/>
 </p>
