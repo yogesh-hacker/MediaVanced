@@ -1,4 +1,5 @@
 import re
+import random
 import base64
 import requests
 from Crypto.Cipher import AES
@@ -32,7 +33,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "FqpVQOUW9yascEh47TYu6r8NgfGmtHKPiI-eJvBZLwS2b3ndCjzDAlxXkRMo05_1"
+    dst = "2xwYJGjOibPtCBu3lUNzL_HrQTVK0gFymven4RShWA6f71IcXs-MZ5EaoqkD8pd9"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -48,8 +49,8 @@ raw_data = match.group(1)
 
 
 # AES encryption setup
-key_hex = "68fa4221681cf65607a1d5182935ad661cdbd31e9e6fabc2a177346e058f3826"
-iv_hex = "0508b5543bece4f350082411b772213e"
+key_hex = "92602fba85ae08969373a50448391cdbccadeb40be09abb17007861049944842"
+iv_hex = "1e933f03e2fb9d2e77f457ac1645f33d"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -58,16 +59,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("616c438ff0e2")
+xor_key = bytes.fromhex("edc5e93586d7")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "8e39ee3bc9096d8b2182b11bb3408ecb2d49d6ea/63f9b2f13d6e49d5626f55ad4dd073eb44c855576623c445f9297dbc41aca8d2/APA91pnnfHpSk-JUXVYqNM-8uZFTnjnkimXJeWy3y8wFIOoGQUuQ0T3ec_a5VZh6g4K0J8VjDJOoGWa3mBbrkq8ktvEu-YBcGVOHOxSQc5AGxcb2HDHjY0zAeBW5PXU54znsUHSteIQBYogeieO2qhWHircRCQAVAACZCfHwPNk0GrGiWEnpC67/1000085286633646/itailige"
-api_url = f"https://111movies.com/{static_path}/{encoded_final}"
-response = requests.post(api_url, headers=headers).json()
+static_path = "APA91t9PoZwHV2WyucaGbKSpxJx7c_VYAYWOXlI8WCB-gTWcvz88bY9PMJ7I30nJayTEJg4AAtk0Gaa6D4V8FJQ9_Io3CtM9law2xptLLoKR8eD8slNP3WwL9x7juFBjXNVr9ciqrMoF2CV9xfmhITgEl6-zqVyecEO801em3fs4_osx2fWihKO/48bbb48dc848f14d2754754d197d939dbab4da99/i/bawose/laf/1181c071/1000037950406033/01ade2fbcf5203de7bc999e631258e3da61441cfe877770fa4cdc28c9971c8cf"
+api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
+response = requests.get(api_servers, headers=headers).json()
+
+# Select a random server
+server = random.choice(response)['data']
+api_stream = f"https://111movies.com/{static_path}/{server}"
+response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
 video_url = response['url']
