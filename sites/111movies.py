@@ -13,8 +13,7 @@ Supports:
 https://111movies.com/
 '''
 
-# @111movies, What is the meaning of changing headers?
-# @PlayerX knows my power.
+# @111movies, Kaalchoddu, haha :)
 
 class Colors:
     header = '\033[95m'
@@ -34,8 +33,7 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "application/json-patch+json",
-    "X-Csrf-Token": "h6mMOblBOJMUfn214Kbp7hbwmBa2c7YA",
+    "Content-Type": "application/atom+xml",
     "X-Requested-With": "XMLHttpRequest"
 }
 
@@ -43,7 +41,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "yRzqGAW8a5mcx9kvs2YO0lHtub_ZhpnKJX6PFdD3fr7UMgNILBjTCwi41EoQSVe-"
+    dst = "XLabrHu8QkVPlC0tRfx2S6ZgpBsW7n95G34qDUNJc-mw_IFyTYOijEv1eAKdohzM"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -58,8 +56,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "e019eef6c8f9086438608c0ecf63056d1eb382829b0202826eb0e0c85275bed3"
-iv_hex = "24449dc8e60e17ce1f9ecd9b1ce6fb8b"
+key_hex = "1e560e7648b02345f9d6197c9c1c07ffd9800330f452bc228aa698394fd3896b"
+iv_hex = "3101312df32fa4884bf13c1181158da9"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -68,21 +66,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("84a609d5fc5d69db22")
+xor_key = bytes.fromhex("d437842b17f0ad453674")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "57a98bd8668da1a41c9a19cb5ff3b6d187da730d5430ffe91c54fb1f033e89c0/APA917twfMY4OADEIqKHNm5QpKCUH0ZmVnJxKgC6CmkCyfii28Zvm_vt3b7CoLy9xlk9PIqQqX3I0tkKm0niyFPC7TDe3PI_bAxub6ECacJkvj3xpziGVo1t56GJpboADn1P267-f-L493iKbL-J0xLVbHkehu-yzviOl_Cbefhmf4h36rZcBV3/4c309f39-b473-50af-82e3-69ed989f62f3/g"
+static_path = "e6338fe53f8fce4b93f00a72a899828164413b5d77e5bc2a604091629bdaa2a2/soitjar/uva/2f7e30f9"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
-response = requests.post(api_servers, headers=headers).json()
+response = requests.get(api_servers, headers=headers).json()
 
 # Select a random server
 server = random.choice(response)['data']
 api_stream = f"https://111movies.com/{static_path}/{server}"
-response = requests.post(api_stream, headers=headers).json()
+response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
 video_url = response['url']
