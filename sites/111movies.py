@@ -33,7 +33,8 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "application/atom+xml",
+    "Content-Type": "application/vnd.api+json",
+    "X-CSRF-Token": "6V0pzHm1pehBhSGG9UxAdLJ4QezSBdMJ",
     "X-Requested-With": "XMLHttpRequest"
 }
 
@@ -41,7 +42,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "XLabrHu8QkVPlC0tRfx2S6ZgpBsW7n95G34qDUNJc-mw_IFyTYOijEv1eAKdohzM"
+    dst = "K9jcxzyd3NeYCuvtF18DbWM-wRHh6qnrZA5JEUISgp_XfT20aBlL7GQV4OoisPkm"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -56,8 +57,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "1e560e7648b02345f9d6197c9c1c07ffd9800330f452bc228aa698394fd3896b"
-iv_hex = "3101312df32fa4884bf13c1181158da9"
+key_hex = "a10e5798728e186d71dbb25c85b70006595c43ebc56077caee5c46fdaec034f9"
+iv_hex = "82562b2cf22038d3daa1770234c63a04"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -66,14 +67,14 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("d437842b17f0ad453674")
+xor_key = bytes.fromhex("c679ea0d")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "e6338fe53f8fce4b93f00a72a899828164413b5d77e5bc2a604091629bdaa2a2/soitjar/uva/2f7e30f9"
+static_path = "APA91KRy2oMU649_pFh2ZLjN2jVZtD-qDAy3sOacFLYmJfyYl8Uy0u1qOOf5kMnYVr4r7yKbh97hBMaRy7i5m78DvYx2g5C16kzq3JW0swcaBhaA-qvfPrSyu_hoW3vXENKQSkVPgTJvaoR-CUGW6Ti4DIzfXOhuSQA6NZOAlDIbkAbRUGrWtnN/k/c2a03ccc-92bb-5745-94e6-0257fb030698/jid/a8304842cd86af17206a5bf6ca4d1ff54e70a477/ir/06fbddd4ef9f2669eee5402279a9d9a00f6f0c1fd128089cab0e2a9528d3943e/f904b75d"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
 response = requests.get(api_servers, headers=headers).json()
 
