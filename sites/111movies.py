@@ -32,15 +32,16 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "X-CSRF-Token": "UoiFXEo7gCemchDjyFTPOi8Dg4CdzxF1",
-    "X-Requested-With": "XMLHttpRequest"
+    "X-CSRF-Token": "4gglJgjvVNM6juEW0kEGdFTCf0ze4hYf",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Requested-With": "XMLHttpRequest",
 }
 
 # Utility Functions
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "WqA-YvVzjly83_POC7g6hBD9Zr4wuEaMKkbHpmcfsxteN1QXonIdRTFSG502LUiJ"
+    dst = "PfWkLGQ1OY4m5wBTjy7IrngX0vcxERz_2U-i9hqpNDuKJtMo6lVdaeZ3AFSHb8sC"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -55,8 +56,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "908672a31b4feda110b66e3276acc04f3b6b113c3e08517da5a28ce9b1fc0a96"
-iv_hex = "9aa761bbc311a7690b6d0aea10df6943"
+key_hex = "8d0badc4081f89a3342549f3a68f5261a4438bd4e607871054b86116d99506a7"
+iv_hex = "4ac971b2f09714ed29a9ad50084a3c34"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -65,21 +66,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("a74f75151a60fd8729")
+xor_key = bytes.fromhex("3115d3da3380")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "wa/56618db0e43085fa7bb872c1d561e8dfcfedef28dd2a5c8b59da0be6bddbc909/aa720919-bed6-579b-bf16-79e2329337fa"
+static_path = "f/1000001283280351/4e814452/cu/vacpuh/42a0e173-fb2d-50b0-bae4-1477e322b432/96966a8d451b1a19fd21afd3a51ade62dfa37d63"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
-response = requests.post(api_servers, headers=headers).json()
+response = requests.get(api_servers, headers=headers).json()
 
 # Select a random server
 server = random.choice(response)['data']
 api_stream = f"https://111movies.com/{static_path}/{server}"
-response = requests.post(api_stream, headers=headers).json()
+response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
 video_url = response['url']
