@@ -8,83 +8,68 @@ import base64
 import binascii
 import codecs
 import time
+from urllib.parse import urlparse
+
+'''
+Supports:
+https://clickndownload.cfd/
+'''
 
 class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    
-base_url = "https://clickndownload.online/bi2svjendk9z"
-default_domain = "https://clickndownload.online/"
-print(f"\n{Colors.OKCYAN}TARGET: {default_domain}{Colors.ENDC}")
-session = requests.Session()
+    header = '\033[95m'
+    okblue = '\033[94m'
+    okcyan = '\033[96m'
+    okgreen = '\033[92m'
+    warning = '\033[93m'
+    fail = '\033[91m'
+    endc = '\033[0m'
+    bold = '\033[1m'
+    underline = '\033[4m'
 
-
-initial_headers = {
-    "Referer": base_url,
-    "User-Agent":"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
-    "Connection": "keep-alive"
+# Constants
+base_url = "https://clickndownload.cfd/mnoso4chus5s"
+user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
+headers = {
+    'Referer': default_domain,
+    'Accept': '*/*',
+    'User-Agent': user_agent
 }
 
-initial_response = session.get(base_url,headers=initial_headers)
-initial_page_html = initial_response.text
-soup = BeautifulSoup(initial_page_html,"html.parser")
-op = soup.find("input", attrs = {"name":"op"})['value']
-user_login = soup.find("input", attrs = {"name":"usr_login"})['value']
-file_id = soup.find("input", attrs = {"name":"id"})['value']
-file_name = soup.find("input", attrs = {"name":"fname"})['value']
-referer = soup.find("input", attrs = {"name":"referer"})['value']
+# Fetch page content
+response = requests.get(base_url, headers=headers).text
+soup = BeautifulSoup(response, 'html.parser')
 
-payload = {
-    "op":op,
-    "usr_login":user_login,
-    "id":file_id,
-    "fname":file_name,
-    "referer":referer,
-    "method_free":"Slow Download"
-}
+# Get form input values
+form = soup.select_one('form')
+inputs = form.find_all('input')
+data = {}
+for input in inputs:
+    data[input['name']] = input['value']
 
-initial_response = session.post(base_url, data=payload, headers=initial_headers)
-initial_page_html = initial_response.text
-soup = BeautifulSoup(initial_page_html,"html.parser")
-op = soup.find("input", attrs = {"name":"op"})['value']
-random = soup.find("input", attrs = {"name":"rand"})['value']
-file_id = soup.find("input", attrs = {"name":"id"})['value']
-referer = soup.find("input", attrs = {"name":"referer"})['value']
-table_data = soup.find("td", attrs = {"align":"right"})
-span_texts = [span.get_text() for span in table_data.find_all('span')]
-captcha_text = ''.join(span_texts)
-payload = {
-    "op": op,
-    "rand": random,
-    "id": file_id,
-    "adblock_detected" : "0",
-    "code": captcha_text,
-    "referer": base_url,
-    "method_premium": "",
-    "method_free": "Slow Download"
-}
+# Post data contents
+response = requests.post(base_url, headers=headers, data=data).text
+soup = BeautifulSoup(response, 'html.parser')
 
-print(f"{Colors.WARNING}Can't skip countdown please wait 15 Seconds...!{Colors.ENDC}")
-# Try to bypass Wrong Captcha Detection!
-initial_response = session.head(base_url, headers=initial_headers)
+# Get form input values
+form = soup.select_one('form')
+inputs = form.find_all('input')
+data = {}
+for input in inputs:
+    data[input['name']] = input.get('value', '0')
+
+# Post data contents
+print('Wait 15 seconds...!')
 time.sleep(15)
-initial_response = session.post(base_url, data=payload, headers=initial_headers)
-initial_page_html = initial_response.text
-soup = BeautifulSoup(initial_page_html,"html.parser")
-error = soup.find("div", attrs={"class":"err"})
-if error:
-    print(f"{Colors.FAIL}ERROR: {error.text} detected!{Colors.ENDC}")
-else:
-    download_url = soup.find("a",attrs={"class","downloadbtn"})['href']
-    print("######################")
-    print("######################")
-    print(f"Captured URL: {Colors.OKGREEN}{download_url}{Colors.ENDC}")
-    print("######################")
-    print("######################\n")
+response = requests.post(base_url, headers=headers, data=data).text
+soup = BeautifulSoup(response, 'html.parser')
+
+# Get Video URL
+anchor_tag = soup.select_one('a.downloadbtn')
+video_url = anchor_tag['href']
+
+# Print results
+print("\n" + "#" * 25 + "\n" + "#" * 25)
+print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
+print("#" * 25 + "\n" + "#" * 25)
+print("\n")

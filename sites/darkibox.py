@@ -46,7 +46,7 @@ for input in inputs:
 
 # Post Data Contents after 3 Seconds
 time.sleep(3)
-response = session.post('https://darkibox.com/0u3sfm76wqpc', headers=headers, data=data).text
+response = session.post(base_url, headers=headers, data=data).text
 
 # Extract video URL
 match = re.search(r'sources:\s*\[\{src:\s*\"(.*?)\"', response)
