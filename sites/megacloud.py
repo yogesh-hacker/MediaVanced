@@ -9,8 +9,7 @@ from urllib.parse import urlparse
 
 '''
 Supports:
-https://cloudvidz.net/
-https://cdnstreame.net/
+https://megacloud.blog/
 '''
 
 class Colors:
@@ -25,9 +24,9 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://cloudvidz.net/embed-1/v2/e-1/1ZRqAICXEoEB?z="
+base_url = "https://megacloud.blog/embed-2/v2/e-1/MoXZBaKooRoQ?k=1"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-password = "1fdb19239edc82f9696bf8d30342aa5f8a7f2e63926b23a1d05289acef90b7f9"
+password = "1b33635e913b32d65a2c9a30885db0988b31999b1149bc056150d60ce361896c"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -62,13 +61,13 @@ response = requests.get(base_url, headers=headers).text
 soup = BeautifulSoup(response, 'html.parser')
 
 # Get file ID
-video_tag = soup.select_one('#vidcloud-player')
+video_tag = soup.select_one('#megacloud-player')
 if not video_tag:
     exit(print(f'{Colors.fail}Looks like URL expired!{Colors.endc}'))
 file_id = video_tag['data-id']
 
 # Get encrypted data
-response = requests.get(f'{default_domain}/embed-1/v2/e-1/getSources?id={file_id}', headers=headers).json()
+response = requests.get(f'{default_domain}/embed-2/v2/e-1/getSources?id={file_id}', headers=headers).json()
 encrypted = response['sources']
 
 # Decrypt encrypted data
