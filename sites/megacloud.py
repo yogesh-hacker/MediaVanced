@@ -24,9 +24,9 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://megacloud.blog/embed-2/v2/e-1/MoXZBaKooRoQ?k=1"
+base_url = "https://megacloud.blog/embed-2/v2/e-1/TN5F1S39VS5d?k=1&autoPlay=1&oa=0&asi=1"
+key_url = "https://raw.githubusercontent.com/yogesh-hacker/yogesh-hacker/refs/heads/main/yogesh-hacker/Megacloud/keys.json"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-password = "1b33635e913b32d65a2c9a30885db0988b31999b1149bc056150d60ce361896c"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -69,6 +69,10 @@ file_id = video_tag['data-id']
 # Get encrypted data
 response = requests.get(f'{default_domain}/embed-2/v2/e-1/getSources?id={file_id}', headers=headers).json()
 encrypted = response['sources']
+
+# Get Password 
+response = requests.get(key_url).json()
+password = response['mega']
 
 # Decrypt encrypted data
 decrypted_data = decrypt_openssl(encrypted, password)

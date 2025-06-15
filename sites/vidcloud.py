@@ -25,9 +25,9 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://cloudvidz.net/embed-1/v2/e-1/1ZRqAICXEoEB?z="
+base_url = "https://cloudvidz.net/embed-1/v2/e-1/0IGXgFdkSu9u?z="
+key_url = "https://raw.githubusercontent.com/yogesh-hacker/yogesh-hacker/refs/heads/main/yogesh-hacker/Megacloud/keys.json"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-password = "4d4b1f070091f3e7aeafdd2d8469ae84b4f86f3874e02cad1c8cb3af1c974db3"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -70,6 +70,10 @@ file_id = video_tag['data-id']
 # Get encrypted data
 response = requests.get(f'{default_domain}/embed-1/v2/e-1/getSources?id={file_id}', headers=headers).json()
 encrypted = response['sources']
+
+# Get Password 
+response = requests.get(key_url).json()
+password = response['rabbit']
 
 # Decrypt encrypted data
 decrypted_data = decrypt_openssl(encrypted, password)
