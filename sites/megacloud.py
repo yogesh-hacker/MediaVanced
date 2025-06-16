@@ -24,8 +24,8 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://megacloud.blog/embed-2/v2/e-1/TN5F1S39VS5d?k=1&autoPlay=1&oa=0&asi=1"
-key_url = "https://raw.githubusercontent.com/yogesh-hacker/yogesh-hacker/refs/heads/main/yogesh-hacker/Megacloud/keys.json"
+base_url = "https://megacloud.blog/embed-2/v2/e-1/eSRUQnTXpjJ1?k=1&autoPlay=1&oa=0&asi=1"
+key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
