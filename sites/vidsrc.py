@@ -7,6 +7,10 @@ from Crypto.Hash import SHA256
 from urllib.parse import urlparse
 from Crypto.Util.Padding import pad
 
+'''
+Supports:
+https://vidsrc.cc/
+'''
 
 class Colors:
     header = '\033[95m'
