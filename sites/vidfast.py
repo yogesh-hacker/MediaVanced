@@ -11,7 +11,7 @@ Supports:
 https://vidfast.pro/
 '''
 
-# @111movies, Kaalchoddu, haha :)
+# @Vidfast, Don't try to challenge. :}
 
 class Colors:
     header = '\033[95m'
@@ -33,13 +33,16 @@ headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
     "x-session": "",
+    "Content-Type": "application/font-woff2",
+    "X-Requested-With":"XMLHttpRequest",
+    "X-Csrf-Token":"HXUwCQsIHigJ7tveUt7toXQysUmtvLp3"
 }
 
 # Utility Functions
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "SlfpOi9DxzTcn683E2o7drBGCKW4XZFu0Q1MRtJbjykL_V-N5veAmHwaPqYhIsUg"
+    target_chars = "ijdwDIx49zeGg3BnpNEJSh_kb8f5KHcyuZPrRXaC1QUsV0v-lLTWoY26FA7qtMOm"
     translation_table = str.maketrans(source_chars, target_chars)
 
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
@@ -58,8 +61,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "d9ff31a40dd415210c298a9d113a1963cf9c5253229a93709928788f12041f22"
-iv_hex = "e591e8af30972f444b5b3b206c60c598"
+key_hex = "023061be4ba16814ba0a3628b99470931b7d291ca3c8d3cf8030fee995d9b70c"
+iv_hex = "3cb95c4d6701fc03a723c35045d6464d"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -68,21 +71,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_key = bytes.fromhex("1261f48e150cbe")
+xor_key = bytes.fromhex("b0660a2812a851")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "79198daa-820c-5b08-ae46-f7391a4cb4dc/APA91XB-tqjXq06x1tMAywlhBwZoXF6FQV1ytGGPiOlCKlVRNnQ5Gm9GfHEO62TBFQbKi9FmQxIsxYuEZDgVwV1nwEzvGANC19MEE7mz_0TKror9KYtgeLtoh4cJiuPV9IJCV-XV7R2A0F0CRzfQKqr--OLVvrDgspSOiGGJEVYHu6BqaLB7xes/4c12dad1e1340c2fa8d5df7a54e1afbdb55f8011/4a5bf14f8b528581e81c89a761a8068bd049c0f86219d9dba62335155f00e04b/sewlujom"
+static_path = "/8dd52148-bacc-55b8-a4c7-9237d0cd651b/bd3414ce7337186ad8f29166ebd287262844fb44/APA91S69lxkcphkoOMhy2G14PsF6FJ_E0WpL7ivuCbSlY6uQymWo4AosiXUD63BFrrCIZzhB0MFV0v2szrqZhD0TmSeNuXJQPDCqYHJIOZJA_zQZETb3s7GbrJxPWqejxtg7si3iZ4l3_qNCJrMG-Iv8p4bG7zyQrTu0heRD_MyaJ_2Z6SI0im6/33b7fb6e/osavecgav/1000069821241725/b62512fdeff941714d00e6bb5ea55b543572cf2775f2d313163fbdbf910f5fc2/l"
 data = {}
-api_servers = f"https://vidfast.pro/{static_path}/YDGUTEY/{encoded_final}"
+api_servers = f"https://vidfast.pro{static_path}/MOUJHVybOkLOGA/{encoded_final}"
 response = session.post(api_servers, headers=headers, json=data).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://vidfast.pro/{static_path}/xo8XtbY-sVen/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/ZwU/{server}"
 response = requests.post(api_stream, headers=headers).json()
 
 # Extract video URL
