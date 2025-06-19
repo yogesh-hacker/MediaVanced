@@ -24,7 +24,8 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://megacloud.blog/embed-2/v2/e-1/eSRUQnTXpjJ1?k=1&autoPlay=1&oa=0&asi=1"
+provider_url = 'https://hianime.to/ajax/v2/episode/sources?id=1155827'
+base_url = requests.get(provider_url).json()['link'] # https://megacloud.blog/embed-2/v2/e-1/<VIDEO_ID>?k=1&autoPlay=1&oa=0&asi=1
 key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 parsed_url = urlparse(base_url)
