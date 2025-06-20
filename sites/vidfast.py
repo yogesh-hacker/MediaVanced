@@ -77,9 +77,9 @@ xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encry
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "/rebivol/ad/w/2c7998b18129848378021254f87db35df8f562b2/2cf30a7c/APA91nNHHa3xbnvasl8ciswLATkt2fIiVFciF5RLarK4oR7nrTpEDSBjO_kRoBJD730BWfo6bQZIpxCr-PAlSGc8GAAxueegNH5gNzrcqhPDliciuUDv0GTqb_2t1ik9pIAXpVaZ8inm6ey56Qf44wrOOPUfZYlkKuKs18mNKqBluBYTB5lBXWF/775d49bf3b9b4d082f5156cd9f36e21d42014547cd9282b1fe62ccbe3d09f66b/1000094661747536"
+static_path = "rebivol/ad/w/2c7998b18129848378021254f87db35df8f562b2/2cf30a7c/APA91nNHHa3xbnvasl8ciswLATkt2fIiVFciF5RLarK4oR7nrTpEDSBjO_kRoBJD730BWfo6bQZIpxCr-PAlSGc8GAAxueegNH5gNzrcqhPDliciuUDv0GTqb_2t1ik9pIAXpVaZ8inm6ey56Qf44wrOOPUfZYlkKuKs18mNKqBluBYTB5lBXWF/775d49bf3b9b4d082f5156cd9f36e21d42014547cd9282b1fe62ccbe3d09f66b/1000094661747536"
 data = {}
-api_servers = f"https://vidfast.pro{static_path}/k33a7dwPZst1/{encoded_final}"
+api_servers = f"https://vidfast.pro/{static_path}/k33a7dwPZst1/{encoded_final}"
 response = session.post(api_servers, headers=headers, json=data).json()
 
 # Select a random server
