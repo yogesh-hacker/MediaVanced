@@ -33,15 +33,15 @@ headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
     "x-session": "",
+    "Content-Type": "application/json",
     "X-Requested-With":"XMLHttpRequest",
-    "X-Csrf-Token":"lVx7BVtk9c3SMNbF49PNvUc7GV5zzdem"
 }
 
 # Utility Functions
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "Ju9Egn27FZNe-kaMUtOBAmf0qp3xDYlTX6PhiL5SRjzQIsHvoVw_WC4dGc1Ky8rb"
+    target_chars = "7EkRi2WnMSlgLbXm_jy1vtO69ehrAV0-saUB5FGpoq3QuNIZ8wJ4PfdHxzTDKYCc"
     translation_table = str.maketrans(source_chars, target_chars)
 
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
@@ -60,8 +60,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "13346e2c05211f72e46a465e953fd5410826715e28d927f92ea5f4daee985c8b"
-iv_hex = "b83bcd42b90f5364e9b95c398264bca4"
+key_hex = "2adaf9545534ea4150a7f2f7479aed88717d7f8f28da19707061cb665c979502"
+iv_hex = "3317da601aadecb751153f9f00d28a50"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -70,21 +70,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_key = bytes.fromhex("3fc3e051ddc9dd8a74")
+xor_key = bytes.fromhex("6a131fa110a0")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "rebivol/ad/w/2c7998b18129848378021254f87db35df8f562b2/2cf30a7c/APA91nNHHa3xbnvasl8ciswLATkt2fIiVFciF5RLarK4oR7nrTpEDSBjO_kRoBJD730BWfo6bQZIpxCr-PAlSGc8GAAxueegNH5gNzrcqhPDliciuUDv0GTqb_2t1ik9pIAXpVaZ8inm6ey56Qf44wrOOPUfZYlkKuKs18mNKqBluBYTB5lBXWF/775d49bf3b9b4d082f5156cd9f36e21d42014547cd9282b1fe62ccbe3d09f66b/1000094661747536"
+static_path = "543db48b-8d5c-504e-8bd4-27cb52f94949/15b7352a/b/e4b2782d0a2fba2dd0fee0d388b41510fb50c036d073952c9ccc9a77264c0b50/jevhittih"
 data = {}
-api_servers = f"https://vidfast.pro/{static_path}/k33a7dwPZst1/{encoded_final}"
+api_servers = f"https://vidfast.pro/{static_path}/AxEZ/{encoded_final}"
 response = session.post(api_servers, headers=headers, json=data).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://vidfast.pro/{static_path}/p6PWA5s/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/04AoGz0d/{server}"
 response = requests.post(api_stream, headers=headers).json()
 
 # Extract video URL
@@ -94,4 +94,6 @@ video_url = response['url']
 print("\n" + "#" * 25 + "\n" + "#" * 25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#" * 25 + "\n" + "#" * 25)
+print(f"{Colors.warning}### Use these headers to access the URL")
+print(f"{Colors.okcyan}Referer:{Colors.endc} {default_domain}")
 print("\n")
