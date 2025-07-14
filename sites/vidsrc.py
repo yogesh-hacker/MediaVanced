@@ -1,16 +1,14 @@
 import re
-import json
-import base64
 import requests
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
+from bs4 import BeautifulSoup
 from urllib.parse import urlparse
-from Crypto.Util.Padding import pad
 
 '''
 Supports:
-https://vidsrc.cc/
+https://vidsrc.to/
+https://vidsrc.xyz/
 '''
+
 
 class Colors:
     header = '\033[95m'
@@ -24,8 +22,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://vidsrc.cc/v2/embed/movie/385687?autoPlay=false"
-api_url = "https://vidsrc.cc/api" 
+base_url = "https://vidsrc.to/embed/movie/tt24517830"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
@@ -33,63 +30,39 @@ headers = {
     "User-Agent": user_agent,
 }
 
-# Utility Functions
-''' Encrypts Movie ID and User ID '''
-def generate_vrf(movie_id: str, user_id: str) -> str:
-    key = SHA256.new(user_id.encode()).digest()
-    iv = bytes(16)
-
-    plaintext = pad(movie_id.encode(), AES.block_size)
-
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    ciphertext = cipher.encrypt(plaintext)
-
-    encoded = base64.b64encode(ciphertext).decode()
-    url_safe = encoded.replace('+', '-').replace('/', '_').replace('=', '')
-
-    return url_safe
-
-# Fetch Initial Response
+# Fetch page content
 response = requests.get(base_url, headers=headers).text
+soup = BeautifulSoup(response, 'html.parser')
 
-# Extract all key-value pairs from the response
-pattern = r'var\s+(\w+)\s*=\s*"([^"]*)"'
-matches = re.findall(pattern, response)
+# Get actual iframe page
+rcp_iframe = soup.select_one("#player_iframe")
+if not rcp_iframe:
+    base_url = base_url.replace('.to', '.xyz')
+    soup = BeautifulSoup(requests.get(base_url, headers=headers).text, 'html.parser')
+    rcp_iframe = f'https:{soup.select_one("#player_iframe")['src']}'
+else:
+    rcp_iframe = f'https:{rcp_iframe['src']}'
 
-# Convert the matches into a dictionary for easy access
-data = {key: value for key, value in matches}
+# Get prorcp iframe
+response = requests.get(rcp_iframe, headers=headers).text
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(rcp_iframe))
+prorcp_iframe = re.search(r"src:\s'(.*?)'", response).group(1)
 
-# Retrieve required fields from the extracted data
-movie_id = data.get('movieId')
-imdb_id = data.get('imdbId')
-user_id = data.get('userId')
-content_type = data.get('movieType')
-version = data.get('v')
-verification_token = generate_vrf(movie_id, user_id)
+# Get final iframe
+final_iframe = f'{default_domain}{prorcp_iframe}'
+response = requests.get(final_iframe, headers=headers).text
 
-# Get all servers
-api_servers = f'{api_url}/{movie_id}/servers?id={movie_id}&type={content_type}&v={version}&vrf={verification_token}&imdbId={imdb_id}'
-response = requests.get(api_servers, headers=headers).json()
-
-# Retrieve iframe URLs for each server
-iframe_urls = []
-
-for server in response['data']:
-    server_hash = server.get('hash')
-    server_name = server.get('name')
-
-    iframe_endpoint = f"{api_url}/source/{server_hash}"
-    iframe_response = requests.get(iframe_endpoint, headers=headers).json()
-
-    if iframe_response.get('success'):
-        source_url = iframe_response.get('data', {}).get('source')
-        iframe_urls.append({server_name: source_url})
+# Extract video URL
+headers['Referer'] = default_domain
+video_url = re.search(r"file:\s'(.*?)'", response).group(1)
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
-print("Captured Providers:")
-for iframe in iframe_urls:
-    provider_name, source_url = next(iter(iframe.items()))
-    print(f"{Colors.okcyan}{provider_name}: {Colors.okgreen}{source_url}{Colors.endc}")
+print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#" * 25 + "\n" + "#" * 25)
+print(f"{Colors.warning}### Use these headers to access the URL")
+
+# Print headers by key: value
+for key, value in headers.items():
+    print(f"{Colors.okcyan}{key}:{Colors.endc} {value}")
 print("\n")
