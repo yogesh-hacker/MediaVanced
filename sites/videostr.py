@@ -24,9 +24,8 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-provider_url = 'https://flixhq.tube/ajax/episode/sources/2521753'
-base_url = requests.get(provider_url).json()['link'] # https://videostr.net/embed-1/v2/e-1/<VIDEO_ID>?z=
-key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
+provider_url = 'https://flixhq.tube/ajax/episode/sources/11998768'
+base_url = requests.get(provider_url).json()['link'] # https://videostr.net/embed-1/v3/e-1/<VIDEO_ID>?z=
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
@@ -37,50 +36,23 @@ headers = {
     "User-Agent": user_agent
 }
 
-# Utility Functions
-def openssl_key_iv(password, salt, key_len=32, iv_len=16):
-    # Implements OpenSSL's EVP_BytesToKey derivation
-    d = d_i = b""
-    while len(d) < key_len + iv_len:
-        d_i = hashlib.md5(d_i + password + salt).digest()
-        d += d_i
-    return d[:key_len], d[key_len:key_len + iv_len]
-
-def decrypt_openssl(enc_base64, password):
-    data = base64.b64decode(enc_base64)
-    assert data[:8] == b"Salted__"
-    salt = data[8:16]
-    key, iv = openssl_key_iv(password.encode(), salt)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted = cipher.decrypt(data[16:])
-    # Remove PKCS7 padding
-    padding_length = decrypted[-1]
-    return decrypted[:-padding_length].decode()
-
 # Fetch initial response
 response = requests.get(base_url, headers=headers).text
 soup = BeautifulSoup(response, 'html.parser')
 
-# Get file ID
+# Get file ID and nonce
 video_tag = soup.select_one('#megacloud-player')
 if not video_tag:
     exit(print(f'{Colors.fail}Looks like URL expired!{Colors.endc}'))
 file_id = video_tag['data-id']
+nonce = re.search(r'\b[a-zA-Z0-9]{48}\b', response).group()
 
 # Get encrypted data
-response = requests.get(f'{default_domain}/embed-1/v2/e-1/getSources?id={file_id}', headers=headers).json()
-encrypted = response['sources']
-
-# Get Password 
-response = requests.get(key_url).json()
-password = response['vidstr']
-
-# Decrypt encrypted data
-decrypted_data = decrypt_openssl(encrypted, password)
+response = requests.get(f'{default_domain}/embed-1/v3/e-1/getSources?id={file_id}&_k={nonce}', headers=headers).json()
+sources = response['sources']
 
 # Extract video URL
-json_data = json.loads(decrypted_data)
-video_url = json_data[0]['file']
+video_url = sources[0]['file']
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
