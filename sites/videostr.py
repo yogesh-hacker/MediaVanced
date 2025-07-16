@@ -1,10 +1,7 @@
 import re
 import json
-import base64
-import hashlib
 import requests
 from bs4 import BeautifulSoup
-from Crypto.Cipher import AES
 from urllib.parse import urlparse
 
 '''
@@ -49,10 +46,13 @@ nonce = re.search(r'\b[a-zA-Z0-9]{48}\b', response).group()
 
 # Get encrypted data
 response = requests.get(f'{default_domain}/embed-1/v3/e-1/getSources?id={file_id}&_k={nonce}', headers=headers).json()
-sources = response['sources']
+encrypted = response.get('encrypted')
 
 # Extract video URL
-video_url = sources[0]['file']
+if encrypted:
+    print("Encryption not supported, we are working on a fix! Please wait!")
+else:
+    video_url = response['sources'][0]['file']
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
