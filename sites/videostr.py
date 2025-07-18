@@ -1,8 +1,10 @@
 import re
 import json
+import base64
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote_plus
+import os
 
 '''
 Supports:
@@ -24,6 +26,8 @@ class Colors:
 provider_url = 'https://flixhq.tube/ajax/episode/sources/11998768'
 base_url = requests.get(provider_url).json()['link'] # https://videostr.net/embed-1/v3/e-1/<VIDEO_ID>?z=
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+decode_url ="https://script.google.com/macros/s/AKfycbwSUvTtQrYJlFQUvp143oKp_C4iua0sw2SiMIb2Xa5az2I647_yHxlqnsc19qUSts6Zpw/exec"
+key = "AaND3XizK1QoixkfwyJfztls3yx5LALK1XBbOgxiyolzVhE"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -50,7 +54,16 @@ encrypted = response.get('encrypted')
 
 # Extract video URL
 if encrypted:
-    print("Encryption not supported, we are working on a fix! Please wait!")
+    # Get required values to decode
+    encrypted_data = quote_plus(response['sources'])
+    nonce_encoded = quote_plus(nonce)
+    key_encoded = quote_plus(key)
+
+    # Decoding is handled on the server side to avoid PRNG-related issues in Python
+    # Original server-side implementation reference: https://github.com/yogesh-hacker/yogesh-hacker/blob/main/js/videostr.js
+    decode_url = f"{decode_url}?encrypted_data={encrypted_data}&nonce={nonce_encoded}&secret={key_encoded}"
+    response = requests.get(decode_url, allow_redirects=True).text
+    video_url = re.search(r'\"file\":\"(.*?)\"', response).group(1)
 else:
     video_url = response['sources'][0]['file']
 
