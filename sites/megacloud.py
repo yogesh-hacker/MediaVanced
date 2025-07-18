@@ -1,11 +1,8 @@
 import re
 import json
-import base64
-import hashlib
 import requests
 from bs4 import BeautifulSoup
-from Crypto.Cipher import AES
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote_plus
 
 '''
 Supports:
@@ -26,8 +23,9 @@ class Colors:
 # Constants
 provider_url = 'https://hianime.to/ajax/v2/episode/sources?id=1155827'
 base_url = requests.get(provider_url).json()['link'] # https://megacloud.blog/embed-2/v2/e-1/<VIDEO_ID>?k=1&autoPlay=1&oa=0&asi=1
-key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+decode_url ="https://script.google.com/macros/s/AKfycbwSUvTtQrYJlFQUvp143oKp_C4iua0sw2SiMIb2Xa5az2I647_yHxlqnsc19qUSts6Zpw/exec"
+key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -36,26 +34,6 @@ headers = {
     "Referer": default_domain,
     "User-Agent": user_agent
 }
-
-# Utility Functions
-def openssl_key_iv(password, salt, key_len=32, iv_len=16):
-    # Implements OpenSSL's EVP_BytesToKey derivation
-    d = d_i = b""
-    while len(d) < key_len + iv_len:
-        d_i = hashlib.md5(d_i + password + salt).digest()
-        d += d_i
-    return d[:key_len], d[key_len:key_len + iv_len]
-
-def decrypt_openssl(enc_base64, password):
-    data = base64.b64decode(enc_base64)
-    assert data[:8] == b"Salted__"
-    salt = data[8:16]
-    key, iv = openssl_key_iv(password.encode(), salt)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted = cipher.decrypt(data[16:])
-    # Remove PKCS7 padding
-    padding_length = decrypted[-1]
-    return decrypted[:-padding_length].decode()
 
 # Fetch initial response
 response = requests.get(base_url, headers=headers).text
@@ -66,21 +44,31 @@ video_tag = soup.select_one('#megacloud-player')
 if not video_tag:
     exit(print(f'{Colors.fail}Looks like URL expired!{Colors.endc}'))
 file_id = video_tag['data-id']
+nonce = re.search(r'\b[a-zA-Z0-9]{48}\b', response).group()
 
-# Get encrypted data
-response = requests.get(f'{default_domain}/embed-2/v2/e-1/getSources?id={file_id}', headers=headers).json()
-encrypted = response['sources']
 
 # Get Password 
 response = requests.get(key_url).json()
-password = response['mega']
+key = response['mega']
 
-# Decrypt encrypted data
-decrypted_data = decrypt_openssl(encrypted, password)
+# Get encrypted data
+response = requests.get(f'{default_domain}/embed-2/v3/e-1/getSources?id={file_id}&_k={nonce}', headers=headers).json()
+encrypted = response['sources']
 
 # Extract video URL
-json_data = json.loads(decrypted_data)
-video_url = json_data[0]['file']
+if encrypted:
+    # Get required values to decode
+    encrypted_data = quote_plus(response['sources'])
+    nonce_encoded = quote_plus(nonce)
+    key_encoded = quote_plus(key)
+
+    # Decoding is handled on the server side to avoid PRNG-related issues in Python
+    # Original server-side implementation reference: https://github.com/yogesh-hacker/yogesh-hacker/blob/main/js/videostr.js
+    decode_url = f"{decode_url}?encrypted_data={encrypted_data}&nonce={nonce_encoded}&secret={key_encoded}"
+    response = requests.get(decode_url, allow_redirects=True).text
+    video_url = re.search(r'\"file\":\"(.*?)\"', response).group(1)
+else:
+    video_url = response['sources'][0]['file']
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
