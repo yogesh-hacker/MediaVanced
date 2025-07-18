@@ -46,7 +46,10 @@ video_tag = soup.select_one('#megacloud-player')
 if not video_tag:
     exit(print(f'{Colors.fail}Looks like URL expired!{Colors.endc}'))
 file_id = video_tag['data-id']
-nonce = re.search(r'\b[a-zA-Z0-9]{48}\b', response).group()
+
+# Get Nonce
+match = re.search(r'\b[a-zA-Z0-9]{48}\b', response) or re.search(r'\b([a-zA-Z0-9]{16})\b.*?\b([a-zA-Z0-9]{16})\b.*?\b([a-zA-Z0-9]{16})\b', response)
+nonce = ''.join(match.groups()) if match and match.lastindex == 3 else match.group() if match else None
 
 # Get Passphrase 
 response = requests.get(key_url).json()
