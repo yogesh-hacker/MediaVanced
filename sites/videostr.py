@@ -11,6 +11,10 @@ Supports:
 https://videostr.net/
 '''
 
+# @Megacloud, @VideoStr || Am I look dumb to you? You cannot defeat me, note that!
+# Still Confused? see PlayerX/Vidstream scraper
+
+
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -26,7 +30,7 @@ class Colors:
 provider_url = 'https://flixhq.tube/ajax/episode/sources/11998768'
 base_url = requests.get(provider_url).json()['link'] # https://videostr.net/embed-1/v3/e-1/<VIDEO_ID>?z=
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-decode_url ="https://script.google.com/macros/s/AKfycbwSUvTtQrYJlFQUvp143oKp_C4iua0sw2SiMIb2Xa5az2I647_yHxlqnsc19qUSts6Zpw/exec"
+decode_url = "https://script.google.com/macros/s/AKfycbx-yHTwupis_JD0lNzoOnxYcEYeXmJZrg7JeMxYnEZnLBy5V0--UxEvP-y9txHyy1TX9Q/exec"
 key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
