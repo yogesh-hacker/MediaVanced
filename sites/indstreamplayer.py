@@ -8,26 +8,9 @@ import sys
 
 '''
 Supports:
-https://asiow333rnva.com/
-https://denni348sof.com/
-https://diego343qop.com/
-https://dplur342dmx.com/
-https://dumjo347cug.com/
-https://fino338khhe.com/
-https://ftmoh345xme.com/
 https://hi351sinoom.com/
-https://hlils336miq.com/
-https://hokpi334amve.com/
-https://jerry350kiz.com/
-https://jillw337rpo.com/
 https://jole340erun.com/
-https://jolls346dae.com/
-https://kinne341wokre.com/
-https://route7ind.com/
-https://simba344doe.com/
-https://sopt339qumi.com/
-https://vista335lopq.com/
-https://vitea349ina.com/
+https://heily367ltt.com/
 '''
 
 class Colors:
@@ -42,7 +25,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://hi351sinoom.com/play/tt13622970"
+base_url = "https://heily367ltt.com/play/tt28037987"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}"
 
