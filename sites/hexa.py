@@ -9,6 +9,7 @@ import hashlib
 import requests
 from Crypto.Hash import MD5
 from Crypto.Cipher import AES
+from urllib.parse import urlparse
 from Crypto.Util.Padding import unpad, pad
 
 '''
@@ -16,7 +17,11 @@ Supports:
 https://hexa.watch/
 '''
 
-# @Hexa, The cookie was yummy! Do you want the celestial taste?
+# To Hexa: Eh ji gaali de raha hai!(Hindi)
+# Bro, If you want I can stop scraping,
+# just you have to be kind and respectful.
+# Just contact me! I will stop, Like PlayerX did! :)
+
 
 class Colors:
     header = '\033[95m'
@@ -30,10 +35,11 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://hexa.watch/watch/movie/284054"
+base_url = "https://hexa.watch/watch/movie/1087192"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
-    "Referer": "https://hexa.watch/",
+    "Referer": default_domain,
     "Accept": "*/*",
     "User-Agent": user_agent
 }
@@ -92,8 +98,8 @@ timestamp = int(time.time() * 1000)
 random_str = ''.join(random.choices(string.ascii_lowercase + string.digits, k=13))
 
 # Primary and secondary encryption keys (Base64-encoded)
-key_main = "aG9wZSB5b3UgaGFkIGZ1biBkZWNyeXB0aW5nIHRoaXMgZ29vZCBqb2Igbm93IGdvIGFzayB5b3VyIG1vbSBmb3IgYSBjb29raWU="
-key_secondary = "b21nIHlvdSBmb3VuZCBteSBrZXkgcGxlYXNlIGdvIHRvdWNoIGdyYXNzIHlvdSBsaXR0bGUgZmF0IGJhc2VtZW50IG1vbmtleQ=="
+key_main = "WWpKV2VWbHVWbTVpTWtveFdsZHNiMk50WkdsaU0yd3hZVWRzYmxwWVNuWmhXRlp2WlZka2VWcFhTbTloVnpreFpWUkNiRm96U25aaFIyd3hZVzAxZVZveVZtOWliV3d4WWpKd2JtTnRWbTlrVjJ4MVdqSldlV0p0YkhaWmJXZDNaRmRXZVZveVNuQmlNbWd4V2xoS2JtSnRiREU9"
+key_secondary = "eWFwcGl0eSB5YXAgeWFwIHlhcCBreXMgY3VudCBhc3MgYml0Y2gg="
 
 # First layer: original payload with checksum
 payload_lvl1 = {
@@ -140,4 +146,6 @@ video_url = random.choice(decrypted_data)['url']
 print("\n" + "#" * 25 + "\n" + "#" * 25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#" * 25 + "\n" + "#" * 25)
+print(f"{Colors.warning}### Use these headers to access the URL")
+print(f"{Colors.okcyan}Referer:{Colors.endc} {default_domain}")
 print("\n")
