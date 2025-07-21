@@ -2,6 +2,9 @@ import requests
 import re
 import json
 
+# !!!![Alert]!!!
+# 18+ Content
+
 '''
 Supports:
 https://www.pornhub.org/
