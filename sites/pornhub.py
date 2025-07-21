@@ -5,6 +5,7 @@ import json
 '''
 Supports:
 https://www.pornhub.org/
+https://www.pornhub.com/
 '''
 
 class Colors:
@@ -19,7 +20,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://www.pornhub.org/view_video.php?viewkey=67fbdfa54f208"
+base_url = "https://www.pornhub.com/view_video.php?viewkey=67fbdfa54f208"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
 headers = {
     "Referer": "https://www.pornhub.org/"
