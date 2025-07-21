@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
+# !!!![Alert]!!!
+# 18+ Content
+
 '''
 Supports:
 https://www.pornhat.com/
