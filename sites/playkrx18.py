@@ -7,6 +7,8 @@ from Crypto.Hash import MD5
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad, pad
 
+# !!!![Alert]!!!
+# 18+ Content
 
 '''
 Supports:
