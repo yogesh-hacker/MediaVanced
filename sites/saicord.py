@@ -1,7 +1,8 @@
-import requests
 import re
-from bs4 import BeautifulSoup
 import base64
+import requests
+import cloudscraper
+from bs4 import BeautifulSoup
 
 '''
 Supports:
@@ -28,12 +29,15 @@ headers = {
 }
 
 cookies = {
-    "cf_clearance" : "7EMvhCoJXzLoB95qoypKRxLaPwEPPMQ_lxNTrZXUgHg-1718419969-1.0.1.1-MDMXbyRum_hdlG34Ovqctc_8sHoWFCS1PMa1xp17Rwydf_uZWwRYnKdeTUprNRxfkExtOm6K_rJPxHzeKOc4KQ"
+    "cf_clearance" : "Y8doFuh8iHDmeTtx2BcymH_XUdwUg2rbT7ebwRTmMsQ-1722687625-1.0.1.1-32h0KLviCUYW48bTf3GzGn5MgqW9GMlNCo2t28iFRzW3y2aTMQeLq_iMtmteV4GpfqzpMI.7E1ww6jWGofoRIw"
 }
 
+# Create Cloudscraper Session to bypass Cloudflare
+scraper = cloudscraper.create_scraper()
+
 # Fetch response
-initial_response = requests.get(base_url, headers=headers, cookies=cookies).text
-soup = BeautifulSoup(initial_response,"html.parser")
+response = scraper.get(base_url, headers=headers, cookies=cookies).text
+soup = BeautifulSoup(response,"html.parser")
 
 # Get main script
 iframe = soup.find("div", attrs={"class": "player-iframe"})
