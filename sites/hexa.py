@@ -99,7 +99,7 @@ random_str = ''.join(random.choices(string.ascii_lowercase + string.digits, k=13
 
 # Primary and secondary encryption keys (Base64-encoded)
 key_main = "WWpKV2VWbHVWbTVpTWtveFdsZHNiMk50WkdsaU0yd3hZVWRzYmxwWVNuWmhXRlp2WlZka2VWcFhTbTloVnpreFpWUkNiRm96U25aaFIyd3hZVzAxZVZveVZtOWliV3d4WWpKd2JtTnRWbTlrVjJ4MVdqSldlV0p0YkhaWmJXZDNaRmRXZVZveVNuQmlNbWd4V2xoS2JtSnRiREU9"
-key_secondary = "eWFwcGl0eSB5YXAgeWFwIHlhcCBreXMgY3VudCBhc3MgYml0Y2gg="
+key_secondary = "eWFwcGl0eSB5YXAgeWFwIIHlhcCBreXMgY3VudCBhc3MgYml0Y2gg="
 
 # First layer: original payload with checksum
 payload_lvl1 = {
