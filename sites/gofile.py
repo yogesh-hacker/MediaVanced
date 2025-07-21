@@ -19,7 +19,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://gofile.io/d/xjLcKn"
+base_url = "https://gofile.io/d/R9eH8Y"
 guest_account_url = "https://api.gofile.io/accounts"
 headers = {
     "Access-Control-Request-Headers": "authorization",
