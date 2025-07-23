@@ -23,7 +23,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://filemoon.to/e/zop9p2hhgmtc/"
+base_url = "https://filemoon.to/e/b0ypyzt8ewqo"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
@@ -83,4 +83,7 @@ video_url = re.search(r'file:"([^"]+)', decoded_data).group(1)
 print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#"*25 + "\n" + "#"*25)
-print(f"{Colors.warning}### Please use header Referer: {default_domain} or host of the CDN to access the URL, along with the User-Agent.\n")
+print(f"{Colors.warning}### Use these headers to access the URL")
+print(f"{Colors.okcyan}Referer:{Colors.endc} {default_domain}")
+print(f"{Colors.okcyan}User-Agent:{Colors.endc} {user_agent}")
+print("\n")
