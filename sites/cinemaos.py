@@ -2,8 +2,6 @@ import re
 import json
 import random
 import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
 from Crypto.Cipher import AES
 from urllib.parse import urlparse
 from Crypto.Util.Padding import unpad
@@ -52,7 +50,7 @@ else:
     exit(print(f'{Colors.fail}TV Series currently not supported!'))
 
 # Get encrypted data
-response = requests.get(f"https://cinemaos.live/api/cinemaos?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t={title}&ry={release_year}", headers=headers).json()['data']
+response = requests.get(f"{default_domain}/api/cinemaos?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t={title}&ry={release_year}", headers=headers).json()['data']
 
 # Extract hex strings from the response
 encrypted_hex = response['encrypted']
