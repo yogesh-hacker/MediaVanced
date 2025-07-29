@@ -58,7 +58,7 @@ iv_hex = response['cin']
 auth_tag_hex = response['mao']
 
 # Convert Hex to Bytes
-key_hex = "6f8c2e9a4b1d7f3e8c5a2b6d9e0f4c1a7b3e5d8c0a2f6b4d9e1c3a7f5b2d8c6e"
+key_hex = "9f7b6c2d4e1a8f3b5d7c9e0f2a4b6d8c1e3f5a7c9e0d2b4c6f8a1e3d5c7b9f0e"
 key = bytes.fromhex(key_hex)
 ciphertext = bytes.fromhex(encrypted_hex)
 iv = bytes.fromhex(iv_hex)
