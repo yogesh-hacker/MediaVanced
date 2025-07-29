@@ -7,6 +7,7 @@ from urllib.parse import urlencode, urlparse, parse_qs, urlunparse
 '''
 Supports:
 https://streamingcommunityz.info/
+https://vixcloud.co/
 '''
 
 class Colors:
