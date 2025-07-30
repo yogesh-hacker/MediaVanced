@@ -29,8 +29,7 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "application/xml",
-    "X-Csrf-Token": "ihdTiOunxvzwSzlAc6yQ011yS5sEoZ4i",
+    "Content-Type": "application/x-font-ttf",
     "X-Requested-With": "XMLHttpRequest",
 }
 
@@ -38,7 +37,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "dHlmM-1V67GZuzoiw03f_rSgktRcB4b9DhPWALpCsEFOnUQ8yKXaINjJ2Ye5qvTx"
+    dst = "LP3F7GHThkbcmBMne4xj6vJXu5oKsUI8RZ19wD0tzQYg2SWVE_NyqAlfrOiapCd-"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -53,8 +52,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "8e2f64693e6c7c6fcf41a7b8661614beaa6f4b73a2ffddeb9fcf2c3c65dc14d3"
-iv_hex = "e0e63b0180b6e2863b72cae86800c2ce"
+key_hex = "c941903738fd081b3d42bee6b999fc6a645e6f9a79718185c736f9e54b10e27d"
+iv_hex = "4aa33bb0575f296c88b5fa2506b79a33"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -63,14 +62,14 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("c971e00d9bb093")
+xor_key = bytes.fromhex("6cca2db4b28ae369")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "po/d0fe26d4"
+static_path = "dbd3bd6508695cff4fb89d7e8df11e94bacecc22bd3a9edef483e1d52cff55d4"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
 response = requests.get(api_servers, headers=headers).json()
 
