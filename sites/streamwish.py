@@ -1,25 +1,27 @@
-import requests
-from bs4 import BeautifulSoup
-import json
 import re
 import ast
+import json
+import requests
+from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+
+# This scraper is compatible with all websites that follow a structure similar to Filelions, Streamwish, or StreamHG.
+
 
 '''
 Supports:
 https://streamwish.to/
-https://rapidplayers.com/
-https://moflix-stream.click/
-https://dhtpre.com/
-https://vidhide.com/
-https://mixdrop.ps/
-https://multimovies.cloud/
-https://hlsflex.com/
+https://hgplaycdn.com
+https://davioad.com/
+https://habetar.com
 https://ghbrisk.com/
-https://niikaplayerr.com/
 https://uqloads.xyz/
+https://davioad.com/
+https://yuguaab.com/
+https://guxhag.com/
+https://taylorplayer.com/
 https://filelions.to/
-https://dhcplay.com/
+https://mivalyo.com
 '''
 
 class Colors:
@@ -33,7 +35,8 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-base_url = "https://dhcplay.com/exk2ot4ibxgx"
+# Constants
+base_url = "https://taylorplayer.com/f/5xo3u4bpl2e1"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
