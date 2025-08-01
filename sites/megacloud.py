@@ -10,8 +10,7 @@ Supports:
 https://megacloud.blog/
 '''
 
-# @Megacloud, @VideoStr || Am I look dumb to you? You cannot defeat me, note that!
-# Still Confused? see PlayerX/Vidstream scraper
+# @Megacloud, @VideoStr || Love you guys! ❤️
 
 class Colors:
     header = '\033[95m'
@@ -28,7 +27,7 @@ class Colors:
 provider_url = 'https://hianime.to/ajax/v2/episode/sources?id=1155827'
 base_url = requests.get(provider_url).json()['link'] # https://megacloud.blog/embed-2/v2/e-1/<VIDEO_ID>?k=1&autoPlay=1&oa=0&asi=1
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-decode_url ="https://script.google.com/macros/s/AKfycbx-yHTwupis_JD0lNzoOnxYcEYeXmJZrg7JeMxYnEZnLBy5V0--UxEvP-y9txHyy1TX9Q/exec"
+decode_url ="https://script.google.com/macros/s/AKfycbxHbYHbrGMXYD2-bC-C43D3njIbU-wGiYQuJL61H4vyy6YVXkybMNNEPJNPPuZrD1gRVA/exec"
 key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
