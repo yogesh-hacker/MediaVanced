@@ -1,6 +1,7 @@
-from requests import get, post
 import re
-import os
+import requests
+from urllib.parse import urlparse
+
 
 '''
 Supports:
@@ -10,33 +11,37 @@ https://embdproxy.xyz/
 https://spedostream.com/
 '''
 
-class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
-default_domain = "https://spedostream.com/"
-base_url = "https://spedostream.com/embed-3l5zif7vfs57.html"
-initial_headers = {
+class Colors:
+    header = '\033[95m'
+    okblue = '\033[94m'
+    okcyan = '\033[96m'
+    okgreen = '\033[92m'
+    warning = '\033[93m'
+    fail = '\033[91m'
+    endc = '\033[0m'
+    bold = '\033[1m'
+    underline = '\033[4m'
+
+# Constants
+base_url = "https://spedostream.com/embed-l22uzg5bztn5.html"
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
+headers = {
     'Referer': default_domain
 }
 
-initial_response = get(base_url, headers = initial_headers)
-initial_page_html = initial_response.text
-pattern = r'file:"([^"]+)"'
-match = re.search(pattern, initial_page_html)
-if match:
-    video_url = match.group(1)
-    print("\n" + "#"*25 + "\n" + "#"*25)
-    print(f"Captured URL: {Colors.OKGREEN}{video_url}{Colors.ENDC}")
-    print("#"*25 + "\n" + "#"*25)
-    print(f"{Colors.WARNING}###Please use header Referer: {default_domain} or host of the CDN to access the url\n")
-    
-else:
-    print("URL not found.")
+# Fetch page content
+response = requests.get(base_url, headers = headers).text
+
+# Extract video URL
+video_url = re.search(r'file:"([^"]+)"', response).group(1)
+
+# Print results
+print("\n" + "#" * 25 + "\n" + "#" * 25)
+print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
+print("#" * 25 + "\n" + "#" * 25)
+print(f"{Colors.warning}### Use these headers to access the URL")
+
+# Print headers by key: value
+print(f"{Colors.okcyan}Referer:{Colors.endc} {default_domain}")
+print("\n")
