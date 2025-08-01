@@ -33,11 +33,13 @@ regex_pattern = r"document\.getElementById\(['\"]captchalink['\"]\)\.innerHTML\s
 
 # Extract video URL
 video_match = re.search(regex_pattern, initial_response)
+if not video_match:
+    exit(print(f'{Colors.fail}ERROR: Streaming URL not found. The video may have been removed.{Colors.endc}'))
 video_url = "https:" + video_match.group(1) + video_match.group(2)[4:]
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#" * 25 + "\n" + "#" * 25)
-print(f"{Colors.warning}### This link is only valid for your current IP.")
+print(f"{Colors.warning}### {Colors.bold}Note:{Colors.endc}{Colors.warning} This video URL is valid only for your current IP address.")
 print("\n")
