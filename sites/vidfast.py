@@ -34,7 +34,7 @@ headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
     "x-session": "",
-    "Content-Type": "application/json",
+    "Content-Type": "application/x-shockwave-flash",
     "X-Requested-With":"XMLHttpRequest",
 }
 
@@ -42,7 +42,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "7EkRi2WnMSlgLbXm_jy1vtO69ehrAV0-saUB5FGpoq3QuNIZ8wJ4PfdHxzTDKYCc"
+    target_chars = "OCmbtfWoski0dEv3HFhu_G1cDUw6QARY87-VJpjqlNLTIZrX249PeSnBgz5MaxyK"
     translation_table = str.maketrans(source_chars, target_chars)
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
     return encoded.translate(translation_table)
@@ -57,8 +57,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = '2adaf9545534ea4150a7f2f7479aed88717d7f8f28da19707061cb665c979502'
-iv_hex = '3317da601aadecb751153f9f00d28a50'
+key_hex = '5b783a7f09f7e006661a5ebf3ef8952fdfc03e41892bf1597f7d8dda49dcb6a9'
+iv_hex = 'a3d48b44795d9c2592ee4c3294258242'
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -68,21 +68,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_key = bytes.fromhex("6a131fa110a0")
+xor_key = bytes.fromhex("11860f0e9ebe20c03c")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Encode XORed data
 encoded_final = custom_encode(xor_result)
 
 # Get streaming servers
-static_path = "543db48b-8d5c-504e-8bd4-27cb52f94949/15b7352a/b/e4b2782d0a2fba2dd0fee0d388b41510fb50c036d073952c9ccc9a77264c0b50/jevhittih"
+static_path = "1000090675158710"
 data = {}
-api_servers = f"https://vidfast.pro/{static_path}/AxEZ/{encoded_final}"
+api_servers = f"https://vidfast.pro/{static_path}/DJIvtQ/{encoded_final}"
 response = requests.post(api_servers, headers=headers, json=data).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://vidfast.pro/{static_path}/04AoGz0d/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/cz7wg6oT0Q/{server}"
 response = requests.post(api_stream, headers=headers).json()
 
 # Extract video URL
