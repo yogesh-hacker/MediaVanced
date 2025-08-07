@@ -29,7 +29,7 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "application/x-font-ttf",
+    "Content-Type": "image/gif",
     "X-Requested-With": "XMLHttpRequest",
 }
 
@@ -37,7 +37,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "LP3F7GHThkbcmBMne4xj6vJXu5oKsUI8RZ19wD0tzQYg2SWVE_NyqAlfrOiapCd-"
+    dst = "MeKUPFfDy_QaGcLwT1bj4xn0g-quZH2vYWE56om3XStdzhl9AICisrN7OVpkJBR8"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -52,8 +52,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "c941903738fd081b3d42bee6b999fc6a645e6f9a79718185c736f9e54b10e27d"
-iv_hex = "4aa33bb0575f296c88b5fa2506b79a33"
+key_hex = "85a893b1171833dffaecf7731235ec416afccc6ffe29d41c16976b83f5e500b2"
+iv_hex = "8648b679a4168c5ed1f41f5d642417e6"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -62,21 +62,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("6cca2db4b28ae369")
+xor_key = bytes.fromhex("f6482348")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "dbd3bd6508695cff4fb89d7e8df11e94bacecc22bd3a9edef483e1d52cff55d4"
+static_path = "7ae59bfb/zac/g/APA912UWa5x0rMiGGcNeljgP7t8jA2Rt6lmnqqlv9r-5R9IjA_kbxjGxmWzw23y5WukwjDEAX0UDWlcUeJD-buSc0fwrRH8zieg0PuZJpqXbhUUCMuQCFS1zVPhlSHTkCyDHyolJ-9tBOOGgmIMKsVJRKAHG66Z44BMb9vWN6ByRjF-8vD6v1u1"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
-response = requests.get(api_servers, headers=headers).json()
+response = requests.post(api_servers, headers=headers).json()
 
 # Select a random server
 server = random.choice(response)['data']
 api_stream = f"https://111movies.com/{static_path}/{server}"
-response = requests.get(api_stream, headers=headers).json()
+response = requests.post(api_stream, headers=headers).json()
 
 # Extract video URL
 video_url = response['url']
