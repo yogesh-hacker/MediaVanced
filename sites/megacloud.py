@@ -61,7 +61,7 @@ response = requests.get(f'{default_domain}/embed-2/v3/e-1/getSources?id={file_id
 encrypted = response['sources']
 
 # Extract video URL
-if encrypted:
+if not encrypted[0]:
     # Get required values to decode
     encrypted_data = quote_plus(response['sources'])
     nonce_encoded = quote_plus(nonce)
