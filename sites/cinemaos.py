@@ -28,7 +28,7 @@ user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
-    "Accept": "*/*",
+    "Origin": default_domain,
     "Referer": default_domain,
     "User-Agent": user_agent,
 }
@@ -58,7 +58,7 @@ iv_hex = response['cin']
 auth_tag_hex = response['mao']
 
 # Convert Hex to Bytes
-key_hex = "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
+key_hex = "a1b2c3d4e4f6589012345678901477567890abcdef1234567890abcdef123456"
 key = bytes.fromhex(key_hex)
 ciphertext = bytes.fromhex(encrypted_hex)
 iv = bytes.fromhex(iv_hex)
@@ -81,4 +81,7 @@ video_url = random_choice['url']
 print("\n" + "#" * 25 + "\n" + "#" * 25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#" * 25 + "\n" + "#" * 25)
-print('\n')
+print(f"{Colors.warning}### Use these headers to access the URL")
+print(f"{Colors.okcyan}Referer:{Colors.endc} {default_domain}")
+print(f"{Colors.okcyan}User-Agent:{Colors.endc} {user_agent}")
+print("\n")
