@@ -1,8 +1,8 @@
-import requests
 import re
-from urllib.parse import urlparse, parse_qsl, urlunparse, quote, unquote
 import ast
+import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 '''
 Supports:
