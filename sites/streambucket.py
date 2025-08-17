@@ -2,7 +2,7 @@ import re
 import ast
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 '''
 Supports:
