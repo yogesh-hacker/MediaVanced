@@ -4,12 +4,10 @@ import numbers
 import requests
 from urllib.parse import urlparse
 
-
 '''
 Supports:
 https://vidrock.net/
 '''
-
 
 class Colors:
     header = '\033[95m'
@@ -22,9 +20,8 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-
 # Constants
-base_url = "https://vidrock.net/movie/533535"
+base_url = "https://vidrock.net/tv/94997/1/1"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}'.format(uri=urlparse(base_url))
 headers = {
@@ -43,18 +40,15 @@ def numbers_to_text(numbers: str) -> str:
     return "".join(result)
 
 # Extract and reverse item ID from base URL
-isMovie = True
+item_type = "tv"
 if 'movie' in base_url:
-    item_id = base_url.split('/')[-1][::-1]
+    item_type = "movie"
+    item_id = numbers_to_text(base_url.split('/')[-1][::-1])
 else:
     segs = base_url.split('/')
     item_id = f"{segs[-1]}-{segs[-2]}-{segs[-3][::-1]}"
 
 # Double Base64 encode item_id
-item_type = "tv"
-if isMovie:
-    item_type = "movie"
-    item_id = numbers_to_text(item_id)
 encoded = base64.b64encode(item_id.encode()).decode()
 encoded = base64.b64encode(encoded.encode()).decode()
 
