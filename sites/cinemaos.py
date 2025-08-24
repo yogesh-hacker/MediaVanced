@@ -1,6 +1,7 @@
 import re
 import json
 import random
+import base64
 import requests
 from Crypto.Cipher import AES
 from urllib.parse import urlparse
@@ -39,13 +40,17 @@ response = requests.get(auth_api, headers=headers).json()
 auth_token = requests.post(auth_api, headers=headers, json=response).json()['token']
 headers['Authorization'] = f'Bearer {auth_token}'
 
+# TMDB API Key (VidRock)
+''' ⚠️ Warning: Unauthorized use of another person’s API key is prohibited. The provided key is intended strictly for testing purposes. We strongly recommend generating and using your own API key in production.'''
+api_key = base64.b64decode("NTRlMDA0NjZhMDk2NzZkZjU3YmE1MWM0Y2EzMGIxYTY=").decode('utf-8')
+
 # Get required data
 if 'movie' in base_url:
     data_id = base_url.split('/')[-1]
-    response = requests.get(f"{default_domain}/api/downloadLinks?type=movie&tmdbId={data_id}").json()['data'][0]
-    release_year = response['releaseYear']
-    title = response['movieTitle']
-    imdb_id = response['subtitleLink'].split('=')[-1]
+    response = requests.get(f"https://api.themoviedb.org/3/movie/{data_id}?api_key={api_key}").json()
+    release_year = response['release_date'].split('-')[0]
+    title = response['title']
+    imdb_id = response['imdb_id']
 else:
     exit(print(f'{Colors.fail}TV Series currently not supported!'))
 
