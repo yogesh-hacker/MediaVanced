@@ -23,13 +23,13 @@ def deobfuscate(code):
     code = re.sub(r'0[xX][0-9a-fA-F]+', hex_to_int, code)
 
     # Get offset
-    pattern = r"function\s*[a-zA-Z]\(\w,\w\){.*?return.*?[a-zA-Z]=[a-zA-Z]-(.*?);.*?}"
+    pattern = r"function\s*[\w$]+\([\w$]+,[\w$]+\){.*?return.*?[\w$]+=[\w$]+-(.*?);.*?}"
     match = re.search(pattern, code)
     if match:
         offset = eval(match.group(1))
 
     # Get target shift and start value
-    pattern = r"\(function\(.*?\)\{.*?var\s([a-zA-Z])=.*?while.*?var\s\w=(.*?);.*?\}\([a-zA-Z],(.*?)\)\)";
+    pattern = r"\(function\(.*?\)\{.*?var\s([\w$]+)=.*?while.*?var\s\w+=(.*?);.*?\}\([\w$]+,(.*?)\)\)";
     match = re.search(pattern, code)
     if match:
         fun_name = match.group(1)
@@ -38,7 +38,7 @@ def deobfuscate(code):
         code = re.sub(pattern, "", code, count=1)
 
     # Get array values
-    pattern = r"function\s[a-zA-Z]\(\){var\s[a-zA-Z]=(\[.*?\])\;.*?}.*?}"
+    pattern = r"function\s[\w$]+\(\){var\s[\w$]+=(\[.*?\])\;.*?}.*?}"
     match = re.search(pattern, code)
     if match:
         array = match.group(1)
@@ -49,7 +49,7 @@ def deobfuscate(code):
     rotated_array = ctx.eval("arr")
 
     # Deobfuscate 
-    pattern = r"[a-zA-Z]\((\d+)\)"
+    pattern = r"[\w$]+\((\d+)\)"
     code = re.sub(pattern, lambda m: replacer(m, offset, rotated_array), code)
 
     # Resolve values

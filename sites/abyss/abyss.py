@@ -59,14 +59,14 @@ script_obfuscated = script_elements[7].text
 deobfuscated = deobfuscator.deobfuscate(script_obfuscated)
 
 # Extract and decode main metadata
-encoded = re.search(r"[a-zA-Z]=\'(.*?)_\'", deobfuscated).group(1)
+encoded = re.search(r"[\w$]+=\'(.*?)_\'", deobfuscated).group(1)
 metadata = json.loads(decode(encoded))
 
 # Extract additional metadata values
-metadata['id'] = re.search(r"\[\'id\'\]=\'(edns.*?)\'", deobfuscated).group(1)
-metadata['slug'] = re.search(r"\[\'slug\'\]=\'(.*?)\'", deobfuscated).group(1)
-metadata['md5_id'] = re.search(r"\[\'md5_id\'\]=(\d+)", deobfuscated).group(1)
-metadata['domain'] = re.search(r"\[\'domain\'\]=\'(.*?)\'", deobfuscated).group(1)
+metadata['id'] = re.search(r"\'id\':\'(edns.*?)\'", deobfuscated).group(1)
+metadata['slug'] = re.search(r"\'slug\':\'(.*?)\'", deobfuscated).group(1)
+metadata['md5_id'] = re.search(r"\'md5_id\':(\d+)", deobfuscated).group(1)
+metadata['domain'] = re.search(r"\'domain\':\'(.*?)\'", deobfuscated).group(1)
 
 # Display metadata and constructed video URL
 print(f'\n{Colors.okgreen}METADATA:{Colors.endc} {metadata}')
