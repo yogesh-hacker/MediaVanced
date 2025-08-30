@@ -51,9 +51,6 @@ def unpack(p, a, c, k, e=None, d=None):
 base_url = base_url.replace('/f/', '/e/')
 response = requests.get(base_url, headers=headers).text
 
-if not response:
-    sys.exit(f"{Colors.fail}Error: Cannot find a valid script. It might be deleted. Exiting...{Colors.endc}")
-
 # Packed data pattern
 pattern = r'eval\(function\((.*?)\)\{.*\}\((.*?)\)\)'
 data_match = re.search(pattern, response)
@@ -64,7 +61,7 @@ if data_match:
     data = data_match.group(2).replace(".split('|')", "");
     data = ast.literal_eval(data)
 else:
-    print("Failed to extract packed data.")
+    exit(f"{Colors.fail}Error: Cannot find packed data. File might be deleted. Exiting...{Colors.endc}")
 
 # Extract variables from packed data
 p,a,c,k,e,d = data[0], int(data[1]), int(data[2]), data[3].split('|'), 0, {}
