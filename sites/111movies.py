@@ -29,7 +29,8 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "application/gzip",
+    "Content-Type": "image/gif",
+    "X-Csrf-Token": "DoMtB3WkHYhWF9gaXI2ck631cqnDDLmz",
     "X-Requested-With": "XMLHttpRequest",
 }
 
@@ -37,7 +38,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "E2wpG7Zf_Ft0Am5qCoxKvYUezc9XjbHNgO6W8LSuaiksPVM4InJDlByQhd-r3TR1"
+    dst = "AciutkO5ZY3n7EKIzrDBMUVG4Svx9qwhR-QbHy8oefJFs6dL2Pla0m1WC_XgNTjp"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -52,8 +53,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "2ee7f2d15f5899bf76c264b64a450cdbda1b14cf067cd97197bcff08874bdcae"
-iv_hex = "881b9bc33ff718dd59fcf4ac7217e7e2"
+key_hex = "781173cff06cfdc723733118cc1b2f470fff7aabd8c3ff538faf118fa7637107"
+iv_hex = "7b5f107225861b665b42c4185a96ff35"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -62,14 +63,14 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("faae4cdbc38becaff147")
+xor_key = bytes.fromhex("e20e56")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "m"
+static_path = "7c0899cf-3994-5ea5-b4d1-3d702b9e0ba1/APA91zGfxrwGYJhTKKNgzZabFoWI5LekcXzfpLG1FrDsXHssx47r10k6MWc5Lh9mWgeNWmXwYQmRA69t6SmFHrWcVKZ8zA6wWSQSG4c5kPwC460HDrCluwDEKU5MMCzxxfkDM3plxQ4WRNPjnMY2H1aObBIpH3u7XFIEPpjF6nvbsp-ur_a2vtM/ojo/28c10ffa/b"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
 response = requests.post(api_servers, headers=headers).json()
 
