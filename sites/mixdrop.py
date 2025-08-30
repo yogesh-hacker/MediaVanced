@@ -1,7 +1,8 @@
-import requests
 import re
+import ast
+import requests
 from bs4 import BeautifulSoup
-import sys
+from urllib.parse import urlparse
 
 class Colors:
     header = '\033[95m'
@@ -14,54 +15,65 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
-base_url = "https://mixdrop.sb/e/k0lo0mlqapx47o"
-user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-
+# Constants
+base_url = "https://mixdrop21.net/e/9n9vml60u33qp1d"
+user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
-    'Referer': "https://mixdrop.sb/",
+    'Referer': default_domain,
     'User-Agent': user_agent
 }
 
 # Utility Functions
-# Base-36 conversion helper function
-def to_base_36(n):
-    return '' if n == 0 else to_base_36(n // 36) + "0123456789abcdefghijklmnopqrstuvwxyz"[n % 36]
+''' JS Unpacker '''
+def unpack(p, a, c, k, e=None, d=None):
+    digits = "0123456789abcdefghijklmnopqrstuvwxyz"
+    def base_encode(n):
+        rem = n % a
+        digit = chr(rem + 29) if rem > 35 else digits[rem]
+        if n < a:
+            return digit
+        return base_encode(n // a) + digit
 
-# Replace placeholders with corresponding values
-def unpack(p,a,c,k,e,d):
-    for i in range(c):
-        if k[c - i - 1]:
-            p = re.sub(r'\b' + to_base_36(c - i - 1) + r'\b', k[c - i - 1], p)
-    return p
+    d = {} if d is None else d
+    for i in range(c - 1, -1, -1):
+        key = base_encode(i)
+        d[key] = k[i] if i < len(k) and k[i] else key
+
+    pattern = re.compile(r'\b\w+\b')
+    def replace(m):
+        w = m.group(0)
+        return d.get(w, w)
+
+    return pattern.sub(replace, p)
 
 # Fetch the initial response
+base_url = base_url.replace('/f/', '/e/')
 response = requests.get(base_url, headers=headers).text
 
-# Fetch and parse the initial response
-soup = BeautifulSoup(response, 'html.parser')
-script_content = next((script.text for script in soup.find_all('script') if "mxcontent" in script.text), "")
-if not script_content:
+if not response:
     sys.exit(f"{Colors.fail}Error: Cannot find a valid script. It might be deleted. Exiting...{Colors.endc}")
 
 # Packed data pattern
 pattern = r'eval\(function\((.*?)\)\{.*\}\((.*?)\)\)'
-data_match = re.search(pattern, script_content)
+data_match = re.search(pattern, response)
 
 # Extract packed data if found
 data = ""
 if data_match:
-    data = data_match.group(2).replace("\"", "").replace(".split('|')", "").replace("\'","").split(',')
+    data = data_match.group(2).replace(".split('|')", "");
+    data = ast.literal_eval(data)
 else:
     print("Failed to extract packed data.")
 
 # Extract variables from packed data
-p,a,c,k,e,d = data[0], int(data[1]), int(data[2]), data[3].split('|'), int(data[4]), {}
+p,a,c,k,e,d = data[0], int(data[1]), int(data[2]), data[3].split('|'), 0, {}
 
 # Replace function to decode the packed data
 decoded_data = unpack(p,a,c,k,e,d)
 
 # Regex to find the video URL
-regex_match = re.search(r"MDCore\.wurl=([^;]+)", decoded_data)
+regex_match = re.search(r'MDCore\.wurl=\"(.*?)\"', decoded_data)
 
 # Get video URL
 video_url = ""
@@ -74,4 +86,9 @@ else:
 print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
 print("#"*25 + "\n" + "#"*25)
-print(f"{Colors.warning}### Please use the header \"Referer: https://mixdrop.sb/\" or the CDN host to access the URL, along with a User-Agent.\n")
+print(f"{Colors.warning}### Use these headers to access the URL")
+
+# Print headers by key: value
+for key, value in headers.items():
+    print(f"{Colors.okcyan}{key}:{Colors.endc} {value}")
+print("\n")
