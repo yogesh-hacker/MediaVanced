@@ -11,6 +11,8 @@ Supports:
 https://111movies.com/
 '''
 
+# @111movies, Hehe :)
+
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -29,8 +31,7 @@ default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "image/gif",
-    "X-Csrf-Token": "DoMtB3WkHYhWF9gaXI2ck631cqnDDLmz",
+    "Content-Type": "text/css",
     "X-Requested-With": "XMLHttpRequest",
 }
 
@@ -38,7 +39,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "AciutkO5ZY3n7EKIzrDBMUVG4Svx9qwhR-QbHy8oefJFs6dL2Pla0m1WC_XgNTjp"
+    dst = "8YtWobvNRx5kInyF39POQcMdVspZT6hqLSzfU4wDE7J_auj1Hg2C-rmKX0leAGiB"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -53,8 +54,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = "781173cff06cfdc723733118cc1b2f470fff7aabd8c3ff538faf118fa7637107"
-iv_hex = "7b5f107225861b665b42c4185a96ff35"
+key_hex = "ad0547086a4af01be0bc6d32fbfbd775fc6268cbbd5956c41d16f86dd6150564"
+iv_hex = "038b6329f7c923be06539d29a8ea218d"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -63,14 +64,14 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("e20e56")
+xor_key = bytes.fromhex("d1a780288a3630")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "7c0899cf-3994-5ea5-b4d1-3d702b9e0ba1/APA91zGfxrwGYJhTKKNgzZabFoWI5LekcXzfpLG1FrDsXHssx47r10k6MWc5Lh9mWgeNWmXwYQmRA69t6SmFHrWcVKZ8zA6wWSQSG4c5kPwC460HDrCluwDEKU5MMCzxxfkDM3plxQ4WRNPjnMY2H1aObBIpH3u7XFIEPpjF6nvbsp-ur_a2vtM/ojo/28c10ffa/b"
+static_path = "jiw/1000026703982506/021d3694-f66c-53a3-8a18-3312bf83dc83/d1471be0ad7c0c1e18faf46e2fd530f3125b401b658fb48aafa9b68ce5c2caf6"
 api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
 response = requests.post(api_servers, headers=headers).json()
 
