@@ -24,44 +24,13 @@ class Colors:
 
 
 # Constants
-base_url = "https://multiembed.mov/?video_id=tt0495596"
+base_url = "https://multiembed.mov/?video_id=tt10698680"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 headers = {
     'Referer': 'https://multiembed.mov',
     'X-Requested-With': 'XMLHttpRequest',
     'User-Agent': user_agent
 }
-
-# Utility Functions
-''' A Base tranformer '''
-def base_transform(d, e, f):
-    charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
-    g = list(charset)
-    h = g[:e]
-    i = g[:f]
-    j = sum(h.index(b) * (e ** c) for c, b in enumerate(reversed(d)) if b in h)
-    k = ""
-    while j > 0:
-        k = i[j % f] + k
-        j = j // f
-    return k or 0
-
-''' HUNTER Unpacker '''
-def decode_hunter(h, u, n, t, e, r=None):
-    r = ""
-    i = 0
-    while i < len(h):
-        s = ""
-        while h[i] != n[e]:
-            s += h[i]
-            i += 1
-        i += 1
-        for j in range(len(n)):
-            s = re.sub(re.escape(n[j]), str(j), s)
-        char_code = int(base_transform(s, e, 10)) - t
-        r += chr(char_code)
-    return unquote(r)
-
 
 # Get page response and refered page
 if 'multiembed' in base_url:
@@ -87,7 +56,7 @@ soup = BeautifulSoup(response, 'html.parser')
 # Locate the VIP source
 vip_source = soup.find(lambda tag: tag.name == "li" and "vipstream-s" in tag.get_text(strip=True).lower())
 if not vip_source:
-    exit("No VIP Stream available. Exiting...")
+    exit(f"{Colors.fail}No VIP Stream available, other servers are not supported. Exiting...{Colors.endc}")
 
 # Extract server and video IDs from the VIP source element
 server_id = vip_source.get('data-server')
@@ -104,20 +73,8 @@ iframe_url = soup.select_one('iframe.source-frame.show')['src']
 # Get video page
 response = requests.get(iframe_url, headers=headers).text
 
-# Get the encoded HUNTER pack
-pattern = re.compile(r'\(\s*function\s*\([^\)]*\)\s*\{.*?\}\s*\(\s*(.*?)\s*\)\s*\)', re.DOTALL)
-match = pattern.search(response)
-if not match:
-    exit(print("Cannot find encoded HUNTER Pack."))
-
-# Decode encoded HUNTER Pack
-hunter_pack = match.group(1)
-data = ast.literal_eval(hunter_pack)
-h,u,n,t,e,r = data[0], data[1], data[2],data[3], data[4], data[5]
-decoded_data = decode_hunter(h,u,n,t,e,r)
-
 # Extract video URL
-video_match = re.search(r'file:"(https?://[^"]+)"', decoded_data)
+video_match = re.search(r'file:"(https?://[^"]+)"', response)
 video_url = video_match.group(1) if video_match else exit(print("No video URL found."))
 
 # Print results
