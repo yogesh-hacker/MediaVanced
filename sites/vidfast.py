@@ -34,6 +34,7 @@ headers = {
     "Accept": "*/*",
     "Referer": default_domain,
     "User-Agent": user_agent,
+    "X-Csrf-Token": "hLYDPpz5XlEh4oWR3JaU0ihThh7mbvyj",
     "X-Requested-With": "XMLHttpRequest",
 }
 
@@ -41,7 +42,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "19aQPL7DwphTK_xe0W8OUdRfE4lA-coSGjuzbN5q3BHtvrmXVMFkCsiIgy6Yn2JZ"
+    target_chars = "ItkaMA4L3DE-SJ60l5qfUFZv8gyenXhHWTQmbpiz97jGCwxYds1_NR2POBVcuKor"
     translation_table = str.maketrans(source_chars, target_chars)
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
     return encoded.translate(translation_table)
@@ -59,8 +60,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = '9c746a308f48f785fbe57488a6669e6d2f366f40e7c80101b24a264404e7ef9f'
-iv_hex = '73ef6dd6f01c75f22566198b4d9ef6b9'
+key_hex = '5d54e7149bdd09f7558eff9b22b39b23cacb70edf009bbd08b0bfa0e7f457106'
+iv_hex = '3a4d58f0e5eb27b6fdd95663c65a9013'
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -70,21 +71,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_key = bytes.fromhex("1a544e951d2f1545ca")
+xor_key = bytes.fromhex("477b754e22")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Encode XORed data
 encoded_final = custom_encode(xor_result)
 
 # Get streaming servers
-static_path = "hezushon/e881770604510fd5f378f952c69fcb6e191d66fd436c25997dee13fcf70531da/c7f55a19115f281e0b7279f8077c3b4113084807/APA91l3tB9AWRaN-YMHbYrXpV1xNal8FWhIQqISYQGT_vQp-squv3EoJVieii9yOljS27YjQgaVwkzWEUaal6U3Hvws-64zNEDWuJ-5XsgYstm4QoGwrewlgtB6y0JueRRA7HMzj0EcyqmKggZ8c3rFTVqQ2_zQ8_p-3_B7PHcQhgJh4r2Kr91h/eno/b923c088-e851-5887-aeb5-eb973475da92/af4335c7/1000044045881926/x"
+static_path = "hezushon/94b0e8ea04dc4ad2d144d9e7e01232a8496154f0fb0e9848a06a87431799c9b3/APA91DoxgFNWXCNB9IVGr4g25O4HfYOOKWctDQbbUNDuOaIkMAprQx5C7GlU93kA1LbCmPzKj_f7OZ3wtbVP6AykcHT4XRhYhBZAQ_VR1Ejs0GxM6tC57erO1-JjYRCRMTMuuoubol50lGJP00KykB8hifnXsQw2wAFbycBc1RH-ADj9LKVgNAU"
 data = {}
-api_servers = f"https://vidfast.pro/{static_path}/v54C_v8/{encoded_final}"
+api_servers = f"https://vidfast.pro/{static_path}/5ggOqUlVpP64/{encoded_final}"
 response = scraper.get(api_servers).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://vidfast.pro/{static_path}/UVsx3Ss/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/oOk/{server}"
 response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
