@@ -9,6 +9,7 @@ from urllib.parse import urlparse, quote_plus
 '''
 Supports:
 https://videostr.net/
+https://streameeeeee.site/
 '''
 
 # @Megacloud, @VideoStr || Love you guys! ❤️
@@ -25,7 +26,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-provider_url = 'https://flixhq.tube/ajax/episode/sources/11998768'
+provider_url = 'https://flixhq.to/ajax/episode/sources/11998768'
 base_url = requests.get(provider_url).json()['link'] # https://videostr.net/embed-1/v3/e-1/<VIDEO_ID>?z=
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 decode_url = "https://script.google.com/macros/s/AKfycbxHbYHbrGMXYD2-bC-C43D3njIbU-wGiYQuJL61H4vyy6YVXkybMNNEPJNPPuZrD1gRVA/exec"
@@ -44,7 +45,7 @@ response = requests.get(base_url, headers=headers).text
 soup = BeautifulSoup(response, 'html.parser')
 
 # Get file ID and nonce
-video_tag = soup.select_one('#megacloud-player')
+video_tag = soup.select_one('[id$="-player"]')
 if not video_tag:
     exit(print(f'{Colors.fail}Looks like URL expired!{Colors.endc}'))
 file_id = video_tag['data-id']
