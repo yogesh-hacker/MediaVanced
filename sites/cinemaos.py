@@ -1,7 +1,9 @@
 import re
 import json
+import hmac
 import random
 import base64
+import hashlib
 import requests
 from Crypto.Cipher import AES
 from urllib.parse import urlparse
@@ -11,6 +13,8 @@ from Crypto.Util.Padding import unpad
 Supports:
 https://cinemaos.live/
 '''
+
+# @Cinemaos, Why making it complex? Signature, AES & Auth. What about latency?
 
 class Colors:
     header = '\033[95m'
@@ -26,6 +30,7 @@ class Colors:
 # Constants
 base_url = "https://cinemaos.live/movie/watch/1061474"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+secret_key = "a1b2c3d4e4f6589012345678901477567890abcdef1234567890abcdef123456"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -35,7 +40,7 @@ headers = {
 }
 
 # Get auth token
-auth_api = f'{default_domain}/api/auth'
+auth_api = f'{default_domain}/api/auth/securex'
 response = requests.get(auth_api, headers=headers).json()
 auth_token = requests.post(auth_api, headers=headers, json=response).json()['token']
 headers['Authorization'] = f'Bearer {auth_token}'
@@ -54,8 +59,18 @@ if 'movie' in base_url:
 else:
     exit(print(f'{Colors.fail}TV Series currently not supported!'))
 
+# Construct the message string to be signed
+tmdb_id = data_id
+season_id = ""
+episode_id = ""
+message_string = f"tmdb:{tmdb_id}|season:{season_id}|episode:{episode_id}"
+
+# Generate an HMAC-SHA256 signature for the media identifiers using a secret key
+hmac_signature = hmac.new(secret_key.encode("utf-8"), message_string.encode("utf-8"), hashlib.sha256)
+signature_hash = hmac_signature.hexdigest()
+
 # Get encrypted data
-response = requests.get(f"{default_domain}/api/cinemaos?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t={title}&ry={release_year}", headers=headers).json()['data']
+response = requests.get(f"{default_domain}/api/cinemaos?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t={title}&ry={release_year}&secret={signature_hash}", headers=headers).json()['data']
 
 # Extract hex strings from the response
 encrypted_hex = response['encrypted']
