@@ -71,8 +71,7 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_hex = "773e3c35d04495b4e96"
-xor_key = bytes.fromhex(xor_hex[:-1] if len(xor_hex) % 2 else xor_hex)
+xor_key = bytes.fromhex("773e3c35d04495b4e9")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Encode XORed data
