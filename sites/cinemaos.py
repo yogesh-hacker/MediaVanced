@@ -30,7 +30,7 @@ class Colors:
 # Constants
 base_url = "https://cinemaos.live/movie/watch/1061474"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-secret_key = "a1b2c3d4e4f6589012345678901477567890abcdef1234567890abcdef123456"
+secret_key = "a1b2c3d4e4f6589008115678901477567890abcdef1234567890abcdef123456"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -78,7 +78,7 @@ iv_hex = response['cin']
 auth_tag_hex = response['mao']
 
 # Convert Hex to Bytes
-key_hex = "a1b2c3d4e4f6589012345678901477567890abcdef1234567890abcdef123456"
+key_hex = "a1b2c3d4e4f6589008115678901477567890abcdef1234567890abcdef123456"
 key = bytes.fromhex(key_hex)
 ciphertext = bytes.fromhex(encrypted_hex)
 iv = bytes.fromhex(iv_hex)
