@@ -14,7 +14,7 @@ Supports:
 https://cinemaos.live/
 '''
 
-# @Cinemaos, Why making it complex? Signature, AES & Auth. What about latency?
+# @Cinemaos, Hehe :)
 
 class Colors:
     header = '\033[95m'
@@ -30,7 +30,7 @@ class Colors:
 # Constants
 base_url = "https://cinemaos.live/movie/watch/1061474"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-secret_key = "a1b2c3d4e4f6589008115678901477567890abcdef1234567890abcdef123456"
+secret_key = "a8f7e9c2d4b6a1f3e8c9d2b4a7f6e9c2d4b6a1f3e8c9d2b4a7f6e9c2d4b6a1f3"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -40,7 +40,7 @@ headers = {
 }
 
 # Get auth token
-auth_api = f'{default_domain}/api/auth/securex'
+auth_api = f'{default_domain}/api/auth/player'
 response = requests.get(auth_api, headers=headers).json()
 auth_token = requests.post(auth_api, headers=headers, json=response).json()['token']
 headers['Authorization'] = f'Bearer {auth_token}'
@@ -63,7 +63,7 @@ else:
 tmdb_id = data_id
 season_id = ""
 episode_id = ""
-message_string = f"tmdb:{tmdb_id}|season:{season_id}|episode:{episode_id}"
+message_string = f"media|episodeId:{episode_id}|seasonId:{season_id}|tmdbId:{tmdb_id}"
 
 # Generate an HMAC-SHA256 signature for the media identifiers using a secret key
 hmac_signature = hmac.new(secret_key.encode("utf-8"), message_string.encode("utf-8"), hashlib.sha256)
