@@ -6,15 +6,17 @@ import base64
 import hashlib
 import requests
 from Crypto.Cipher import AES
+from Crypto.Hash import SHA256
 from urllib.parse import urlparse
 from Crypto.Util.Padding import unpad
+from Crypto.Protocol.KDF import PBKDF2
 
 '''
 Supports:
 https://cinemaos.live/
 '''
 
-# @Cinemaos, Hehe :)
+# Haha @Cinemaos, bro… cryptography is my playground now. PlayerX (scraper) made me unstoppable! 😉
 
 class Colors:
     header = '\033[95m'
@@ -38,12 +40,6 @@ headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
 }
-
-# Get auth token
-auth_api = f'{default_domain}/api/auth/player'
-response = requests.get(auth_api, headers=headers).json()
-auth_token = requests.post(auth_api, headers=headers, json=response).json()['token']
-headers['Authorization'] = f'Bearer {auth_token}'
 
 # TMDB API Key (VidRock)
 ''' ⚠️ Warning: Unauthorized use of another person’s API key is prohibited. The provided key is intended strictly for testing purposes. We strongly recommend generating and using your own API key in production.'''
@@ -73,16 +69,20 @@ signature_hash = hmac_signature.hexdigest()
 response = requests.get(f"{default_domain}/api/cinemaos?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t={title}&ry={release_year}&secret={signature_hash}", headers=headers).json()['data']
 
 # Extract hex strings from the response
-encrypted_hex = response['encrypted']
-iv_hex = response['cin']
-auth_tag_hex = response['mao']
+encrypted_hex = response.get('encrypted')
+iv_hex = response.get('cin')
+auth_tag_hex = response.get('mao')
+salt_hex = response.get('salt')
 
-# Convert Hex to Bytes
-key_hex = "a1b2c3d4e4f6589008115678901477567890abcdef1234567890abcdef123456"
-key = bytes.fromhex(key_hex)
+# Convert the password and all hex-encoded values into bytes
+password = b"a1b2c3d4e4f6589008115678901477567890abcdef1234567890abcdef123456"
 ciphertext = bytes.fromhex(encrypted_hex)
 iv = bytes.fromhex(iv_hex)
 auth_tag = bytes.fromhex(auth_tag_hex)
+salt = bytes.fromhex(salt_hex)
+
+# Derive a 256-bit AES key from the password and salt using PBKDF2 with SHA-256
+key = PBKDF2(password, salt, dkLen=32, count=100000, hmac_hash_module=SHA256)
 
 # Decrypt using AES-256-GCM
 cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
