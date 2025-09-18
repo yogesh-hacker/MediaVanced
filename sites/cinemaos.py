@@ -75,7 +75,7 @@ auth_tag_hex = response.get('mao')
 salt_hex = response.get('salt')
 
 # Convert the password and all hex-encoded values into bytes
-password = b"a1b2c3d4e4f6589008115678901477567890abcdef1234567890abcdef123456"
+password = b"a1b2c3d4e4f6588118115678901477567890abcdef1234567890abcdef123456"
 ciphertext = bytes.fromhex(encrypted_hex)
 iv = bytes.fromhex(iv_hex)
 auth_tag = bytes.fromhex(auth_tag_hex)
