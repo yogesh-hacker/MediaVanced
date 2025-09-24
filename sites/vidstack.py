@@ -6,6 +6,7 @@ from Crypto.Util.Padding import unpad
 
 '''
 Supports:
+https://multimovies.p2pplay.pro/
 https://cloudy.upns.one/
 '''
 
