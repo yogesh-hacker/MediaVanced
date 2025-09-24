@@ -21,7 +21,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://rubystm.com/e/jghxuekfqu52"
+base_url = "https://rubystm.com/e/6kt64xxjjlks.html"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
@@ -53,9 +53,8 @@ for input_tag in form.find_all("input"):
     value = input_tag.get("value", "")
     data[name] = value
 
-data["file_code"] = base_url.split('/')[-1]
+data["file_code"] = base_url.split('/')[-1].replace('.html', '')
 data["referer"] = default_domain
-
 
 # Submit form to get streaming page
 response = requests.post(f'{default_domain}/dl', headers=headers, data=data).text
