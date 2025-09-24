@@ -42,7 +42,7 @@ headers = {
 
 # Get server and ID
 item_id = re.search(r'\/(?:movie|webseries)\/(\d+)', base_url).group(1)
-server = 1 # Default server
+server = 4 # Default server (Try changing the number if scraper fails)
 
 # Get Movie/Webseries info
 data = {
