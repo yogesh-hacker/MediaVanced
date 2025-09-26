@@ -1,23 +1,15 @@
 import re
-import os
-import json
-import time
-import base64
-import string
 import random
-import hashlib
 import requests
 from urllib.parse import urlparse
 
 '''
 Supports:
 https://hexa.watch/
+https://flixer.su/
 '''
 
-# @Hexa – what did you think? That I’d never crack it again?  
-# Hah! :) The demand for this scraper has skyrocketed,  
-# so I’m carrying on the legacy! Hahaha!
-
+# @Hexa & @Flixer, two birds in one cage :)
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -30,8 +22,9 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://hexa.watch/watch/movie/1087192"
+base_url = "https://flixer.su/watch/tv/110316/1/1"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
+decode_api = "https://hexa.yogesh-hacker.deno.net/"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
@@ -39,24 +32,32 @@ headers = {
     "User-Agent": user_agent
 }
 
-# Get Media ID and Type
+# Get media type and server
 media_type = 'movie' if 'movie' in base_url else 'tv'
-match = re.search(r'/(\d+)(?:/(\d+)/(\d+))?', base_url)
-media_id = f"{match.group(1)}/{match.group(2)}/{match.group(3)}" if media_type == "tv" else match.group(1)
+server = 'hexa' if 'hexa' in base_url else 'flixer'
 
-# Support limited to movies for now
+# Get tmdbId, season and episode
+match = re.search(r'/(\d+)(?:/(\d+)/(\d+))?', base_url)
+if media_type == "movie":
+    media_id = match.group(1)
+else:
+    media_id = match.group(1)
+    season = match.group(2)
+    episode = match.group(3)
+
+# Construct URL based on Content Type
 if media_type != 'movie':
-    exit(f"{Colors.fail}Series are not supported by the API at the moment. Please wait for upcoming updates.{Colors.endc}")
+    decode_url = f'{decode_api}?tmdbId={media_id}&season={season}&episode={episode}&server={server}&mediaType={media_type}'
+else:
+    decode_url = f'{decode_api}?tmdbId={media_id}&server={server}&mediaType={media_type}'
 
 # Get streaming data
 '''
 Due to the site's use of WASM, the decryption logic
 and WASM implementation are hosted server-side.  
-If you need the implementation script, reach out to me
-on Discord (peerless_x).  
-I am unable to make it publicly available.
+Server-Side Code: https://github.com/yogesh-hacker/yogesh-hacker/tree/main/js/hexa
 '''
-response = requests.get(f"https://hexa.yogesh-hacker.deno.net/?tmdbId={media_id}").json()
+response = requests.get(decode_url).json()
 decrypted_data = response.get('sources').get('sources')
 
 # Extract video URL
