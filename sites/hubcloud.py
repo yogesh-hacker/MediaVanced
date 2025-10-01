@@ -1,6 +1,7 @@
-import requests
 import re
-import sys
+import random
+import requests
+from bs4 import BeautifulSoup
 
 '''
 Supports:
@@ -21,8 +22,8 @@ class Colors:
     underline = '\033[4m'
 
 
-base_url = "https://hubcloud.bz/drive/oocjo4xi4doj636"
-default_domain = "https://hubcloud.bz/"
+base_url = "https://hubcloud.one/drive/vfvuxdwlwicoxno"
+default_domain = "https://hubcloud.onr/"
 headers = {
     'Referer': default_domain,
     'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
@@ -32,18 +33,26 @@ headers = {
 response = requests.post(base_url, headers=headers).text
 
 # Get next page url
-base_match = re.search(r"var\s+url\s*=\s*'(https?:\/\/[^\s]+)'", response)
-if not base_match:
-    sys.exit(print(f'{Colors.fail}ERROR: Unable to get base URL, make sure file exists{Colors.endc}'))
-base_url = base_match.group(1)
-
+match = re.search(r"var\s+url\s*=\s*'(https?:\/\/[^\s]+)'", response)
+if not match:
+    exit(f'{Colors.fail}ERROR: Unable to get base URL, make sure file exists{Colors.endc}')
+file_page = match.group(1)
 
 # Get next page
-response = requests.get(base_url, headers=headers).text
+response = requests.get(file_page, headers=headers).text
+soup = BeautifulSoup(response, 'html.parser')
 
-# Extract video URL
-video_match = re.search(r"https:\/\/pub[^\s]+", response)
-video_url = video_match.group(0).replace("\"", "")
+# Parse all file URLs
+anchors = soup.find_all('a', class_=lambda c: c and all(cls in c.split() for cls in ['btn', 'btn-lg', 'h6']))
+links = []
+for anchor in anchors:
+    link = anchor.get('href')
+    if link:  # make sure href exists
+        if ('.mp4' in link or '.mkv' in link) and '.zip' not in link:
+            links.append(link)
+
+# Pick a random file URL
+video_url = random.choice(links)
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
