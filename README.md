@@ -74,6 +74,28 @@ This project does not promote or condone scraping of any restricted, copyrighted
 
 **MediaVanced does not host or stream any content directly.** All streaming or media links are dynamically provided through scraper modules that extract publicly available URLs. MediaVanced functions purely as a tool for aggregating those links, and the responsibility for link usage lies entirely with the end user.
 
+---
+
+## ☕ Support the Developer
+
+<p align="center">
+  <a href="https://buymeacoffee.com/yogeshkumau" target="_blank" rel="noopener noreferrer">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="250" alt="Buy Me A Coffee" />
+  </a>
+</p>
+
+> 💬 *If MediaVanced made your work easier or inspired you — consider fueling its next update with a small donation!*  
+> ❤️ Every single coffee keeps this project alive, faster, and free for everyone.  
+> 👨‍💻 From sleepless debugging nights to new scraper modules — your support truly makes it all possible.  
+
+<p align="center">
+  <a href="https://buymeacoffee.com/yogeshkumau" target="_blank" rel="noopener noreferrer">
+    👉 <b>Donate Now & Join the Supporters!</b> 👈
+  </a>
+</p>
+
+---
+
 ## License
 
 Media Vanced is licensed under the [Apache 2.0 License](https://github.com/yogesh-hacker/MediaVanced/blob/main/LICENSE).
