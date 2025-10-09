@@ -1,13 +1,17 @@
+import re
 import random
 import base64
-import numbers
 import requests
-from urllib.parse import urlparse
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+from urllib.parse import urlparse, quote
+
 
 '''
 Supports:
 https://vidrock.net/
 '''
+
 
 class Colors:
     header = '\033[95m'
@@ -20,37 +24,34 @@ class Colors:
     bold = '\033[1m'
     underline = '\033[4m'
 
+
 # Constants
-base_url = "https://vidrock.net/tv/94997/1/1"
+base_url = "https://vidrock.net/movie/533535/"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}'.format(uri=urlparse(base_url))
+passphrase = "x7k9mPqT2rWvY8zA5bC3nF6hJ2lK4mN9"
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
 }
 
-# Utility Functions
-def numbers_to_text(numbers: str) -> str:
-    """Converts numbers to letters (0–25)"""
-    result = []
-    for digit in numbers:
-        if digit.isdigit():
-            ch = chr(int(digit) + ord('a'))
-            result.append(ch)
-    return "".join(result)
-
-# Extract and reverse item ID from base URL
+# Extract item ID from base URL
 item_type = "tv"
 if 'movie' in base_url:
     item_type = "movie"
-    item_id = numbers_to_text(base_url.split('/')[-1][::-1])
+    item_id = re.search(r'movie\/(\d+)', base_url).group(1)
 else:
-    segs = base_url.split('/')
-    item_id = f"{segs[-1]}-{segs[-2]}-{segs[-3][::-1]}"
+    match = re.search(r'tv\/(\d+)\/(\d+)\/(\d+)', base_url)
+    item_id = f"{match.group(1)}_{match.group(2)}_{match.group(3)}"
 
-# Double Base64 encode item_id
-encoded = base64.b64encode(item_id.encode()).decode()
-encoded = base64.b64encode(encoded.encode()).decode()
+# Set up encryption params
+key = passphrase.encode()
+iv = key[0:16]
+
+# Encrypt and URL encode
+cipher = AES.new(key, AES.MODE_CBC, iv)
+ct = cipher.encrypt(pad(item_id.encode(), AES.block_size))
+encoded = quote(base64.b64encode(ct).decode())
 
 # Get streaming info
 response = requests.get(f'{default_domain}/api/{item_type}/{encoded}').json()
