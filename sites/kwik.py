@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 '''
 Supports:
-https://kwik.si/
+https://kwik.cx/
 '''
 
 class Colors:
@@ -22,7 +22,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://kwik.si/e/YPofXhANgdDG"
+base_url = "https://kwik.cx/e/YPofXhANgdDG"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
