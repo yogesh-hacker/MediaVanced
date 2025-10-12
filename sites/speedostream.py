@@ -9,6 +9,7 @@ https://speedostream.pm/
 https://minoplres.xyz/
 https://embdproxy.xyz/
 https://spedostream.com/
+https://speedostream1.com/
 '''
 
 
@@ -24,7 +25,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://spedostream.com/embed-l22uzg5bztn5.html"
+base_url = "https://speedostream1.com/embed-bytsjltt7d2i.html"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     'Referer': default_domain
