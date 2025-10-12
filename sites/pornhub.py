@@ -2,9 +2,6 @@ import requests
 import re
 import json
 
-# !!!![Alert]!!!
-# 18+ Content
-
 '''
 Supports:
 https://www.pornhub.org/
@@ -23,7 +20,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://www.pornhub.com/view_video.php?viewkey=67fbdfa54f208"
+base_url = "https://www.pornhub.com/view_video.php?viewkey=651d49096ff2b"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36"
 headers = {
     "Referer": "https://www.pornhub.org/"
@@ -36,11 +33,17 @@ response = requests.get(base_url, headers=headers).text
 match = re.search(r'var\s+flashvars_\d+\s*=\s*({.*?});', response, re.DOTALL)
 
 # Parse matched JSON string to Python dictionary
-json_data = json.loads(match.group(1))
+stream_info = json.loads(match.group(1))
 
-# Loop through media definitions and print HLS video URLs with resolution
+# Filter only HLS formats
+hls_videos = [v for v in stream_info.get('mediaDefinitions') if v.get('format') == 'hls']
+
+# Select best quality video URL
+best_video = max(hls_videos, key=lambda x: x.get('height', 0))
+video_url = best_video.get('videoUrl')
+
+# Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
-for video in json_data['mediaDefinitions']:
-    if video['format'] == 'hls':
-        print(f"{video['height']}p: {Colors.okgreen}{video['videoUrl']}{Colors.endc}")
-print("#" * 25 + "\n" + "#" * 25 + "\n")
+print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
+print("#" * 25 + "\n" + "#" * 25)
+print("\n")
