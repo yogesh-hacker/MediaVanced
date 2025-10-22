@@ -12,8 +12,6 @@ Supports:
 https://vidfast.pro/
 '''
 
-# @Vidfast, Have a nice Day!
-
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -41,7 +39,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "gGQyAiBxYUdRkLc0jwFKqb9pO7zsV1TPmXMW6utIZvfaohrSn3NEl8HC4D_eJ52-"
+    target_chars = "MDhk5KB7sdVtpTOE-A80mNa4F9CYfeWo3QzRuZIqcL_SUH1yJibGrvX26xjlPwgn"
     translation_table = str.maketrans(source_chars, target_chars)
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
     return encoded.translate(translation_table)
@@ -59,8 +57,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = '5955dc5737af408c27e741946f3914f71a89116734b0cc6a56f085104e8a5c46'
-iv_hex = 'd1ee9ca62bcbfba61dc0330007660e87'
+key_hex = '1dc203af0fd5e9fe9afb00b3c493f99d2afd4079bfbc3e6215905307a5f94c60'
+iv_hex = '88e64b5e95213ab779e234c89a4d586d'
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -70,21 +68,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_key = bytes.fromhex("291f48c33e0d4d4e")
+xor_key = bytes.fromhex("6f9772dfe44c")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Encode XORed data
 encoded_final = custom_encode(xor_result)
 
 # Get streaming servers
-static_path = "hezushon/bunafmin/1000098709565419/lu/40468dfa/de97f995ef83714e8ce88dc789c1c1acc4760231/y"
+static_path = "hezushon/88e9184396861e1614ca54216944f038181ac569d8598024ac05ebbd918f11f8/t"
 data = {}
-api_servers = f"https://vidfast.pro/{static_path}/LAk/{encoded_final}"
+api_servers = f"https://vidfast.pro/{static_path}/3xNAjSIxZx0b/{encoded_final}"
 response = scraper.get(api_servers).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://vidfast.pro/{static_path}/N8b-ENGCMKNz/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/Ici0cUs4soE/{server}"
 response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
