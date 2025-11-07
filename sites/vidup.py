@@ -32,7 +32,7 @@ headers = {
     "Accept": "*/*",
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "X-Csrf-Token": "If1HwRaAqdHHOMdEkV1PCEQZYoOYnUnZ",
+    "X-Csrf-Token": "r92mGaqV1ePy2Tz3Oy9mLvrETahmoeTm",
     "X-Requested-With": "XMLHttpRequest"
 }
 
@@ -40,7 +40,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "vDKmpzeT_FIVi9A10-dY4sgrQZExuBjnLaUSwM8G3XcoCWbOklPfRJ76thHyN25q"
+    target_chars = "5LkfH2dsVn-aWDqzJpRhFP8jilY9_wEANxZGCMT34y1XrecoUO6mSgu7Kt0bBQIv"
     translation_table = str.maketrans(source_chars, target_chars)
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
     return encoded.translate(translation_table)
@@ -58,8 +58,8 @@ if not match:
 raw_data = match.group(1)
 
 # AES encryption setup
-key_hex = '30f7944b736c3aa42dc0302b2ca39884320aef184040918726b2476647e3deb5'
-iv_hex = '28676a98424e3ce4969a5ea4863608ba'
+key_hex = '94cb23ee065f66267d176f68eb79571022f3b6099db41bf5bd2c5ab28c72ad43'
+iv_hex = '73c97f3a1c06a117ee830eb8736cf64f'
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -69,21 +69,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data)
 
 # XOR operation
-xor_key = bytes.fromhex("d24e55cc27cb")
+xor_key = bytes.fromhex("b7abdb6a2ae613781bb6")
 xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
 
 # Encode XORed data
 encoded_final = custom_encode(xor_result)
 
 # Get streaming servers
-static_path = "hezushon/96c85b9491f4a2cd87dc11ea334e5754e04b7c6f6aec08bc11760a406b233c31/110910a4"
+static_path = "hezushon/fun/e8b589ffffb5119301d2726e214693a07e7c98e9/APA918OZyDhFxerTsFz45sHyEvXxcVPVs0QulQGArl0lKahNWkvvLBnOQyLn4-nZzDs0qJ9MTC7FXsQVeZrw49Jfz79tgywFQXscK_tZaAMzI6WAZveztyn4HJAbeJ7ey6oJL7U_8s9DogiOulKN5V1EknVJ5_8kFGFxx0pk8Du-tvHDGXjtWgr"
 data = {}
-api_servers = f"https://vidup.to/{static_path}/LEWfR-RqfA/{encoded_final}"
+api_servers = f"https://vidup.to/{static_path}/uMo/{encoded_final}"
 response = requests.get(api_servers, headers=headers).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://vidup.to/{static_path}/vciUhA/{server}"
+api_stream = f"https://vidup.to/{static_path}/T2dQFY4Pn4lVEQ/{server}"
 response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
