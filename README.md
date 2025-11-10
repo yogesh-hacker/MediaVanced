@@ -80,20 +80,16 @@ This project does not promote or condone scraping of any restricted, copyrighted
 
 <p align="center">
   <a href="https://buymeacoffee.com/yogeshkumau" target="_blank" rel="noopener noreferrer">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="250" alt="Buy Me A Coffee" />
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" width="150" height="50" alt="Buy Me A Coffee" />
   </a>
 </p>
 
-> 💬 *If MediaVanced made your work easier or inspired you — consider fueling its next update with a small donation!*  
+> 💬 If MediaVanced made your work easier or inspired you — consider fueling its next update with a small donation!<br>
 > ❤️ Every single coffee keeps this project alive, faster, and free for everyone.  
 > 👨‍💻 From sleepless debugging nights to new scraper modules — your support truly makes it all possible.  
 
-<p align="center">
-  <a href="https://buymeacoffee.com/yogeshkumau" target="_blank" rel="noopener noreferrer">
-    👉 <b>Donate Now & Join the Supporters!</b> 👈
-  </a>
-</p>
 
+[![Support Me](https://img.shields.io/badge/Support-☕-ff69b4?style=for-the-badge&logo=buymeacoffee)](https://buymeacoffee.com/yogeshkumau)
 ---
 
 ## License
