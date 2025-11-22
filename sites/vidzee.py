@@ -38,7 +38,7 @@ headers = {
 
 # Get content type and TMDB ID
 media_type = 'movie' if 'movie' in base_url else 'tv'
-server = 1 # Default
+server = 3 # Default
 
 # Get tmdbId, season and episode
 match = re.search(r'/(\d+)(?:/(\d+)/(\d+))?', base_url)
