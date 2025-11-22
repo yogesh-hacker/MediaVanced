@@ -42,7 +42,7 @@ headers = {
 
 # Get server and ID
 item_id = re.search(r'\/(?:movie|webseries)\/(\d+)', base_url).group(1)
-server = 4 # Default server (Try changing the number if scraper fails)
+server = 4 # Default server
 
 # Get Movie/Webseries info
 data = {
@@ -85,9 +85,7 @@ decrypted_text = unpad(cipher.decrypt(ciphertext), AES.block_size).decode('utf-8
 streaming_info = json.loads(decrypted_text)
 
 # Resolve proxied URL to actual stream URL
-proxy_url = f"{default_domain}{streaming_info.get('url')}"
-response = requests.head(proxy_url, headers=headers).headers
-video_url = response['Location']
+video_url = streaming_info.get('url')
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
