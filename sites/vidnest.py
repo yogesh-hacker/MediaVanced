@@ -45,7 +45,7 @@ else:
     item_id = base_url.split('/movie/')[-1]
 
 # Fetch encrypted streams
-response = requests.get(f'https://backend.vidnest.fun/{server}/{media_type}/{item_id}', headers=headers).json()
+response = requests.get(f'https://second.vidnest.fun/{server}/{media_type}/{item_id}', headers=headers).json()
 b64_encoded = response.get('data')
 
 # Prepare decryption params
