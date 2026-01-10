@@ -1,3 +1,9 @@
+> [!WARNING]
+> **Project Temporarily Paused**
+>
+> This project is currently on hold due to personal reasons.  
+> Development may continue in the future depending on the situation.
+
 <p align="center">
   <a href="https://yogesh-hacker.github.io/yogesh-hacker/App/" target="_blank" rel="noopener noreferrer">
     <img width="550" src="README/banner.png" alt="MediaVanced Banner" />
