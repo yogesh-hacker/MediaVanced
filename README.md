@@ -1,8 +1,9 @@
-> [!WARNING]
-> **Project Temporarily Paused**
+> [!NOTE]
+> **Good News! Project Continues 🎉**
 >
-> This project is currently on hold due to personal reasons.  
-> Development may continue in the future depending on the situation.
+> This project is not paused anymore.
+> Development will continue, but with fewer updates and additions.
+> Most new updates and features will be released on weekends, as long as I am free.
 
 <p align="center">
   <a href="https://yogesh-hacker.github.io/yogesh-hacker/App/" target="_blank" rel="noopener noreferrer">
