@@ -1,5 +1,3 @@
-import re
-import random
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, quote
@@ -52,7 +50,7 @@ for div in divs:
         text = div.get_text(strip=True)
         url = a_tag['href']
         
-        # Step 3: Detect quality from text
+        # Detect quality from text
         for q in qualities.keys():
             if q in text:
                 qualities[q] = url   # assign single URL
@@ -80,7 +78,6 @@ if a_tag:
     file_url = a_tag['href']
     video_url = file_url.replace(" ", "%20")
 
-# Print results
 # Print Results
 print("\n" + "#"*25 + "\n" + "#"*25)
 print(f"Captured URL: {Colors.okgreen}{video_url}{Colors.endc}")
