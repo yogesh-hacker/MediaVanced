@@ -8,6 +8,7 @@ from Crypto.Util.Padding import pad
 
 '''
 Supports:
+https://111movies.net/
 https://111movies.com/
 '''
 
@@ -24,21 +25,22 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://111movies.com/movie/533535"
+base_url = "https://111movies.net/movie/533535"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "Content-Type": "application/octet-stream",
-    "X-Requested-With": "XMLHttpRequest"
+    "Content-Type": "application/json",
+    "X-Csrf-Token": "BpYuiPWpyPnbEB9oJyFvqT0GqT1O1gcq"
+
 }
 
 # Utility Functions
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input):
     src = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    dst = "TuzHOxl7b0RW9o_1FPV3eGfmL4Z5pD8cahBQr2U-6yvEYwngXCdJjANtqKIMiSks"
+    dst = "uJrhzdKF_VOMRT46vZBiYxPobps1AlafD8tU93eSH7kXNjqG0m5c-EQ2nCLIgwyW"
     trans = str.maketrans(src, dst)
     b64 = base64.b64encode(input.encode()).decode().replace('+', '-').replace('/', '_').replace('=', '')
     return b64.translate(trans)
@@ -52,9 +54,10 @@ if not match:
     exit(print("No data found!"))
 raw_data = match.group(1)
 
+
 # AES encryption setup
-key_hex = "034bcfc6275541ff4059bffb23d6d1d23ea49b55f79ea730ac540d1213a61339"
-iv_hex = "a2e7ad865464f12105e9df84f5bdabed"
+key_hex = "b6056eb574ffaef182bc792ecb72e58bd826c92d8ecaf9ed455d5addb5725194"
+iv_hex = "531eb67ccf30131b0f2ceffe93e6cad8"
 aes_key = bytes.fromhex(key_hex)
 aes_iv = bytes.fromhex(iv_hex)
 
@@ -63,21 +66,21 @@ padded_data = pad(raw_data.encode(), AES.block_size)
 aes_encrypted = cipher.encrypt(padded_data).hex()
 
 # XOR operation
-xor_key = bytes.fromhex("aaa27e7e3cff888285")
+xor_key = bytes.fromhex("e430d176b32c")
 xor_result = ''.join(chr(ord(char) ^ xor_key[i % len(xor_key)]) for i, char in enumerate(aes_encrypted))
 
 # Custom encoded string
 encoded_final = custom_encode(xor_result)
 
 # Make final request
-static_path = "fcd552c4321aeac1e62c5304913b3420be75a19d390807281a425aabbb5dc4c0"
-api_servers = f"https://111movies.com/{static_path}/{encoded_final}/sr"
-response = requests.get(api_servers, headers=headers).json()
+static_path = "1000019296501249/go/APA91SNiaIvLg0-eCYn9p1nwW1ElrIYusLzI2NsuJ3z4C-5AmH1uBVtrBMS-BDghYAB10NNScL0SDNZU3zzzGW6GbNpiu35lPEHiuScMlyPxgKPv8PkjtVjoDQn_MkHlgKBX0QDWB0okBmOsqOZF_bvZg6tntM-LfMzEGzXA4ATew9QlHy07mQl"
+api_servers = f"https://111movies.net/{static_path}/{encoded_final}/sr"
+response = requests.post(api_servers, headers=headers).json()
 
 # Select a random server
 server = random.choice(response)['data']
-api_stream = f"https://111movies.com/{static_path}/{server}"
-response = requests.get(api_stream, headers=headers).json()
+api_stream = f"https://111movies.net/{static_path}/{server}"
+response = requests.post(api_stream, headers=headers).json()
 
 # Extract video URL
 video_url = response['url']
