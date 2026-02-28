@@ -20,7 +20,7 @@ class Colors:
 
 
 # Constants
-base_url = 'http://vidmoly.me/embed-zvojb6qxv207.html'
+base_url = 'https://vidmoly.net/embed-ut27dlwrjvq0.html'
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
@@ -32,7 +32,7 @@ headers = {
 response = requests.get(base_url, headers=headers).text
 
 # Extract video URL
-video_url = re.search(r'file:\"(.*?)\"', response).group(1)
+video_url = re.search(r"file:\s*\'(.*?)\'", response).group(1)
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)

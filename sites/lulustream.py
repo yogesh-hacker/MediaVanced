@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 '''
 Supports:
 https://lulustream.com/
+https://luluvdo.com/
 '''
 
 class Colors:
@@ -20,7 +21,7 @@ class Colors:
 
 
 # Constants
-base_url = 'https://lulustream.com/e/ovtjpkunq57m'
+base_url = 'https://luluvdo.com/e/inkrd53qfxox'
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {

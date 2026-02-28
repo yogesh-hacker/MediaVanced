@@ -36,7 +36,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://taylorplayer.com/f/5xo3u4bpl2e1"
+base_url = "https://hgplaycdn.com/e/kbhalgdbz5ry"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
