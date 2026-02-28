@@ -21,7 +21,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://driveseed.org/file/d2JAWrNAHb"
+base_url = "https://driveseed.org/file/IkA5nabe0swlrzOplUMT"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
 headers = {
     "Referer": "https://driveleech.org",
@@ -35,19 +35,14 @@ soup = BeautifulSoup(response, 'html.parser')
 # Find the anchor tag containing 'Instant Download'
 anchor = next((a for a in soup.find_all('a') if "Instant Download" in a.get_text()), None) or sys.exit("Anchor not found")
 
-# Construct API URL and parse encrypted URL
+# Get redirected URL
 parsed_url = urlparse(anchor['href'])
-base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/api"
-keys = parse_qs(parsed_url.query).get('url')
-
-# Prepare data and make POST request
-data = {
-    'keys': keys
-}
-response = requests.post(base_url, headers=headers, data=data).json()
+anchor_link = anchor.get('href')
+redirect_url = requests.get(anchor_link, headers=headers, allow_redirects = False).headers.get('Location')
 
 # Extract video URL
-video_url = response['url']
+
+video_url = redirect_url.split('?url=')[-1]
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
