@@ -1,3 +1,4 @@
+import re
 import json
 import base64
 import requests
@@ -35,7 +36,7 @@ headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
 }
-server_action = "7ea71ad5f3b5914b221a943397c4f514bf901f1204"
+server_action = "7e39d9c97c06435588fcbe91fa753849f5e4e88869"
 rsa_public_key = """-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPnLvTpbxYFPHBv5TRj8uRaMlh
 yp2ekzUgnyfMopVfnrsPgeC8mmM+tlmebZvDtA/zHGwYoAXViE7oiH57mbhVKrMp
@@ -44,15 +45,32 @@ cBBHg6Y5o40AM60WrwIDAQAB
 -----END PUBLIC KEY-----"""
 aes_key_b64 = "JWmlRlgGKC3MLQihZMqx/hW276z1FolQ8QRePYWhn/E="
 
+# Ask user for Server selection
+options = ["Nebula", "Storm", "Frost", "Breeze", "Rain", "Mist"]
+while True:
+    print("Select a server:")
+    for i, server in enumerate(options, 1):
+        print(f" {i}. {server}")
+    
+    choice = input("\nEnter the number of your choice: ").strip()
+    
+    if choice.isdigit() and 1 <= int(choice) <= len(options):
+        selected_server = options[int(choice) - 1].lower()
+        print(f"Selected server: {selected_server}")
+        break
+    else:
+        print("❌ Invalid choice, please try again.")
 
 # Get content info
-content_id = None
-content_type = None
-if 'movie' in base_url:
-    content_id = base_url.split('/')[-1]
-    content_type = 'movie'
-else:
-    print("Series are not supported right now!")
+match = re.search(r'\/embed\/(.*?)\/(\d+)(?:\?s=(\d+)&e=(\d+))?', base_url)
+if match:
+    content_type = match.group(1)
+    content_type = "show" if content_type == "tv" else content_type
+    content_id, season, episode = (
+        match.group(2),
+        match.group(3) or '$undefined',
+        match.group(4) or '$undefined'
+    )
 
 # Get token from server
 response = requests.get(f'{default_domain}/api/signature', headers=headers).json()
@@ -97,7 +115,7 @@ ciphertext_b64 = base64.b64encode(aes_ciphertext).decode()
 encrypted_blob = '.'.join(['v1', encrypted_key_b64, iv_b64, ciphertext_b64])
 
 # Prepare Payload and Get Encrypted Streaming Data
-request_payload = [content_id, content_type, '$undefined', '$undefined', encrypted_blob, 'nebula']
+request_payload = [content_id, content_type, season, episode, encrypted_blob, selected_server]
 response = requests.post(base_url, data=json.dumps(request_payload), headers={**headers, 'next-action': server_action}).text
 
 # Extract encrypted payload line
