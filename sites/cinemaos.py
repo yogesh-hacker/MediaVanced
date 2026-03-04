@@ -16,7 +16,7 @@ Supports:
 https://cinemaos.live/
 '''
 
-# Haha @Cinemaos, bro… cryptography is my playground now. PlayerX (scraper) made me unstoppable! 😉
+# Haha @Cinemaos, bro… after a decade, I was busy with my life, Welcome Me Now! 😉
 
 class Colors:
     header = '\033[95m'
@@ -30,9 +30,10 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://cinemaos.live/movie/watch/1061474"
+base_url = "https://cinemaos.live/movie/watch/1272837"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-secret_key = "a8f7e9c2d4b6a1f3e8c9d2b4a7f6e9c2d4b6a1f3e8c9d2b4a7f6e9c2d4b6a1f3"
+primary_hmac_key = "a7f3b9c2e8d4f1a6b5c9e2d7f4a8b3c6e1d9f7a4b2c8e5d3f9a6b4c1e7d2f8a5"
+secondary_hmac_key = "d3f8a5b2c9e6d1f7a4b8c5e2d9f3a6b1c7e4d8f2a9b5c3e7d4f1a8b6c2e9d5f3"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -49,33 +50,32 @@ api_key = base64.b64decode("NTRlMDA0NjZhMDk2NzZkZjU3YmE1MWM0Y2EzMGIxYTY=").decod
 if 'movie' in base_url:
     data_id = base_url.split('/')[-1]
     response = requests.get(f"https://api.themoviedb.org/3/movie/{data_id}?api_key={api_key}").json()
-    release_year = response['release_date'].split('-')[0]
-    title = response['title']
     imdb_id = response['imdb_id']
 else:
     exit(print(f'{Colors.fail}TV Series currently not supported!'))
 
-# Construct the message string to be signed
+# Construct the message string
 tmdb_id = data_id
 season_id = ""
 episode_id = ""
-message_string = f"media|episodeId:{episode_id}|seasonId:{season_id}|tmdbId:{tmdb_id}"
+message = f"tmdbId:{data_id}|imdbId:{imdb_id}"
 
-# Generate an HMAC-SHA256 signature for the media identifiers using a secret key
-hmac_signature = hmac.new(secret_key.encode("utf-8"), message_string.encode("utf-8"), hashlib.sha256)
-signature_hash = hmac_signature.hexdigest()
+# Get the secret token for request
+primary_secret = hmac.new(primary_hmac_key.encode(), message.encode(), hashlib.sha256).hexdigest()
+final_secret = hmac.new(secondary_hmac_key.encode(), primary_secret.encode(), hashlib.sha256).hexdigest()
 
 # Get encrypted data
-response = requests.get(f"{default_domain}/api/cinemaos?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t={title}&ry={release_year}&secret={signature_hash}", headers=headers).json()['data']
+response = requests.get(f"{default_domain}/api/providerv2?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t=fuck_you_lol&ry=fuck_you_lol&secret={final_secret}", headers=headers).json()
+decryption_parameters = response.get('data')
 
 # Extract hex strings from the response
-encrypted_hex = response.get('encrypted')
-iv_hex = response.get('cin')
-auth_tag_hex = response.get('mao')
-salt_hex = response.get('salt')
+encrypted_hex = decryption_parameters.get('encrypted')
+iv_hex = decryption_parameters.get('cin')
+auth_tag_hex = decryption_parameters.get('mao')
+salt_hex = decryption_parameters.get('salt')
 
 # Convert the password and all hex-encoded values into bytes
-password = b"a1b2c3d4e4f6588658455678901477567890abcdef1234567890abcdef123456"
+password = b"a1b2c3d4e4f6477658455678901477567890abcdef1234567890abcdef123456"
 ciphertext = bytes.fromhex(encrypted_hex)
 iv = bytes.fromhex(iv_hex)
 auth_tag = bytes.fromhex(auth_tag_hex)
@@ -92,10 +92,10 @@ decrypted_data = cipher.decrypt(ciphertext).decode('utf-8')
 cipher.verify(auth_tag)
 
 # Extract video URL
-json_data = json.loads(decrypted_data)['sources']
-valid_entries = [v for v in json_data.values() if isinstance(v, dict) and 'url' in v]
+streaming_data = json.loads(decrypted_data).get('sources')
+valid_entries = [v for v in streaming_data.values() if isinstance(v, dict) and 'url' in v]
 random_choice = random.choice(valid_entries)
-video_url = random_choice['url']
+video_url = random_choice.get('url')
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
