@@ -36,7 +36,7 @@ headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
 }
-server_action = "7e39d9c97c06435588fcbe91fa753849f5e4e88869"
+server_action_token = requests.get('https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json').json().get('cinesrc').get('getStream')
 rsa_public_key = """-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPnLvTpbxYFPHBv5TRj8uRaMlh
 yp2ekzUgnyfMopVfnrsPgeC8mmM+tlmebZvDtA/zHGwYoAXViE7oiH57mbhVKrMp
@@ -116,7 +116,7 @@ encrypted_blob = '.'.join(['v1', encrypted_key_b64, iv_b64, ciphertext_b64])
 
 # Prepare Payload and Get Encrypted Streaming Data
 request_payload = [content_id, content_type, season, episode, encrypted_blob, selected_server]
-response = requests.post(base_url, data=json.dumps(request_payload), headers={**headers, 'next-action': server_action}).text
+response = requests.post(base_url, data=json.dumps(request_payload), headers={**headers, 'next-action': server_action_token}).text
 
 # Extract encrypted payload line
 encrypted_line = response.splitlines()[1]
