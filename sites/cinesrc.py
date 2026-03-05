@@ -36,7 +36,7 @@ headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
 }
-server_action_token = requests.get('https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json').json().get('cinesrc').get('getStream')
+server_action_token = requests.get('https://script.google.com/macros/s/AKfycbyWasTBsvJ_dZjs2IdlViYYmNRXxRCiVa0kjZrHw4JXlrjyQ7PrQYzo54kDX4SVL9Ne/exec').json().get('key')
 rsa_public_key = """-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCPnLvTpbxYFPHBv5TRj8uRaMlh
 yp2ekzUgnyfMopVfnrsPgeC8mmM+tlmebZvDtA/zHGwYoAXViE7oiH57mbhVKrMp
