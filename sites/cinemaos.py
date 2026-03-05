@@ -46,26 +46,31 @@ headers = {
 ''' ⚠️ Warning: Unauthorized use of another person’s API key is prohibited. The provided key is intended strictly for testing purposes. We strongly recommend generating and using your own API key in production.'''
 api_key = base64.b64decode("NTRlMDA0NjZhMDk2NzZkZjU3YmE1MWM0Y2EzMGIxYTY=").decode('utf-8')
 
-# Get required data
-if 'movie' in base_url:
-    data_id = base_url.split('/')[-1]
-    response = requests.get(f"https://api.themoviedb.org/3/movie/{data_id}?api_key={api_key}").json()
-    imdb_id = response['imdb_id']
-else:
-    exit(print(f'{Colors.fail}TV Series currently not supported!'))
+# Get content info
+match = re.search(r'\/cinemaos.live\/(.*?)\/watch\/(\d+)(?:\?season=(\d+)&episode=(\d+))?', base_url)
+if match:
+    content_type = match.group(1)
+    content_id, season, episode = (
+        match.group(2),
+        match.group(3) or None,
+        match.group(4) or None
+    )
+
+# Get IMDB ID of the content
+response = requests.get(f"https://api.themoviedb.org/3/{content_type}/{content_id}?api_key={api_key}&append_to_response=external_ids").json()
+imdb_id = response.get('imdb_id') or (response.get('external_ids') or {}).get('imdb_id')
 
 # Construct the message string
-tmdb_id = data_id
-season_id = ""
-episode_id = ""
-message = f"tmdbId:{data_id}|imdbId:{imdb_id}"
+message = f"tmdbId:{content_id}|imdbId:{imdb_id}"
+if season and episode:
+    message += f"|seasonId:{season}|episodeId:{episode}"
 
 # Get the secret token for request
 primary_secret = hmac.new(primary_hmac_key.encode(), message.encode(), hashlib.sha256).hexdigest()
 final_secret = hmac.new(secondary_hmac_key.encode(), primary_secret.encode(), hashlib.sha256).hexdigest()
 
 # Get encrypted data
-response = requests.get(f"{default_domain}/api/providerv2?type=movie&tmdbId={data_id}&imdbId={imdb_id}&t=fuck_you_lol&ry=fuck_you_lol&secret={final_secret}", headers=headers).json()
+response = requests.get(f"{default_domain}/api/providerv2?type={content_type}&tmdbId={content_id}&imdbId={imdb_id}&seasonId={season}&episodeId={episode}&t=&ry=&secret={final_secret}", headers=headers).json()
 decryption_parameters = response.get('data')
 
 # Extract hex strings from the response
