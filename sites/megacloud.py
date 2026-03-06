@@ -27,8 +27,6 @@ class Colors:
 provider_url = 'https://hianime.to/ajax/v2/episode/sources?id=1155827'
 base_url = requests.get(provider_url).json()['link'] # https://megacloud.blog/embed-2/v2/e-1/<VIDEO_ID>?k=1&autoPlay=1&oa=0&asi=1
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
-decode_url ="https://script.google.com/macros/s/AKfycbxHbYHbrGMXYD2-bC-C43D3njIbU-wGiYQuJL61H4vyy6YVXkybMNNEPJNPPuZrD1gRVA/exec"
-key_url = "https://raw.githubusercontent.com/yogesh-hacker/MegacloudKeys/refs/heads/main/keys.json"
 parsed_url = urlparse(base_url)
 default_domain = f"{parsed_url.scheme}://{parsed_url.netloc}/"
 headers = {
@@ -52,28 +50,9 @@ file_id = video_tag['data-id']
 match = re.search(r'\b[a-zA-Z0-9]{48}\b', response) or re.search(r'\b([a-zA-Z0-9]{16})\b.*?\b([a-zA-Z0-9]{16})\b.*?\b([a-zA-Z0-9]{16})\b', response)
 nonce = ''.join(match.groups()) if match and match.lastindex == 3 else match.group() if match else None
 
-# Get Password 
-response = requests.get(key_url).json()
-key = response['mega']
-
-# Get encrypted data
+# Get streaming data
 response = requests.get(f'{default_domain}/embed-2/v3/e-1/getSources?id={file_id}&_k={nonce}', headers=headers).json()
-encrypted = response['sources']
-
-# Extract video URL
-if not encrypted[0]:
-    # Get required values to decode
-    encrypted_data = quote_plus(response['sources'])
-    nonce_encoded = quote_plus(nonce)
-    key_encoded = quote_plus(key)
-
-    # Decoding is handled on the server side to avoid PRNG-related issues in Python
-    # Original server-side implementation reference: https://github.com/yogesh-hacker/yogesh-hacker/blob/main/js/videostr.js
-    decode_url = f"{decode_url}?encrypted_data={encrypted_data}&nonce={nonce_encoded}&secret={key_encoded}"
-    response = requests.get(decode_url, allow_redirects=True).text
-    video_url = re.search(r'\"file\":\"(.*?)\"', response).group(1)
-else:
-    video_url = response['sources'][0]['file']
+video_url = response.get('sources')[0].get('file')
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
