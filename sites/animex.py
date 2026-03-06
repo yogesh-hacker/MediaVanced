@@ -63,10 +63,6 @@ def xor_diffuse_bytes(input_bytes: bytes, key1: bytes, key2: bytes, lookup_table
 
 ''' Swap nibbles and XOR each byte with a position-based mask. '''
 def swap_nibbles_and_mask(input_bytes: bytes) -> bytes:
-    """
-    Scrambles a byte array by swapping high and low nibbles of each byte
-    and XORing with a position-dependent mask.
-    """
     output = bytearray(len(input_bytes))
     for index, byte in enumerate(input_bytes):
         mask = (index * 23) & 0xFF
@@ -78,7 +74,7 @@ content_info = re.search(r'\/.*?(\d+)-episode-(\d+)', base_url)
 media_id = content_info.group(1)
 episode_num = content_info.group(2)
 
-# Prepare payload
+# Prepare payload for encryption
 payload = {
     "id": int(media_id),
     "host": "pahe",
