@@ -11,8 +11,7 @@ https://player.vidzee.wtf/
 https://vidzee.wtf/
 '''
 
-# @Vidzee, I'm straight, may I show you?
-# Gawk! Gawk! Gawk!
+# @Vidzee, Sarson Da Saag te Makki Di Roti
 
 class Colors:
     header = '\033[95m'
@@ -30,7 +29,7 @@ class Colors:
 base_url = 'https://player.vidzee.wtf/embed/tv/1399/1/1'
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
-key_hex = '6966796f75736372617065796f75617265676179000000000000000000000000' # Do not decode :)
+secret = "alookeparathewithlassi"
 headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
@@ -38,7 +37,7 @@ headers = {
 
 # Get content type and TMDB ID
 media_type = 'movie' if 'movie' in base_url else 'tv'
-server = 3 # Default
+server = 0 # Default
 
 # Get tmdbId, season and episode
 match = re.search(r'/(\d+)(?:/(\d+)/(\d+))?', base_url)
@@ -66,7 +65,7 @@ iv_b64, ciphertext_b64 = decoded.split(':', 1)
 # Prepare decryption parameters
 iv = base64.b64decode(iv_b64)
 ciphertext = base64.b64decode(ciphertext_b64)
-key = bytes.fromhex(key_hex)
+key = secret.ljust(32, "\0").encode("utf-8")
 
 # Decrypt using AES-CBC
 cipher = AES.new(key, AES.MODE_CBC, iv)
