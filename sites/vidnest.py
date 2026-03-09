@@ -1,9 +1,8 @@
 import re
-import json
+import os
+import time
 import random
-import base64
 import requests
-from Crypto.Cipher import AES
 from urllib.parse import urlparse
 
 '''
@@ -26,7 +25,7 @@ class Colors:
 base_url = 'https://vidnest.fun/tv/94605/1/1'
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
-passphrase = 'T8c8PQlSQVU4mBuW4CbE/g57VBbM5009QHd+ym93aZZ5pEeVpToY6OdpYPvRMVYp'
+passphrase = 'A7kP9mQeXU2BWcD4fRZV+Sg8yN0/M5tLbC1HJQwYe6pOKFaE3vTnPZsRuYdVmLq2'
 headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
@@ -45,28 +44,27 @@ else:
     item_id = base_url.split('/movie/')[-1]
 
 # Fetch encrypted streams
-response = requests.get(f'https://second.vidnest.fun/{server}/{media_type}/{item_id}', headers=headers).json()
-b64_encoded = response.get('data')
+response = requests.get(f'https://new.vidnest.fun/{server}/{media_type}/{item_id}', headers=headers).json()
+encrypted = response.get('data')
 
-# Prepare decryption params
-encrypted_bytes = base64.b64decode(b64_encoded)
-key = base64.b64decode(passphrase)[:32]
-iv = encrypted_bytes[:12]
-ciphertext = encrypted_bytes[12:-16]
-tag = encrypted_bytes[-16:]
+# Prepare payload
+timestamp = int(time.time())
+random_iv = os.urandom(16).hex()
+payload = {
+    'data': encrypted,
+    'timestamp': timestamp,
+    'nonce': random_iv
+}
 
-# Decrypt encrypted data (AES-GCM)
-cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
-plaintext = cipher.decrypt_and_verify(ciphertext, tag).decode('utf-8')
+# Decrypt data from server
+response = requests.post('https://new.vidnest.fun/decrypt', headers=headers, json=payload).json().get('data')
 
-# Parse decrypted JSON and validate server response
-json_data = json.loads(plaintext)
-if not json_data.get('success') and not json_data.get('streams'):
-    exit(f'{Colors.fail}ERROR: {json_data.get('error')}\nPlease retry with different server...{Colors.endc}')
-sources = json_data.get('sources') or json_data.get('streams')
+# Get sources or streams
+streaming_data = response.get('sources') or response.get('streams')
 
 # Extract video URL
-video_url = sources[0].get('file') or sources[0].get('url')
+random_choice = random.choice(streaming_data)
+video_url = random_choice.get('file') or random_choice.get('url')
 
 # Print results
 print("\n" + "#" * 25 + "\n" + "#" * 25)
