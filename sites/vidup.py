@@ -1,11 +1,12 @@
 import re
-import random
+import time
 import base64
+import hashlib
 import requests
-import cloudscraper
 from Crypto.Cipher import AES
 from urllib.parse import urlparse
 from Crypto.Util.Padding import pad
+from Crypto.Random import get_random_bytes
 
 '''
 Supports:
@@ -28,10 +29,14 @@ class Colors:
 base_url = "https://vidup.to/movie/587412"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
+aes_key = bytes.fromhex("50c629cfcf5585893a9bfed7f9bdd1d2676c96eb132277e8a0bea02a08b7c781")
+aes_iv = bytes.fromhex("dc19784faa5f862e6b3b905cb9c2eba8")
+xor_seed_key = bytes.fromhex("5323c681df44c000d066")
 headers = {
     "Accept": "*/*",
     "Referer": default_domain,
     "User-Agent": user_agent,
+    "X-Csrf-Token": "ZKMMHgeKju4dmmn6cnm7N63HMaGRRIZx",
     "X-Requested-With": "XMLHttpRequest"
 }
 
@@ -39,50 +44,151 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "yIbBg8CGhS7dukc9OTHleUfW_Atjmi1pz0PEsZ3rqM56-wFJKNLVQov4Y2DxRXna"
+    target_chars = "fh6qTrXFcaoH-9vJ1EsMpDdbiSCBIPwKZuW7lAj5Nn8gL23YxRz0QGm_tVOyeU4k"
     translation_table = str.maketrans(source_chars, target_chars)
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
     return encoded.translate(translation_table)
 
-# Initialize Cloudscraper session (bypasses Cloudflare)
-scraper = cloudscraper.create_scraper()
+'''Generate a KSA-like permutation from a hash seed'''
+def generate_ksa(seed, size):
+    s = seed if isinstance(seed, bytes) else bytes(seed)
+    state = (int.from_bytes(s[0:4],"little") ^ int.from_bytes(s[4:8],"little") ^
+             int.from_bytes(s[8:12],"little") ^ int.from_bytes(s[12:16],"little")) & 0xffffffff
+
+    S = list(range(size))
+    for i in range(size-1, 0, -1):
+        state ^= (state << 13) & 0xffffffff
+        state ^= state >> 17
+        state ^= (state << 5) & 0xffffffff
+        state &= 0xffffffff
+        j = state % (i+1)
+        S[i], S[j] = S[j], S[i]
+    return S
+
+'''Rotate and mask a byte using a key'''
+def transform_byte(input_byte, key_byte):
+    r = key_byte % 8
+    rotated = ((input_byte << r) | (input_byte >> (8 - r))) & 0xff
+    return (rotated + (key_byte ^ 0xA5)) & 0xff
+
+'''Shuffles the payload into blocks according to the permutation box'''
+def shuffle_blocks(payload, pbox):
+    payload_len = len(payload)
+    num_blocks = len(pbox)
+
+    if payload_len % num_blocks != 0:
+        raise ValueError(f"Payload length ({payload_len}) must be divisible by pbox length ({num_blocks})")
+
+    block_size = payload_len // num_blocks
+    result = bytearray(payload_len)
+
+    for dst_idx, src_block in enumerate(pbox):
+        src_start = src_block * block_size
+        dst_start = dst_idx * block_size
+        result[dst_start:dst_start + block_size] = payload[src_start:src_start + block_size]
+
+    return result
 
 # Fetch page content
-response = scraper.get(base_url).text
+response = requests.get(base_url, headers=headers).text
 
 # Extract raw data
 match = re.search(r'\\"en\\":\\"(.*?)\\"', response)
 if not match:
     exit(print("No data found!"))
-raw_data = match.group(1)
+raw_data =  match.group(1)
 
-# AES encryption setup
-key_hex = 'd70c7b56dbee9ccb389397d4e17e3db8f3e4151bc75980c39a14d57d677facef'
-iv_hex = 'ac3239aebf5329061e8164db90b8e639'
-aes_key = bytes.fromhex(key_hex)
-aes_iv = bytes.fromhex(iv_hex)
+# Get timestamp bytes
+timestamp_bytes = bytearray(8)
+timestamp = int(time.time() * 1000)
+for i in range(8):
+        timestamp_bytes[i] = timestamp & 255
+        timestamp >>= 8
 
-# Encrypt raw data
+# Prepare Input
+random_iv = get_random_bytes(16)
+site_buffer = raw_data.encode()
+combined_input = random_iv + timestamp_bytes + site_buffer
+
+# PKCS7 padding
+pad = 16 - len(combined_input) % 16
+combined_input += bytes([pad]) * pad
+
+# Encrypt
 cipher = AES.new(aes_key, AES.MODE_CBC, aes_iv)
-padded_data = pad(raw_data.encode(), AES.block_size)
-aes_encrypted = cipher.encrypt(padded_data)
+encrypted = cipher.encrypt(combined_input)
+encrypted_bytes = bytearray(encrypted)
 
-# XOR operation
-xor_key = bytes.fromhex("93b013")
-xor_result = bytes(b ^ xor_key[i % len(xor_key)] for i, b in enumerate(aes_encrypted))
+# Step 1 XOR
+xor_seed = xor_seed_key + random_iv
+xor_hash = hashlib.sha256(xor_seed).digest()
+xor_output = bytearray(len(encrypted_bytes))
 
-# Encode XORed data
-encoded_final = custom_encode(xor_result)
+for i in range(len(encrypted_bytes)):
+    if i > 0 and i % len(xor_hash) == 0:
+        xor_hash = hashlib.sha256(xor_hash).digest()
+    xor_output[i] = encrypted_bytes[i] ^ xor_hash[i % len(xor_hash)]
+
+# Step 2 Byte Transform
+transform_seed = aes_key + random_iv
+transform_hash = hashlib.sha256(transform_seed).digest()
+transform_output = bytearray(len(xor_output))
+for i in range(len(xor_output)):
+    transform_output[i] = transform_byte(xor_output[i], transform_hash[i % len(transform_hash)])
+
+# Step 3 KSA
+ksa_seed = random_iv + xor_seed_key + aes_iv
+ksa_hash = hashlib.sha256(ksa_seed).digest()
+ksa = generate_ksa(ksa_hash, 256)
+payload_swaps = []
+
+for b in transform_output:
+    idx = b & 0xff
+    payload_swaps.append(ksa[idx] & 0xff)
+
+# Step 4 Block Shuffle
+permutation_count = len(payload_swaps) // 16
+block_shuffle_seed = xor_seed_key + random_iv
+block_shuffle_hash = hashlib.sha256(block_shuffle_seed).digest()
+perm_ksa = generate_ksa(block_shuffle_hash, permutation_count)
+shuffled = shuffle_blocks(payload_swaps, perm_ksa)
+
+# Setp 5 Final Permutation
+length_byte = bytes([len(shuffled)])
+perm_seed = aes_key + random_iv + length_byte
+perm_hash = hashlib.sha256(perm_seed).digest()
+perm_s_box = generate_ksa(perm_hash, 112)
+
+final_payload = []
+for i in range(len(perm_s_box)):
+    final_payload.append(shuffled[perm_s_box[i]])
+
+swap_order = []
+for v in perm_ksa:
+        swap_order.extend([v, 0, 0, 0])
+
+final_buffer = bytes(swap_order) + bytes(final_payload)
+
+# Hash Footer
+footer_hash = hashlib.sha256(final_buffer).digest()
+footer = footer_hash[:8]
+version_buf = bytes([1])
+perm_length_buf = bytes([permutation_count, 0])
+final_packet = (version_buf + random_iv + perm_length_buf + final_buffer + footer)
+
+# Encode final packet
+encoded = custom_encode(final_packet)
+reversed_bytes = encoded.encode()[::-1]
+servers_token = reversed_bytes.hex()
 
 # Get streaming servers
-static_path = "hezushon/y/3cfb5e9b-2e38-5ca5-a573-3affbab964ca"
-data = {}
-api_servers = f"https://vidup.to/{static_path}/-Js/{encoded_final}"
+static_path = "hezushon/mu/APA91ebjjP3JX-M_mwaWXV8tvZH7mEwnSG_CrlcIOcRUiopbIg3zfRKPQfBFJl8nv8vrUu0MgvaB2m8PjDj9qXQvlvQHstiDixMOy1OwIwxB84n-7NJNIpf0HHT_4_wBVyy8lsrl2KjrjqYnCO6fuuyL0uL0ky6J83hYj6S4eurfuJl51OuwWkW"
+api_servers = f"https://vidup.to/{static_path}/1kf_RmY/{servers_token}"
 response = requests.get(api_servers, headers=headers).json()
 
 # Select a random server
-server = random.choice(response)['data']
-api_stream = f"https://vidup.to/{static_path}/OxQB1g/{server}"
+server = response[0]['data']
+api_stream = f"https://vidup.to/{static_path}/7GQ/{server}"
 response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
