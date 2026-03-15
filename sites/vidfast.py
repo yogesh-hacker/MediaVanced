@@ -13,12 +13,6 @@ Supports:
 https://vidfast.pro/
 '''
 
-# Vidfast, Hey my friend, Your Obfuscator.io VM
-# is gone :)
-# Special thanks to Ciarands (https://github.com/Ciarands)
-# for explaining the VM architecture and helping in understanding
-# the virtual machine in depth.
-
 class Colors:
     header = '\033[95m'
     okblue = '\033[94m'
@@ -35,9 +29,9 @@ class Colors:
 base_url = "https://vidfast.pro/movie/533535"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
-aes_key = bytes.fromhex("e69cd71bc5f8dbf5e6c69abd5546af19f0de9525a88e03cc3c778d78ad2e962b")
-aes_iv = bytes.fromhex("3f874462bdca9999f4738c0e8da896e9")
-xor_seed_key = bytes.fromhex("21fdd6309703dd")
+aes_key = bytes.fromhex("50bb6a529bfb4abb1969c1a29c8cac6df1f00ec63a7297c4c06dcc9473cdacc4")
+aes_iv = bytes.fromhex("ffe7765f45669a794181d0b4a8d9e96b")
+xor_seed_key = bytes.fromhex("1a5d66c3fbf2")
 headers = {
     "Accept": "*/*",
     "Referer": default_domain,
@@ -50,7 +44,7 @@ headers = {
 ''' Encodes input using Base64 with custom character mapping. '''
 def custom_encode(input_bytes):
     source_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
-    target_chars = "sYh-20Zv6CxfiFeTPzcMUXmdnB581qtaHSwOkrDouWVj_KQARgI9NGpEJ3Ll4yb7"
+    target_chars = "4jrpDdPNYKMiBLgwczuHGksmOIoS2-JVRCnbfl769A0UeE5Qyt_aWq1xTF3vhXZ8"
     translation_table = str.maketrans(source_chars, target_chars)
     encoded = base64.urlsafe_b64encode(input_bytes).decode().rstrip('=')
     return encoded.translate(translation_table)
@@ -188,13 +182,13 @@ reversed_bytes = encoded.encode()[::-1]
 servers_token = reversed_bytes.hex()
 
 # Get streaming servers
-static_path = "hezushon/43bba164-137d-537c-8e39-86be4e11ed99/efo/e/APA91V1c6t-xHraulRs44kbQ7VxPjj5YvTYCMgu4bJNg_gWoKNEFKPCil8SQ5zK3T8EMrBQPsogUpMN1We8xcBXhx6K6hJKiGZFng7ZKBc74j-YFpuWWe65h8cv0858a6pxKMWtu9xmYhFzReNuXw4vzEZ6h_2tLhiLKPyLeueIR6m8MTpvDX1r"
-api_servers = f"https://vidfast.pro/{static_path}/Yt5qlWapsjE/{servers_token}"
+static_path = "hezushon/8ee77bc2e110fd6e6ac7659b33c6f9146497cb81b1a2694590a68f22c5b495b9/APA91DQqR0e_8UTJpaNhNS9c2Bgrg21PeT12bVxpsCvoUhB9rNLJgMZMHxO7oigbPWv7eXn4NavycM9jt2EGVHBmkXIeSJUXh2AOEvWyji1iNx4Txr2OZONKK5IjKp8GBmmzCCb6-rh1I0o50c5eLc_cZ6KnwX7TrB_UsqfYsbMwBqhvWBEEZ1Q/bdf45bbf7c054d8a75d7575767e40745f967d0a8"
+api_servers = f"https://vidfast.pro/{static_path}/N1dm4OEpPc8/{servers_token}"
 response = requests.get(api_servers, headers=headers).json()
 
 # Select a random server
 server = response[0]['data']
-api_stream = f"https://vidfast.pro/{static_path}/1lJcgK26vkO2/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/HSgMMZOauoo/{server}"
 response = requests.get(api_stream, headers=headers).json()
 
 # Extract video URL
