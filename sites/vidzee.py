@@ -26,10 +26,10 @@ class Colors:
 
 
 # Constants
-base_url = 'https://player.vidzee.wtf/embed/tv/1399/1/1'
+base_url = 'https://player.vidzee.wtf/embed/movie/155'
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
-secret = "alookeparathewithlassi"
+secret = "pleasedontscrapemesaywallahi"
 headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
@@ -37,7 +37,7 @@ headers = {
 
 # Get content type and TMDB ID
 media_type = 'movie' if 'movie' in base_url else 'tv'
-server = 0 # Default
+server = 3 # Default
 
 # Get tmdbId, season and episode
 match = re.search(r'/(\d+)(?:/(\d+)/(\d+))?', base_url)
