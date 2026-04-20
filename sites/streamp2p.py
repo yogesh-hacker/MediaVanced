@@ -1,11 +1,13 @@
 import json
 import requests
 from Crypto.Cipher import AES
+from urllib.parse import urlparse
 from Crypto.Util.Padding import unpad
 
 '''
 Supports:
 https://multimovies.p2pplay.pro/
+https://lplayer.embed4me.com
 '''
 
 class Colors:
@@ -21,10 +23,10 @@ class Colors:
 
 # Constants
 base_url = 'https://multimovies.p2pplay.pro/#pw8kx'
-default_domain = 'https://multimovies.p2pplay.pro'
+default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 headers = {
-    'Referer': 'https://multimovies.p2pplay.pro/',
+    'Referer': default_domain,
     'User-Agent': user_agent
 }
 
