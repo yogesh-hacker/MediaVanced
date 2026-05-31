@@ -55,7 +55,6 @@ streaming_servers = [
         "api": "https://uwu.eat-peach.sbs"
     }
 ]
-
 headers = {
     'Referer': default_domain,
     'User-Agent': user_agent
@@ -75,21 +74,17 @@ selected_server = streaming_servers[1]
 
 # Retrieve encrypted playback payload
 api_endpoint = f'{selected_server.get('api')}/{selected_server.get('path')}/{media_path}'
-
 response = requests.get(api_endpoint, headers=headers).json()
-
 encrypted_payload = response.get('data')
 
 # Parse AES-GCM components
 nonce_b64, ciphertext_b64, auth_tag_b64 = encrypted_payload.split(".")
-
 nonce = decode_base64url(nonce_b64)
 ciphertext = decode_base64url(ciphertext_b64)
 authentication_tag = decode_base64url(auth_tag_b64)
 
 # Decrypt payload using AES-256-GCM
 decryption_key = bytes.fromhex(decryption_key_hex)
-
 cipher = AES.new(decryption_key, AES.MODE_GCM, nonce=nonce)
 plaintext = cipher.decrypt_and_verify(ciphertext, authentication_tag)
 
