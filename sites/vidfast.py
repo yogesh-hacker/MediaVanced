@@ -32,7 +32,9 @@ headers = {
     "X-Requested-With": "XMLHttpRequest"
 }
 
-''' Due to the complexity and size of the encryption workflow, the implementation has been moved to the backend. If you require access to the backend code, please contact me on Discord. '''
+''' Due to the complexity and size of the encryption workflow, 
+the implementation has been moved to the backend. 
+If you require access to the backend code, please contact me on Discord. '''
 
 # Fetch page content
 response = requests.get(base_url, headers=headers).text
