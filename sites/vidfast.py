@@ -64,7 +64,7 @@ data = {
 response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 
 # Select a random server
-server = response[0].get('data')
+server = response[1].get('data')
 api_stream = f"https://vidfast.pro/{static_path}/Ilz-gRcqmnc/{server}"
 response = requests.post(api_stream, headers=headers).text
 
