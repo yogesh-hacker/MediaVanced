@@ -36,6 +36,7 @@ headers = {
 the implementation has been moved to the backend. 
 If you require access to the backend code, please contact me on Discord. '''
 
+
 # Fetch page content
 response = requests.get(base_url, headers=headers).text
 
@@ -53,8 +54,8 @@ response = requests.post(f'{cf_worker}/generate', json=data).json()
 servers_token = response.get('payload')
 
 # Get streaming servers
-static_path = "APA91us-GbhI-Ws6ZInNz-QNV2allAFUx55blgozPyIVI-OeknhulqY61BeJvMaxeSITX9C5UFTQgvQHUiFITaTI3AnEf7DzgWBxay2g6UfwREoc98ACJyz9seVlJC7kWMZEAvPSE32TNk_knj6oB4ayBCXoBTpI7z7uuZuuLbKjM1wWsgr3JKr/c29f50610e7c62617c6311ed5511dabd8003905f/162ec52ba3a977fb9f1fa118af8558615fba46bb9792910a26c598213bb69e0b/b733099d-8cbd-5b16-9a33-76d62e6365d1/q/1000025805044766/vacjeoki"
-api_servers = f"https://vidfast.pro/{static_path}/u863YkZdyz8/{servers_token}"
+static_path = "c1e375a038fedd84d8efd9f3a6b2aba044d1f28e/x"
+api_servers = f"https://vidfast.pro/{static_path}/m40hogoZRog/{servers_token}"
 response = requests.post(api_servers, headers=headers).text
 
 # Decrypt servers response
@@ -64,8 +65,8 @@ data = {
 response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 
 # Select a random server
-server = response[1].get('data')
-api_stream = f"https://vidfast.pro/{static_path}/Ilz-gRcqmnc/{server}"
+server = response[0].get('data')
+api_stream = f"https://vidfast.pro/{static_path}/j2iuFyZz_-A/{server}"
 response = requests.post(api_stream, headers=headers).text
 
 # Decrypt stream response
