@@ -93,6 +93,7 @@ python your_script.py
 
 <p><i>Or copy Binance Pay ID:</i> <code>992511662</code></p>
 <p>💛 Donations are completely optional and greatly appreciated.</p>
+<em>ℹ️ If you'd like to donate using a different payment method, please contact me on Discord.</em>
 </div>
 
 
