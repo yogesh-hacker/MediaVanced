@@ -83,7 +83,7 @@ This project is for educational purposes only. It demonstrates how to build web 
 
 <img src="https://img.shields.io/badge/Donate_with-Binance-F3BA2F?style=for-the-badge&logo=binance&logoColor=black" alt="Donate with Binance">
 
-<br><br>
+<br>
 
 💬 If <b>MediaVanced</b> made your work easier or inspired you — consider fueling its next update!
 
