@@ -69,35 +69,38 @@ python your_script.py
 
 > If you encounter any errors or issues, please report them in the respective repository.
 
-## Disclaimer
+## Legal & Disclaimer
 
 This project is for educational purposes only. It demonstrates how to build web scraper tools and cryptography implementations for learning and research.
 
-While this repository may contain example URLs or domain references for demonstration, **no actual scraping is performed or encouraged**. The code does not store, serve, or distribute any scraped data or copyrighted content.
+ * **No Data Hosted:** MediaVanced does not host, store, serve, or distribute any media, scraped data, or copyrighted content.
+ * **User Responsibility:** Users are solely responsible for how they utilize this software. You must ensure your actions comply with all applicable local laws, regulations, and the Terms of Service of any websites you interact with.
+ * **No Encouragement of Piracy:** This project does not promote, endorse, or condone the scraping or circumvention of restricted, copyrighted, or adult content sources. Links are dynamically aggregated from publicly available sources based on user input.
 
-Users are solely responsible for how they use this code and must ensure their usage complies with all applicable laws, regulations, and the terms of service of the websites they interact with.
+<div align="center">
 
-This project does not promote or condone scraping of any restricted, copyrighted, or adult content sources.
+<h2>🟡 Support the Development</h2>
 
-**MediaVanced does not host or stream any content directly.** All streaming or media links are dynamically provided through scraper modules that extract publicly available URLs. MediaVanced functions purely as a tool for aggregating those links, and the responsibility for link usage lies entirely with the end user.
+<img src="https://img.shields.io/badge/Donate_with-Binance-F3BA2F?style=for-the-badge&logo=binance&logoColor=black" alt="Donate with Binance">
 
----
+<br><br>
 
-## ☕ Support the Developer
-
-<p align="center">
-  <a href="https://buymeacoffee.com/yogeshkumau" target="_blank" rel="noopener noreferrer">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" width="150" height="50" alt="Buy Me A Coffee" />
-  </a>
-</p>
-
-> 💬 If MediaVanced made your work easier or inspired you — consider fueling its next update with a small donation!<br>
-> ❤️ Every single coffee keeps this project alive, faster, and free for everyone.  
-> 👨‍💻 From sleepless debugging nights to new scraper modules — your support truly makes it all possible.  
+💬 If <b>MediaVanced</b> made your work easier or inspired you — consider fueling its next update!
 
 
-[![Support Me](https://img.shields.io/badge/Support-☕-ff69b4?style=for-the-badge&logo=buymeacoffee)](https://buymeacoffee.com/yogeshkumau)
----
+⚡ Every contribution keeps this project alive, faster, and free for everyone.
+
+👨‍💻 From sleepless debugging nights to new scraper modules — your support truly makes it all possible.
+
+<br>
+
+<img src="https://github.com/yogesh-hacker/yogesh-hacker/raw/main/myfiles/qr-image-1781150775681.png" width="220" alt="Binance Pay QR Code">
+
+<p><b>Scan the QR code above using your Binance App</b></p>
+
+<p><i>Or copy Binance Pay ID:</i> <code>992511662</code></p>
+
+</div>
 
 ## License
 
