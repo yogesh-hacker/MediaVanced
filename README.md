@@ -69,13 +69,6 @@ python your_script.py
 
 > If you encounter any errors or issues, please report them in the respective repository.
 
-## Legal & Disclaimer
-
-This project is for educational purposes only. It demonstrates how to build web scraper tools and cryptography implementations for learning and research.
-
- * **No Data Hosted:** MediaVanced does not host, store, serve, or distribute any media, scraped data, or copyrighted content.
- * **User Responsibility:** Users are solely responsible for how they utilize this software. You must ensure your actions comply with all applicable local laws, regulations, and the Terms of Service of any websites you interact with.
- * **No Encouragement of Piracy:** This project does not promote, endorse, or condone the scraping or circumvention of restricted, copyrighted, or adult content sources. Links are dynamically aggregated from publicly available sources based on user input.
 
 <div align="center">
 
@@ -83,7 +76,7 @@ This project is for educational purposes only. It demonstrates how to build web 
 
 <img src="https://img.shields.io/badge/Donate_with-Binance-F3BA2F?style=for-the-badge&logo=binance&logoColor=black" alt="Donate with Binance">
 
-<br>
+<br><br>
 
 💬 If <b>MediaVanced</b> made your work easier or inspired you — consider fueling its next update!
 
@@ -99,8 +92,17 @@ This project is for educational purposes only. It demonstrates how to build web 
 <p><b>Scan the QR code above using your Binance App</b></p>
 
 <p><i>Or copy Binance Pay ID:</i> <code>992511662</code></p>
-
+<p>💛 Donations are completely optional and greatly appreciated.</p>
 </div>
+
+
+## Legal & Disclaimer
+
+This project is for educational purposes only. It demonstrates how to build web scraper tools and cryptography implementations for learning and research.
+
+ * **No Data Hosted:** MediaVanced does not host, store, serve, or distribute any media, scraped data, or copyrighted content.
+ * **User Responsibility:** Users are solely responsible for how they utilize this software. You must ensure your actions comply with all applicable local laws, regulations, and the Terms of Service of any websites you interact with.
+ * **No Encouragement of Piracy:** This project does not promote, endorse, or condone the scraping or circumvention of restricted, copyrighted, or adult content sources. Links are dynamically aggregated from publicly available sources based on user input.
 
 ## License
 
