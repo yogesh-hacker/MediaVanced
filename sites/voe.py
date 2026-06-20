@@ -9,8 +9,6 @@ from urllib.parse import urlparse
 '''
 Supports:
 https://voe.sx/
-https://kellywhatcould.com/
-https://jilliandescribecompany.com/
 '''
 
 class Colors:
@@ -25,7 +23,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://jilliandescribecompany.com/e/ueof3kkmzcal"
+base_url = "https://garylargeavailable.com/e/ueof3kkmzcal"
 user_agent = "Mozilla/5.0 (Linux; Android 11; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
