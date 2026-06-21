@@ -28,7 +28,7 @@ headers = {
     "Accept": "*/*",
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "X-Csrf-Token": "afRoMQ0Gulz3cFn3rFpPSwebg8z1Ys5i",
+    "X-Csrf-Token": "qSisdq0Eza7t9Ja9DmH5sEq376Kv0Oom",
     "X-Requested-With": "XMLHttpRequest"
 }
 
@@ -54,8 +54,8 @@ response = requests.post(f'{cf_worker}/generate', json=data).json()
 servers_token = response.get('payload')
 
 # Get streaming servers
-static_path = "c1e375a038fedd84d8efd9f3a6b2aba044d1f28e/x"
-api_servers = f"https://vidfast.pro/{static_path}/m40hogoZRog/{servers_token}"
+static_path = "segucow/1000051563617990/1fd3effe9c35dd1a5d26627c1e21c98db2d8489b4cbdb7fe7530006d07586afc/APA913f6aqvxI-1XWSPgcpTvD7pjmh--az_4XJCmB_CPZt3VqhurjM5tE3WFr3WxoWhwsSNXfj_flz0pcq_DV8SiBvA5ZAO_FN97LKe1HJLxXXisFO_Ps5Wv55lRrDRlos9Y8KsQrLXJbTUIHaJK8HqMwJA1fD692JsZ6FnqUR5B1Mc47ug05Lz/ze"
+api_servers = f"https://vidfast.pro/{static_path}/DwJsWR1VHKg/{servers_token}"
 response = requests.post(api_servers, headers=headers).text
 
 # Decrypt servers response
@@ -66,7 +66,7 @@ response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 
 # Select a random server
 server = response[0].get('data')
-api_stream = f"https://vidfast.pro/{static_path}/j2iuFyZz_-A/{server}"
+api_stream = f"https://vidfast.pro/{static_path}/-Wm0yYBQuCE/{server}"
 response = requests.post(api_stream, headers=headers).text
 
 # Decrypt stream response
