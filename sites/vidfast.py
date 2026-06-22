@@ -46,6 +46,16 @@ if not match:
     exit(print("No data found!"))
 raw_data =  match.group(1)
 
+# Get route config
+response = requests.get(f'{cf_worker}/route-config').json()
+data = response.get('data', {})
+static_path, server_path, stream_path = (
+    data.get('static_path'),
+    data.get('server_path'),
+    data.get('stream_path')
+)
+api_headers = response.get('headers')
+
 # Generate payload
 data = {
     'siteData': raw_data
@@ -54,9 +64,8 @@ response = requests.post(f'{cf_worker}/generate', json=data).json()
 servers_token = response.get('payload')
 
 # Get streaming servers
-static_path = "di/1c809caab5bc402065ca049bd579ed76c82b06b0/1000063776743068"
-api_servers = f"https://vidfast.pro/{static_path}/LKqp06QOwSA/{servers_token}"
-response = requests.post(api_servers, headers=headers).text
+api_servers = f"https://vidfast.pro/{static_path}/{server_path}/{servers_token}"
+response = requests.post(api_servers, headers=api_headers).text
 
 # Decrypt servers response
 data = {
@@ -66,8 +75,8 @@ response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 
 # Select a random server
 server = response[0].get('data')
-api_stream = f"https://vidfast.pro/{static_path}/u5xQbIZdSjI/{server}"
-response = requests.post(api_stream, headers=headers).text
+api_stream = f"https://vidfast.pro/{static_path}/{stream_path}/{server}"
+response = requests.post(api_stream, headers=api_headers).text
 
 # Decrypt stream response
 data = {
