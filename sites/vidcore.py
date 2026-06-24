@@ -28,7 +28,6 @@ headers = {
     "Accept": "*/*",
     "Referer": default_domain,
     "User-Agent": user_agent,
-    "X-Csrf-Token": "0qv1jDQw6mHsiQm7fDjrWm1VNq9sqm2a",
     "X-Requested-With": "XMLHttpRequest"
 }
 
@@ -46,6 +45,17 @@ if not match:
     exit(print("No data found!"))
 raw_data =  match.group(1)
 
+# Get route config
+response = requests.get(f'{cf_worker}/route-config').json()
+data = response.get('data', {})
+static_path, server_path, stream_path = (
+    data.get('static_path'),
+    data.get('server_path'),
+    data.get('stream_path')
+)
+api_headers = response.get('headers')
+
+
 # Generate payload
 data = {
     'siteData': raw_data
@@ -54,8 +64,7 @@ response = requests.post(f'{cf_worker}/generate', json=data).json()
 servers_token = response.get('payload')
 
 # Get streaming servers
-static_path = "mo/a727b5170f54deb64cdffbc8dd75b46bdb7ad7b749fa701ae1e9f6622d2b2840/a9d27c44/1000001664634767/f37d80f6934eef58cee0cf5969bb447974b695f4/1c0b8d92-2ff6-5f69-a5f4-3c186a3ca7cc"
-api_servers = f"https://vidcore.net/{static_path}/dhz6fwNPMbI/{servers_token}"
+api_servers = f"https://vidcore.net/{static_path}/{server_path}/{servers_token}"
 response = requests.post(api_servers, headers=headers).text
 
 # Decrypt servers response
@@ -66,7 +75,7 @@ response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 
 # Select a random server
 server = response[0].get('data')
-api_stream = f"https://vidcore.net/{static_path}/bubSb04fMD4/{server}"
+api_stream = f"https://vidcore.net/{static_path}/{stream_path}/{server}"
 response = requests.post(api_stream, headers=headers).text
 
 # Decrypt stream response
