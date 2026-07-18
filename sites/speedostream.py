@@ -25,7 +25,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://speedostream1.com/embed-bytsjltt7d2i.html"
+base_url = "https://speedostream1.com/embed-qt82dhpdey1q.html"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
     'Referer': default_domain
