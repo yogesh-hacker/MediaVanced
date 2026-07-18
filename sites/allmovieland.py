@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 '''
 Supports:
-https://allmovieland.you/
+https://allmovieland.art/
 '''
 
 class Colors:
@@ -21,7 +21,7 @@ class Colors:
     underline = '\033[4m'
 
 # Constants
-base_url = "https://allmovieland.you/9794-ramyaa.html"
+base_url = "https://allmovieland.art/9794-ramyaa.html"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 headers = {
