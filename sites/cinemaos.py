@@ -70,7 +70,7 @@ primary_secret = hmac.new(primary_hmac_key.encode(), message.encode(), hashlib.s
 final_secret = hmac.new(secondary_hmac_key.encode(), primary_secret.encode(), hashlib.sha256).hexdigest()
 
 # Get encrypted data
-response = requests.get(f"{default_domain}/api/providerv3?type={content_type}&tmdbId={content_id}&imdbId={imdb_id}&seasonId={season}&episodeId={episode}&t=&ry=&secret={final_secret}", headers=headers).json()
+response = requests.get(f"{default_domain}/api/providerv4?type={content_type}&tmdbId={content_id}&imdbId={imdb_id}&seasonId={season}&episodeId={episode}&t=&ry=&secret={final_secret}&_gt=6775dc8e702c08643385273df088c14952c590ddda02d14f", headers=headers).json()
 decryption_parameters = response.get('data')
 
 # Extract hex strings from the response
