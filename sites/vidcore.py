@@ -65,7 +65,7 @@ servers_token = response.get('payload')
 
 # Get streaming servers
 api_servers = f"https://vidcore.net/{static_path}/{server_path}/{servers_token}"
-response = requests.post(api_servers, headers=headers).text
+response = requests.post(api_servers, headers=api_headers).text
 
 # Decrypt servers response
 data = {
@@ -76,7 +76,7 @@ response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 # Select a random server
 server = response[0].get('data')
 api_stream = f"https://vidcore.net/{static_path}/{stream_path}/{server}"
-response = requests.post(api_stream, headers=headers).text
+response = requests.post(api_stream, headers=api_headers).text
 
 # Decrypt stream response
 data = {
