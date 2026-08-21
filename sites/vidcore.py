@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 '''
 Supports:
 https://vidcore.net/
+https://vidcore.io/
 '''
 
 class Colors:
@@ -20,10 +21,11 @@ class Colors:
 
 
 # Constants
-base_url = "https://vidcore.net/movie/1198994"
+base_url = "https://vidcore.io/movie/1198994"
 user_agent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36"
 default_domain = '{uri.scheme}://{uri.netloc}/'.format(uri=urlparse(base_url))
 cf_worker = "https://vidcore.yogeshkumarjamre1.workers.dev"
+#cf_worker = "http://localhost:8787"
 headers = {
     "Accept": "*/*",
     "Referer": default_domain,
@@ -64,7 +66,7 @@ response = requests.post(f'{cf_worker}/generate', json=data).json()
 servers_token = response.get('payload')
 
 # Get streaming servers
-api_servers = f"https://vidcore.net/{static_path}/{server_path}/{servers_token}"
+api_servers = f"https://vidcore.io/{static_path}/{server_path}/{servers_token}"
 response = requests.post(api_servers, headers=api_headers).text
 
 # Decrypt servers response
@@ -75,7 +77,7 @@ response = requests.post(f'{cf_worker}/decrypt', json=data).json().get('data')
 
 # Select a random server
 server = response[0].get('data')
-api_stream = f"https://vidcore.net/{static_path}/{stream_path}/{server}"
+api_stream = f"https://vidcore.io/{static_path}/{stream_path}/{server}"
 response = requests.post(api_stream, headers=api_headers).text
 
 # Decrypt stream response
